@@ -18,6 +18,7 @@ STYLE DE RÉPONSE :
 - Des paragraphes courts et clairs
 - Un ton direct, professionnel mais accessible
 - Tu peux répondre à n'importe quelle question, pas seulement sur Somfy
+- Si un fichier est joint, analyse-le et réponds en te basant sur son contenu
 - Utilise la recherche web pour toute question d'actualité
 
 GRAPHIQUES : quand tu as des données chiffrées comparatives, ajoute à la fin :
@@ -130,7 +131,10 @@ function Message({ msg, streaming }) {
   const isUser = msg.role==="user";
   if (isUser) return (
     <div style={{display:"flex",justifyContent:"flex-end",marginBottom:16,gap:9,alignItems:"flex-start"}}>
-      <div style={{maxWidth:"76%",background:NAVY,borderRadius:"16px 4px 16px 16px",padding:"11px 15px",fontSize:14,lineHeight:1.7,color:"#fff",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>{msg.content}</div>
+      <div style={{maxWidth:"76%"}}>
+        {msg.fileName&&<div style={{background:"#e8f0f4",borderRadius:"10px 10px 0 0",padding:"8px 14px",fontSize:12,color:NAVY,display:"flex",alignItems:"center",gap:6,borderBottom:"1px solid rgba(37,72,90,0.15)"}}><i className="ti ti-paperclip" style={{fontSize:13}}/>{msg.fileName}</div>}
+        <div style={{background:NAVY,borderRadius:msg.fileName?"0 0 16px 16px":"16px 4px 16px 16px",padding:"11px 15px",fontSize:14,lineHeight:1.7,color:"#fff",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>{msg.content}</div>
+      </div>
       <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:"#fff8e6",border:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2}}><i className="ti ti-user" style={{fontSize:14,color:NAVY}}/></div>
     </div>
   );
@@ -166,157 +170,163 @@ function HistoryItem({ item, active, onClick, onDelete }) {
 }
 
 function exportPDF(messages, profile, title) {
-  const date = new Date().toLocaleDateString("fr-FR", { day:"2-digit", month:"long", year:"numeric" });
-  const content = messages.map(m => {
-    const { text } = parseMessage(m.content);
-    if (m.role === "user") {
-      return `<div class="message user"><div class="label">Question</div><div class="bubble user-bubble">${text}</div></div>`;
+  const date = new Date().toLocaleDateString("fr-FR",{day:"2-digit",month:"long",year:"numeric"});
+  const content = messages.map(m=>{
+    const {text} = parseMessage(m.content);
+    if (m.role==="user") {
+      const fileTag = m.fileName?`<div class="file-tag">📎 ${m.fileName}</div>`:"";
+      return `<div class="message user">${fileTag}<div class="label">Question</div><div class="bubble user-bubble">${text}</div></div>`;
     }
     return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
   }).join("");
-
-  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/>
-  <title>Somfy Agent — ${title}</title>
-  <style>
-    body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 40px; color: #1a1a1a; background: #fff; }
-    .header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 20px; border-bottom: 2px solid #25485A; margin-bottom: 30px; }
-    .logo { display: flex; align-items: center; gap: 12px; }
-    .logo-icon { width: 40px; height: 40px; background: #25485A; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-    .logo-sun { width: 24px; height: 24px; background: #FFB71E; border-radius: 50%; }
-    .logo-text h1 { margin: 0; font-size: 18px; color: #25485A; font-weight: 700; }
-    .logo-text p { margin: 0; font-size: 12px; color: #666; }
-    .meta { text-align: right; font-size: 12px; color: #666; }
-    .meta strong { color: #25485A; }
-    .conversation { max-width: 700px; margin: 0 auto; }
-    .message { margin-bottom: 20px; }
-    .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; color: #999; }
-    .bubble { padding: 14px 18px; border-radius: 12px; font-size: 14px; line-height: 1.7; }
-    .user-bubble { background: #25485A; color: #fff; border-radius: 16px 4px 16px 16px; }
-    .agent-bubble { background: #f5f7f9; color: #1a1a1a; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px 16px 16px 16px; }
-    .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 11px; color: #bbb; text-align: center; }
-    @media print { body { padding: 20px; } }
-  </style></head><body>
-  <div class="header">
-    <div class="logo">
-      <div class="logo-icon"><div class="logo-sun"></div></div>
-      <div class="logo-text"><h1>Somfy Agent</h1><p>Protection solaire tertiaire</p></div>
-    </div>
-    <div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div>
-  </div>
-  <div class="conversation">${content}</div>
-  <div class="footer">Généré par Somfy Agent — ${date}</div>
-  <script>window.onload=()=>window.print();</script>
-  </body></html>`;
-
+  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:40px;color:#1a1a1a;background:#fff}.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:2px solid #25485A;margin-bottom:30px}.logo{display:flex;align-items:center;gap:12px}.logo-box{width:40px;height:40px;background:#25485A;border-radius:10px;display:flex;align-items:center;justify-content:center}.logo-sun{width:22px;height:22px;background:#FFB71E;border-radius:50%}.logo-text h1{margin:0;font-size:18px;color:#25485A;font-weight:700}.logo-text p{margin:0;font-size:12px;color:#666}.meta{text-align:right;font-size:12px;color:#666}.meta strong{color:#25485A}.message{margin-bottom:20px}.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;color:#999}.bubble{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f5f7f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:12px;color:#25485A;margin-bottom:6px}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#bbb;text-align:center}</style></head><body>
+  <div class="header"><div class="logo"><div class="logo-box"><div class="logo-sun"></div></div><div class="logo-text"><h1>Somfy Agent</h1><p>Protection solaire tertiaire</p></div></div><div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
+  ${content}<div class="footer">Généré par Somfy Agent — ${date}</div>
+  <script>window.onload=()=>window.print();</script></body></html>`;
   const win = window.open("","_blank");
   win.document.write(html);
   win.document.close();
 }
 
+async function readFileAsBase64(file) {
+  return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result.split(",")[1]); r.onerror=()=>reject(new Error("Lecture impossible")); r.readAsDataURL(file); });
+}
+
+async function readFileAsText(file) {
+  return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=()=>reject(new Error("Lecture impossible")); r.readAsText(file); });
+}
+
+function getFileIcon(name) {
+  const ext=name.split(".").pop().toLowerCase();
+  if(ext==="pdf") return "ti-file-type-pdf";
+  if(["jpg","jpeg","png","gif","webp"].includes(ext)) return "ti-photo";
+  if(["doc","docx"].includes(ext)) return "ti-file-type-doc";
+  if(["xls","xlsx","csv"].includes(ext)) return "ti-file-type-xls";
+  return "ti-file";
+}
+
+function getFileColor(name) {
+  const ext=name.split(".").pop().toLowerCase();
+  if(ext==="pdf") return "#e74c3c";
+  if(["jpg","jpeg","png","gif","webp"].includes(ext)) return "#9b59b6";
+  if(["doc","docx"].includes(ext)) return "#2980b9";
+  if(["xls","xlsx","csv"].includes(ext)) return "#27ae60";
+  return "#666";
+}
+
 export default function App() {
-  const [profile, setProfile] = useState("commercial");
-  const [openCat, setOpenCat] = useState("prospection");
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [streaming, setStreaming] = useState(false);
-  const [histories, setHistories] = useState({ commercial: [], marketing: [] });
-  const [activeId, setActiveId] = useState({ commercial: null, marketing: null });
-  const bottomRef = useRef(null);
-  const inputRef = useRef(null);
+  const [profile,setProfile]=useState("commercial");
+  const [openCat,setOpenCat]=useState("prospection");
+  const [input,setInput]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [streaming,setStreaming]=useState(false);
+  const [histories,setHistories]=useState({commercial:[],marketing:[]});
+  const [activeId,setActiveId]=useState({commercial:null,marketing:null});
+  const [pendingFile,setPendingFile]=useState(null);
+  const [dragOver,setDragOver]=useState(false);
+  const bottomRef=useRef(null);
+  const inputRef=useRef(null);
+  const fileRef=useRef(null);
 
-  const currentMessages = () => {
-    const id = activeId[profile];
-    if (!id) return [];
-    const conv = histories[profile].find(h=>h.id===id);
-    return conv ? conv.messages : [];
-  };
+  const currentMessages=()=>{ const id=activeId[profile]; if(!id) return []; const conv=histories[profile].find(h=>h.id===id); return conv?conv.messages:[]; };
+  const currentTitle=()=>{ const id=activeId[profile]; if(!id) return "Conversation"; const conv=histories[profile].find(h=>h.id===id); return conv?conv.title:"Conversation"; };
 
-  const currentTitle = () => {
-    const id = activeId[profile];
-    if (!id) return "Conversation";
-    const conv = histories[profile].find(h=>h.id===id);
-    return conv ? conv.title : "Conversation";
-  };
+  useEffect(()=>{ bottomRef.current?.scrollIntoView({behavior:"smooth"}); },[histories,activeId,profile]);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({behavior:"smooth"}); }, [histories, activeId, profile]);
+  function newConversation(){ setActiveId(prev=>({...prev,[profile]:null})); setPendingFile(null); }
+  function switchProfile(p){ setProfile(p); setOpenCat(PROFILES[p].categories[0].id); }
 
-  function newConversation() { setActiveId(prev=>({...prev,[profile]:null})); }
-  function switchProfile(p) { setProfile(p); setOpenCat(PROFILES[p].categories[0].id); }
-
-  function updateLastMsg(convId, profileKey, content) {
-    setHistories(prev=>({
-      ...prev,
-      [profileKey]: prev[profileKey].map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)
-    }));
+  function updateLastMsg(convId,profileKey,content){
+    setHistories(prev=>({...prev,[profileKey]:prev[profileKey].map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)}));
   }
 
-  async function sendMessage(text) {
-    const userText = (text||input).trim();
-    if (!userText||loading) return;
-    setInput("");
-    const msgs = currentMessages();
-    const newMsgs = [...msgs, {role:"user",content:userText}];
-    let convId = activeId[profile];
-    const profileKey = profile;
-    if (!convId) {
-      convId = Date.now().toString();
-      const title = userText.slice(0,40)+(userText.length>40?"...":"");
-      setHistories(prev=>({...prev,[profileKey]:[{id:convId,title,messages:[]}, ...prev[profileKey]]}));
+  async function handleFile(file){
+    if(!file) return;
+    if(file.size>5*1024*1024){ alert("Fichier trop volumineux (max 5 Mo)"); return; }
+    const ext=file.name.split(".").pop().toLowerCase();
+    const allowed=["pdf","jpg","jpeg","png","gif","webp","doc","docx","xls","xlsx","csv","txt"];
+    if(!allowed.includes(ext)){ alert("Format non supporté. Acceptés : PDF, images, Word, Excel, CSV, TXT"); return; }
+    setPendingFile(file);
+    inputRef.current?.focus();
+  }
+
+  async function buildMessageContent(userText,file){
+    if(!file) return userText;
+    const ext=file.name.split(".").pop().toLowerCase();
+    if(["jpg","jpeg","png","gif","webp"].includes(ext)){
+      const b64=await readFileAsBase64(file);
+      const mt=ext==="jpg"||ext==="jpeg"?"image/jpeg":ext==="png"?"image/png":ext==="gif"?"image/gif":"image/webp";
+      return [{type:"image",source:{type:"base64",media_type:mt,data:b64}},{type:"text",text:userText||"Analyse cette image."}];
+    }
+    if(ext==="pdf"){
+      const b64=await readFileAsBase64(file);
+      return [{type:"document",source:{type:"base64",media_type:"application/pdf",data:b64}},{type:"text",text:userText||"Analyse ce document PDF."}];
+    }
+    const text=await readFileAsText(file);
+    return `[Fichier joint : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce fichier."}`;
+  }
+
+  async function sendMessage(text){
+    const userText=(text||input).trim();
+    if((!userText&&!pendingFile)||loading) return;
+    const file=pendingFile;
+    setInput(""); setPendingFile(null);
+    const displayText=userText||(file?`Analyse du fichier : ${file.name}`:"");
+    const msgs=currentMessages();
+    const newUserMsg={role:"user",content:displayText,fileName:file?.name};
+    const newMsgs=[...msgs,newUserMsg];
+    let convId=activeId[profile];
+    const profileKey=profile;
+    if(!convId){
+      convId=Date.now().toString();
+      const title=displayText.slice(0,40)+(displayText.length>40?"...":"");
+      setHistories(prev=>({...prev,[profileKey]:[{id:convId,title,messages:[]},...prev[profileKey]]}));
       setActiveId(prev=>({...prev,[profileKey]:convId}));
     }
     setHistories(prev=>({...prev,[profileKey]:prev[profileKey].map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
-    setLoading(true);
-    setStreaming(false);
-    try {
-      const res = await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-opus-4-5",max_tokens:1500,system:SYSTEM_PROMPT,tools:[{type:"web_search_20250305",name:"web_search"}],messages:newMsgs.map(m=>({role:m.role,content:m.content}))})});
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let fullText = "";
-      let started = false;
-      while (true) {
-        const {done,value} = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value);
-        const lines = chunk.split("\n");
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const data = line.slice(6);
-            if (data==="[DONE]") continue;
-            try {
-              const parsed = JSON.parse(data);
-              if (parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta") {
-                if (!started) { started=true; setStreaming(true); updateLastMsg(convId,profileKey,""); }
-                fullText += parsed.delta.text;
-                updateLastMsg(convId,profileKey,fullText);
+    setLoading(true); setStreaming(false);
+    try{
+      const msgContent=await buildMessageContent(userText,file);
+      const apiMessages=[...msgs.map(m=>({role:m.role,content:m.content})),{role:"user",content:msgContent}];
+      const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-opus-4-5",max_tokens:1500,system:SYSTEM_PROMPT,tools:[{type:"web_search_20250305",name:"web_search"}],messages:apiMessages})});
+      const reader=res.body.getReader();
+      const decoder=new TextDecoder();
+      let fullText=""; let started=false;
+      while(true){
+        const {done,value}=await reader.read(); if(done) break;
+        const chunk=decoder.decode(value);
+        const lines=chunk.split("\n");
+        for(const line of lines){
+          if(line.startsWith("data: ")){
+            const data=line.slice(6); if(data==="[DONE]") continue;
+            try{
+              const parsed=JSON.parse(data);
+              if(parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta"){
+                if(!started){started=true;setStreaming(true);updateLastMsg(convId,profileKey,"");}
+                fullText+=parsed.delta.text; updateLastMsg(convId,profileKey,fullText);
               }
-            } catch {}
+            }catch{}
           }
         }
       }
-      setStreaming(false);
-      if (!started) updateLastMsg(convId,profileKey,"Pas de réponse.");
-    } catch(err) {
-      setStreaming(false);
-      updateLastMsg(activeId[profileKey]||"",profileKey,`Erreur : ${err.message}`);
-    } finally {
-      setLoading(false);
-      setTimeout(()=>inputRef.current?.focus(),100);
-    }
+      setStreaming(false); if(!started) updateLastMsg(convId,profileKey,"Pas de réponse.");
+    }catch(err){ setStreaming(false); updateLastMsg(convId,profileKey,`Erreur : ${err.message}`); }
+    finally{ setLoading(false); setTimeout(()=>inputRef.current?.focus(),100); }
   }
 
-  function deleteConv(id) {
-    setHistories(prev=>({...prev,[profile]:prev[profile].filter(h=>h.id!==id)}));
-    if (activeId[profile]===id) setActiveId(prev=>({...prev,[profile]:null}));
-  }
+  function deleteConv(id){ setHistories(prev=>({...prev,[profile]:prev[profile].filter(h=>h.id!==id)})); if(activeId[profile]===id) setActiveId(prev=>({...prev,[profile]:null})); }
 
-  const currentProfile = PROFILES[profile];
-  const currentCat = currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
-  const messages = currentMessages();
-  const profileHistory = histories[profile];
-  const isStreaming = streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
+  const currentProfile=PROFILES[profile];
+  const currentCat=currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
+  const messages=currentMessages();
+  const profileHistory=histories[profile];
+  const isStreaming=streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
 
   return (
     <div style={{display:"flex",height:640,background:"#fff",borderRadius:16,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.10)",border:`1px solid rgba(0,0,0,0.08)`}}>
+      <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
+
+      {/* Sidebar */}
       <div style={{width:220,background:NAVY,display:"flex",flexDirection:"column",flexShrink:0,overflow:"hidden"}}>
         <div style={{padding:"16px 14px 13px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
           <div style={{display:"flex",alignItems:"center",gap:9}}>
@@ -356,7 +366,9 @@ export default function App() {
           <div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:7,height:7,borderRadius:"50%",background:"#3dba6e"}}/><span style={{fontSize:11,color:"rgba(255,255,255,0.3)"}}>Recherche web active</span></div>
         </div>
       </div>
-      <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}}>
+
+      {/* Main */}
+      <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
         <div style={{padding:"12px 18px",borderBottom:`1px solid rgba(0,0,0,0.08)`,display:"flex",alignItems:"center",justifyContent:"space-between",background:"#fff"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <div style={{width:30,height:30,borderRadius:8,background:NAVY,display:"flex",alignItems:"center",justifyContent:"center"}}><i className={`ti ${currentCat.icon}`} style={{fontSize:14,color:YELLOW}}/></div>
@@ -364,25 +376,20 @@ export default function App() {
           </div>
           <div style={{display:"flex",alignItems:"center",gap:7}}>
             {isStreaming&&<span style={{fontSize:11,color:NAVY,background:"#fff8e6",padding:"3px 10px",borderRadius:20,border:`1px solid ${YELLOW}`}}>✍️ Rédaction...</span>}
-            {messages.length>0&&!isStreaming&&(
-              <button onClick={()=>exportPDF(messages, currentProfile.label, currentTitle())} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.12)`,background:"#f5f7f9",cursor:"pointer",fontSize:11,color:"#25485A",fontWeight:500}}>
-                <i className="ti ti-file-download" style={{fontSize:13}}/> Exporter PDF
-              </button>
-            )}
+            {messages.length>0&&!isStreaming&&<button onClick={()=>exportPDF(messages,currentProfile.label,currentTitle())} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.12)`,background:"#f5f7f9",cursor:"pointer",fontSize:11,color:NAVY,fontWeight:500}}><i className="ti ti-file-download" style={{fontSize:13}}/> PDF</button>}
             <span style={{fontSize:11,color:"#666",background:"#f5f7f9",padding:"3px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.08)`}}>{currentProfile.label}</span>
             {messages.length>0&&<span style={{fontSize:11,color:"#999",background:"#f5f7f9",padding:"3px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.08)`}}>{messages.filter(m=>m.role==="user").length} échange{messages.filter(m=>m.role==="user").length>1?"s":""}</span>}
           </div>
         </div>
-        <div style={{flex:1,overflowY:"auto",padding:"18px 20px 10px",background:"#fff"}}>
+        <div style={{flex:1,overflowY:"auto",padding:"18px 20px 10px",background:dragOver?"#f0f8ff":"#fff",transition:"background 0.2s",position:"relative"}}>
+          {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.06)",border:`2px dashed ${NAVY}`,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><i className="ti ti-upload" style={{fontSize:32,color:NAVY,display:"block",marginBottom:8}}/><p style={{margin:0,fontWeight:500,color:NAVY}}>Déposez votre fichier ici</p><p style={{margin:"4px 0 0",fontSize:12,color:"#666"}}>PDF, image, Word, Excel, CSV</p></div></div>}
           {messages.length===0?(
             <div style={{paddingTop:6}}>
               <p style={{margin:"0 0 5px",fontSize:15,fontWeight:500,color:"#1a1a1a"}}>Bonjour, que puis-je faire pour vous ?</p>
-              <p style={{margin:"0 0 18px",fontSize:13,color:"#666"}}>Voici quelques suggestions pour commencer :</p>
+              <p style={{margin:"0 0 18px",fontSize:13,color:"#666"}}>Posez une question, uploadez un fichier ou choisissez une suggestion :</p>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {currentCat.prompts.map((p,i)=>(
-                  <button key={i} onClick={()=>sendMessage(p.text)} style={{padding:"12px 16px",borderRadius:10,cursor:"pointer",textAlign:"left",background:"#f5f7f9",border:`1px solid rgba(0,0,0,0.08)`,display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:14,color:"#1a1a1a"}}
-                  onMouseEnter={e=>e.currentTarget.style.borderColor=YELLOW}
-                  onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.08)"}>
+                  <button key={i} onClick={()=>sendMessage(p.text)} style={{padding:"12px 16px",borderRadius:10,cursor:"pointer",textAlign:"left",background:"#f5f7f9",border:`1px solid rgba(0,0,0,0.08)`,display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:14,color:"#1a1a1a"}} onMouseEnter={e=>e.currentTarget.style.borderColor=YELLOW} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.08)"}>
                     <span>{p.label}</span><i className="ti ti-arrow-right" style={{fontSize:13,color:"#999",flexShrink:0,marginLeft:10}}/>
                   </button>
                 ))}
@@ -391,14 +398,27 @@ export default function App() {
           ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming&&i===messages.length-1}/>)}
           <div ref={bottomRef}/>
         </div>
+        {pendingFile&&(
+          <div style={{padding:"8px 16px",background:"#f0f8f4",borderTop:`1px solid rgba(0,0,0,0.06)`,display:"flex",alignItems:"center",gap:10}}>
+            <i className={`ti ${getFileIcon(pendingFile.name)}`} style={{fontSize:18,color:getFileColor(pendingFile.name),flexShrink:0}}/>
+            <div style={{flex:1,minWidth:0}}>
+              <p style={{margin:0,fontSize:13,fontWeight:500,color:"#1a1a1a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pendingFile.name}</p>
+              <p style={{margin:0,fontSize:11,color:"#666"}}>{(pendingFile.size/1024).toFixed(0)} Ko — prêt à envoyer</p>
+            </div>
+            <button onClick={()=>setPendingFile(null)} style={{background:"none",border:"none",cursor:"pointer",color:"#999",fontSize:16}}><i className="ti ti-x"/></button>
+          </div>
+        )}
         <div style={{padding:"10px 16px 14px",borderTop:`1px solid rgba(0,0,0,0.08)`,background:"#fff"}}>
-          <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f7f9",borderRadius:12,border:`1px solid ${input.trim()?YELLOW:"rgba(0,0,0,0.12)"}`,padding:"8px 8px 8px 14px",transition:"border-color 0.15s"}}>
-            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder="Posez votre question..." rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto"}}/>
-            <button onClick={()=>sendMessage()} disabled={!input.trim()||loading} style={{width:36,height:36,borderRadius:9,border:"none",background:input.trim()&&!loading?NAVY:"#e8e8e8",cursor:input.trim()&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s",flexShrink:0}}>
-              <i className="ti ti-arrow-up" style={{fontSize:16,color:input.trim()&&!loading?YELLOW:"#aaa"}}/>
+          <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f7f9",borderRadius:12,border:`1px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.12)"}`,padding:"8px 8px 8px 14px",transition:"border-color 0.15s"}}>
+            <button onClick={()=>fileRef.current?.click()} style={{width:30,height:30,borderRadius:7,border:`1px solid rgba(0,0,0,0.12)`,background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:"#666"}} onMouseEnter={e=>{e.currentTarget.style.borderColor=NAVY;e.currentTarget.style.color=NAVY;}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(0,0,0,0.12)";e.currentTarget.style.color="#666";}}>
+              <i className="ti ti-paperclip" style={{fontSize:15}}/>
+            </button>
+            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message ou envoyez directement...":"Posez votre question ou déposez un fichier..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto"}}/>
+            <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:9,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#e8e8e8",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s",flexShrink:0}}>
+              <i className="ti ti-arrow-up" style={{fontSize:16,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa"}}/>
             </button>
           </div>
-          <p style={{margin:"6px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · Shift+Entrée pour saut de ligne</p>
+          <p style={{margin:"6px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · 📎 pour joindre un fichier · ou glissez-déposez</p>
         </div>
       </div>
     </div>
