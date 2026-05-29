@@ -196,6 +196,63 @@ async function readFileAsText(file) {
   return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=()=>reject(new Error("Lecture impossible")); r.readAsText(file); });
 }
 
+async function readDocxAsText(file) {
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=async(e)=>{
+      try{
+        const result=await window.mammoth.extractRawText({arrayBuffer:e.target.result});
+        resolve(result.value);
+      }catch(err){ reject(err); }
+    };
+    r.onerror=()=>reject(new Error("Lecture impossible"));
+    r.readAsArrayBuffer(file);
+  });
+}
+
+async function readXlsxAsText(file) {
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=(e)=>{
+      try{
+        const wb=window.XLSX.read(e.target.result,{type:"array"});
+        let text="";
+        wb.SheetNames.forEach(name=>{
+          text+=`\n[Feuille : ${name}]\n`;
+          text+=window.XLSX.utils.sheet_to_csv(wb.Sheets[name]);
+        });
+        resolve(text);
+      }catch(err){ reject(err); }
+    };
+    r.onerror=()=>reject(new Error("Lecture impossible"));
+    r.readAsArrayBuffer(file);
+  });
+}
+
+async function buildMessageContent(userText,file){
+  if(!file) return userText;
+  const ext=file.name.split(".").pop().toLowerCase();
+  if(["jpg","jpeg","png","gif","webp"].includes(ext)){
+    const b64=await readFileAsBase64(file);
+    const mt=ext==="jpg"||ext==="jpeg"?"image/jpeg":ext==="png"?"image/png":ext==="gif"?"image/gif":"image/webp";
+    return [{type:"image",source:{type:"base64",media_type:mt,data:b64}},{type:"text",text:userText||"Analyse cette image."}];
+  }
+  if(ext==="pdf"){
+    const b64=await readFileAsBase64(file);
+    return [{type:"document",source:{type:"base64",media_type:"application/pdf",data:b64}},{type:"text",text:userText||"Analyse ce document PDF."}];
+  }
+  if(ext==="docx"||ext==="doc"){
+    const text=await readDocxAsText(file);
+    return `[Fichier Word : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce document."}`;
+  }
+  if(ext==="xlsx"||ext==="xls"){
+    const text=await readXlsxAsText(file);
+    return `[Fichier Excel : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce fichier Excel."}`;
+  }
+  const text=await readFileAsText(file);
+  return `[Fichier : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce fichier."}`;
+}
+
 function getFileIcon(name) {
   const ext=name.split(".").pop().toLowerCase();
   if(ext==="pdf") return "ti-file-type-pdf";
@@ -250,22 +307,6 @@ export default function App() {
     inputRef.current?.focus();
   }
 
-  async function buildMessageContent(userText,file){
-    if(!file) return userText;
-    const ext=file.name.split(".").pop().toLowerCase();
-    if(["jpg","jpeg","png","gif","webp"].includes(ext)){
-      const b64=await readFileAsBase64(file);
-      const mt=ext==="jpg"||ext==="jpeg"?"image/jpeg":ext==="png"?"image/png":ext==="gif"?"image/gif":"image/webp";
-      return [{type:"image",source:{type:"base64",media_type:mt,data:b64}},{type:"text",text:userText||"Analyse cette image."}];
-    }
-    if(ext==="pdf"){
-      const b64=await readFileAsBase64(file);
-      return [{type:"document",source:{type:"base64",media_type:"application/pdf",data:b64}},{type:"text",text:userText||"Analyse ce document PDF."}];
-    }
-    const text=await readFileAsText(file);
-    return `[Fichier joint : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce fichier."}`;
-  }
-
   async function sendMessage(text){
     const userText=(text||input).trim();
     if((!userText&&!pendingFile)||loading) return;
@@ -309,7 +350,8 @@ export default function App() {
           }
         }
       }
-      setStreaming(false); if(!started) updateLastMsg(convId,profileKey,"Pas de réponse.");
+      setStreaming(false);
+      if(!started) updateLastMsg(convId,profileKey,"Je n'ai pas pu analyser ce fichier. Essaie avec un autre format.");
     }catch(err){ setStreaming(false); updateLastMsg(convId,profileKey,`Erreur : ${err.message}`); }
     finally{ setLoading(false); setTimeout(()=>inputRef.current?.focus(),100); }
   }
@@ -326,7 +368,6 @@ export default function App() {
     <div style={{display:"flex",height:640,background:"#fff",borderRadius:16,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.10)",border:`1px solid rgba(0,0,0,0.08)`}}>
       <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
 
-      {/* Sidebar */}
       <div style={{width:220,background:NAVY,display:"flex",flexDirection:"column",flexShrink:0,overflow:"hidden"}}>
         <div style={{padding:"16px 14px 13px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
           <div style={{display:"flex",alignItems:"center",gap:9}}>
@@ -367,7 +408,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Main */}
       <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
         <div style={{padding:"12px 18px",borderBottom:`1px solid rgba(0,0,0,0.08)`,display:"flex",alignItems:"center",justifyContent:"space-between",background:"#fff"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -381,6 +421,7 @@ export default function App() {
             {messages.length>0&&<span style={{fontSize:11,color:"#999",background:"#f5f7f9",padding:"3px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.08)`}}>{messages.filter(m=>m.role==="user").length} échange{messages.filter(m=>m.role==="user").length>1?"s":""}</span>}
           </div>
         </div>
+
         <div style={{flex:1,overflowY:"auto",padding:"18px 20px 10px",background:dragOver?"#f0f8ff":"#fff",transition:"background 0.2s",position:"relative"}}>
           {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.06)",border:`2px dashed ${NAVY}`,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><i className="ti ti-upload" style={{fontSize:32,color:NAVY,display:"block",marginBottom:8}}/><p style={{margin:0,fontWeight:500,color:NAVY}}>Déposez votre fichier ici</p><p style={{margin:"4px 0 0",fontSize:12,color:"#666"}}>PDF, image, Word, Excel, CSV</p></div></div>}
           {messages.length===0?(
@@ -398,6 +439,7 @@ export default function App() {
           ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming&&i===messages.length-1}/>)}
           <div ref={bottomRef}/>
         </div>
+
         {pendingFile&&(
           <div style={{padding:"8px 16px",background:"#f0f8f4",borderTop:`1px solid rgba(0,0,0,0.06)`,display:"flex",alignItems:"center",gap:10}}>
             <i className={`ti ${getFileIcon(pendingFile.name)}`} style={{fontSize:18,color:getFileColor(pendingFile.name),flexShrink:0}}/>
@@ -408,6 +450,7 @@ export default function App() {
             <button onClick={()=>setPendingFile(null)} style={{background:"none",border:"none",cursor:"pointer",color:"#999",fontSize:16}}><i className="ti ti-x"/></button>
           </div>
         )}
+
         <div style={{padding:"10px 16px 14px",borderTop:`1px solid rgba(0,0,0,0.08)`,background:"#fff"}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f7f9",borderRadius:12,border:`1px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.12)"}`,padding:"8px 8px 8px 14px",transition:"border-color 0.15s"}}>
             <button onClick={()=>fileRef.current?.click()} style={{width:30,height:30,borderRadius:7,border:`1px solid rgba(0,0,0,0.12)`,background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:"#666"}} onMouseEnter={e=>{e.currentTarget.style.borderColor=NAVY;e.currentTarget.style.color=NAVY;}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(0,0,0,0.12)";e.currentTarget.style.color="#666";}}>
