@@ -1,14 +1,19 @@
-export default async function handler(req, res) {
+export const config = { runtime: 'edge' };
+
+export default async function handler(req) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Méthode non autorisée' })
+    return new Response('Méthode non autorisée', { status: 405 });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'Clé API manquante. Configure ANTHROPIC_API_KEY dans Vercel.' })
+    return new Response(JSON.stringify({ error: 'Clé API manquante' }), { 
+      status: 500, headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   try {
+    const body = await req.json();
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -17,12 +22,16 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01',
         'anthropic-beta': 'web-search-2025-03-05'
       },
-      body: JSON.stringify(req.body)
-    })
-
-    const data = await response.json()
-    return res.status(response.status).json(data)
+      body: JSON.stringify(body)
+    });
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
-    return res.status(500).json({ error: 'Erreur serveur', details: error.message })
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500, headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
