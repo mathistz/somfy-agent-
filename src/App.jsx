@@ -3,7 +3,6 @@ import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Cart
 
 const NAVY = "#25485A";
 const YELLOW = "#FFB71E";
-const LOGO_URL = "https://companieslogo.com/img/orig/SO.PA-fea83676.png";
 const CHART_COLORS = ["#25485A","#FFB71E","#1a6b4a","#e07b00","#5a8fa3","#f0c040","#2e7d5e","#c9600a"];
 
 const SYSTEM_PROMPT = `Tu es un assistant IA expert en protection solaire tertiaire, travaillant avec les équipes de Somfy France.
@@ -143,9 +142,7 @@ function Message({ msg, streaming }) {
   const {text,chart} = isLoading?{text:"...",chart:null}:parseMessage(msg.content);
   return (
     <div style={{display:"flex",justifyContent:"flex-start",marginBottom:16,gap:9,alignItems:"flex-start"}}>
-      <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:"#fff",border:`1px solid rgba(0,0,0,0.1)`,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2,overflow:"hidden",padding:3}}>
-        <img src={LOGO_URL} alt="Somfy" style={{width:"100%",height:"auto"}}/>
-      </div>
+      <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:NAVY,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2}}><i className="ti ti-sparkles" style={{fontSize:14,color:YELLOW}}/></div>
       <div style={{maxWidth:"82%",minWidth:0}}>
         <div style={{background:"#f5f7f9",border:`1px solid rgba(0,0,0,0.08)`,borderRadius:"4px 16px 16px 16px",padding:"11px 15px",fontSize:14,lineHeight:1.75,color:"#1a1a1a",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>
           {isLoading?<TypingDots/>:text}
@@ -182,8 +179,8 @@ function exportPDF(messages, profile, title) {
     }
     return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
   }).join("");
-  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:40px;color:#1a1a1a;background:#fff}.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:2px solid #25485A;margin-bottom:30px}.logo{display:flex;align-items:center;gap:12px}.logo-img{height:32px;width:auto}.logo-text p{margin:0;font-size:12px;color:#666}.meta{text-align:right;font-size:12px;color:#666}.meta strong{color:#25485A}.message{margin-bottom:20px}.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;color:#999}.bubble{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f5f7f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:12px;color:#25485A;margin-bottom:6px}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#bbb;text-align:center}</style></head><body>
-  <div class="header"><div class="logo"><img class="logo-img" src="${LOGO_URL}" alt="Somfy"/><div class="logo-text"><p>Protection solaire tertiaire</p></div></div><div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
+  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:40px;color:#1a1a1a;background:#fff}.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:2px solid #25485A;margin-bottom:30px}.logo{display:flex;align-items:center;gap:12px}.logo-box{width:40px;height:40px;background:#25485A;border-radius:10px;display:flex;align-items:center;justify-content:center}.logo-sun{width:22px;height:22px;background:#FFB71E;border-radius:50%}.logo-text h1{margin:0;font-size:18px;color:#25485A;font-weight:700}.logo-text p{margin:0;font-size:12px;color:#666}.meta{text-align:right;font-size:12px;color:#666}.meta strong{color:#25485A}.message{margin-bottom:20px}.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;color:#999}.bubble{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f5f7f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:12px;color:#25485A;margin-bottom:6px}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#bbb;text-align:center}</style></head><body>
+  <div class="header"><div class="logo"><div class="logo-box"><div class="logo-sun"></div></div><div class="logo-text"><h1>Somfy Agent</h1><p>Protection solaire tertiaire</p></div></div><div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
   ${content}<div class="footer">Généré par Somfy Agent — ${date}</div>
   <script>window.onload=()=>window.print();</script></body></html>`;
   const win = window.open("","_blank");
@@ -203,8 +200,10 @@ async function readDocxAsText(file) {
   return new Promise((resolve,reject)=>{
     const r=new FileReader();
     r.onload=async(e)=>{
-      try{ const result=await window.mammoth.extractRawText({arrayBuffer:e.target.result}); resolve(result.value); }
-      catch(err){ reject(err); }
+      try{
+        const result=await window.mammoth.extractRawText({arrayBuffer:e.target.result});
+        resolve(result.value);
+      }catch(err){ reject(err); }
     };
     r.onerror=()=>reject(new Error("Lecture impossible"));
     r.readAsArrayBuffer(file);
@@ -218,7 +217,10 @@ async function readXlsxAsText(file) {
       try{
         const wb=window.XLSX.read(e.target.result,{type:"array"});
         let text="";
-        wb.SheetNames.forEach(name=>{ text+=`\n[Feuille : ${name}]\n`; text+=window.XLSX.utils.sheet_to_csv(wb.Sheets[name]); });
+        wb.SheetNames.forEach(name=>{
+          text+=`\n[Feuille : ${name}]\n`;
+          text+=window.XLSX.utils.sheet_to_csv(wb.Sheets[name]);
+        });
         resolve(text);
       }catch(err){ reject(err); }
     };
@@ -366,11 +368,11 @@ export default function App() {
     <div style={{display:"flex",height:640,background:"#fff",borderRadius:16,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.10)",border:`1px solid rgba(0,0,0,0.08)`}}>
       <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
 
-      {/* Sidebar */}
       <div style={{width:220,background:NAVY,display:"flex",flexDirection:"column",flexShrink:0,overflow:"hidden"}}>
         <div style={{padding:"16px 14px 13px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
           <div style={{display:"flex",alignItems:"center",gap:9}}>
-            <img src={LOGO_URL} alt="Somfy" style={{height:28,width:"auto",filter:"brightness(0) invert(1)"}}/>
+            <div style={{width:30,height:30,borderRadius:7,background:YELLOW,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-sun" style={{fontSize:16,color:NAVY}}/></div>
+            <div><p style={{margin:0,fontWeight:600,fontSize:14,color:"#fff"}}>Somfy Agent</p><p style={{margin:0,fontSize:10,color:"rgba(255,255,255,0.4)"}}>Protection solaire tertiaire</p></div>
           </div>
         </div>
         <div style={{padding:"11px 11px 7px"}}>
@@ -406,7 +408,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Main */}
       <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
         <div style={{padding:"12px 18px",borderBottom:`1px solid rgba(0,0,0,0.08)`,display:"flex",alignItems:"center",justifyContent:"space-between",background:"#fff"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -422,7 +423,7 @@ export default function App() {
         </div>
 
         <div style={{flex:1,overflowY:"auto",padding:"18px 20px 10px",background:dragOver?"#f0f8ff":"#fff",transition:"background 0.2s",position:"relative"}}>
-          {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.06)",border:`2px dashed ${NAVY}`,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><i className="ti ti-cloud-upload" style={{fontSize:32,color:NAVY,display:"block",marginBottom:8}}/><p style={{margin:0,fontWeight:500,color:NAVY}}>Déposez votre fichier ici</p><p style={{margin:"4px 0 0",fontSize:12,color:"#666"}}>PDF, image, Word, Excel, CSV</p></div></div>}
+          {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.06)",border:`2px dashed ${NAVY}`,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><i className="ti ti-upload" style={{fontSize:32,color:NAVY,display:"block",marginBottom:8}}/><p style={{margin:0,fontWeight:500,color:NAVY}}>Déposez votre fichier ici</p><p style={{margin:"4px 0 0",fontSize:12,color:"#666"}}>PDF, image, Word, Excel, CSV</p></div></div>}
           {messages.length===0?(
             <div style={{paddingTop:6}}>
               <p style={{margin:"0 0 5px",fontSize:15,fontWeight:500,color:"#1a1a1a"}}>Bonjour, que puis-je faire pour vous ?</p>
@@ -453,14 +454,14 @@ export default function App() {
         <div style={{padding:"10px 16px 14px",borderTop:`1px solid rgba(0,0,0,0.08)`,background:"#fff"}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f7f9",borderRadius:12,border:`1px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.12)"}`,padding:"8px 8px 8px 14px",transition:"border-color 0.15s"}}>
             <button onClick={()=>fileRef.current?.click()} style={{width:30,height:30,borderRadius:7,border:`1px solid rgba(0,0,0,0.12)`,background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:"#666"}} onMouseEnter={e=>{e.currentTarget.style.borderColor=NAVY;e.currentTarget.style.color=NAVY;}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(0,0,0,0.12)";e.currentTarget.style.color="#666";}}>
-              <i className="ti ti-cloud-upload" style={{fontSize:15}}/>
+              <i className="ti ti-paperclip" style={{fontSize:15}}/>
             </button>
             <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message ou envoyez directement...":"Posez votre question ou déposez un fichier..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto"}}/>
             <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:9,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#e8e8e8",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s",flexShrink:0}}>
               <i className="ti ti-arrow-up" style={{fontSize:16,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa"}}/>
             </button>
           </div>
-          <p style={{margin:"6px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier · ou glissez-déposez</p>
+          <p style={{margin:"6px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · 📎 pour joindre un fichier · ou glissez-déposez</p>
         </div>
       </div>
     </div>
