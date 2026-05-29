@@ -126,7 +126,7 @@ function TypingDots() {
   return <div style={{display:"flex",gap:5,alignItems:"center",padding:"5px 0"}}>{[0,1,2].map(i=><div key={i} style={{width:7,height:7,borderRadius:"50%",background:YELLOW,animation:"sb 1.2s ease-in-out infinite",animationDelay:`${i*0.2}s`}}/>)}<style>{`@keyframes sb{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}`}</style></div>;
 }
 
-function Message({ msg }) {
+function Message({ msg, streaming }) {
   const isUser = msg.role==="user";
   if (isUser) return (
     <div style={{display:"flex",justifyContent:"flex-end",marginBottom:16,gap:9,alignItems:"flex-start"}}>
@@ -134,13 +134,18 @@ function Message({ msg }) {
       <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:"#fff8e6",border:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2}}><i className="ti ti-user" style={{fontSize:14,color:NAVY}}/></div>
     </div>
   );
-  const {text,chart} = msg.content==="..."?{text:"...",chart:null}:parseMessage(msg.content);
+  const isLoading = msg.content === "...";
+  const {text, chart} = isLoading ? {text:"...", chart:null} : parseMessage(msg.content);
   return (
     <div style={{display:"flex",justifyContent:"flex-start",marginBottom:16,gap:9,alignItems:"flex-start"}}>
       <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:NAVY,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2}}><i className="ti ti-sparkles" style={{fontSize:14,color:YELLOW}}/></div>
       <div style={{maxWidth:"82%",minWidth:0}}>
-        <div style={{background:"#f5f7f9",border:`1px solid rgba(0,0,0,0.08)`,borderRadius:"4px 16px 16px 16px",padding:"11px 15px",fontSize:14,lineHeight:1.75,color:"#1a1a1a",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>{msg.content==="..."?<TypingDots/>:text}</div>
-        {chart&&<ChartBlock chart={chart}/>}
+        <div style={{background:"#f5f7f9",border:`1px solid rgba(0,0,0,0.08)`,borderRadius:"4px 16px 16px 16px",padding:"11px 15px",fontSize:14,lineHeight:1.75,color:"#1a1a1a",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>
+          {isLoading ? <TypingDots/> : text}
+          {streaming && <span style={{display:"inline-block",width:2,height:14,background:NAVY,marginLeft:2,animation:"blink 1s infinite"}}/>}
+          <style>{`@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}`}</style>
+        </div>
+        {!streaming && chart && <ChartBlock chart={chart}/>}
       </div>
     </div>
   );
@@ -165,6 +170,7 @@ export default function App() {
   const [openCat, setOpenCat] = useState("prospection");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [streaming, setStreaming] = useState(false);
   const [histories, setHistories] = useState({ commercial: [], marketing: [] });
   const [activeId, setActiveId] = useState({ commercial: null, marketing: null });
   const bottomRef = useRef(null);
@@ -180,8 +186,17 @@ export default function App() {
   useEffect(() => { bottomRef.current?.scrollIntoView({behavior:"smooth"}); }, [histories, activeId, profile]);
 
   function newConversation() { setActiveId(prev=>({...prev,[profile]:null})); }
-
   function switchProfile(p) { setProfile(p); setOpenCat(PROFILES[p].categories[0].id); }
+
+  function updateLastMsg(convId, profileKey, content) {
+    setHistories(prev=>({
+      ...prev,
+      [profileKey]: prev[profileKey].map(h=>h.id===convId ? {
+        ...h,
+        messages: h.messages.slice(0,-1).concat([{role:"assistant",content}])
+      } : h)
+    }));
+  }
 
   async function sendMessage(text) {
     const userText = (text||input).trim();
@@ -190,22 +205,62 @@ export default function App() {
     const msgs = currentMessages();
     const newMsgs = [...msgs, {role:"user",content:userText}];
     let convId = activeId[profile];
+    const profileKey = profile;
     if (!convId) {
       convId = Date.now().toString();
       const title = userText.slice(0,40)+(userText.length>40?"...":"");
-      setHistories(prev=>({...prev,[profile]:[{id:convId,title,messages:[]}, ...prev[profile]]}));
-      setActiveId(prev=>({...prev,[profile]:convId}));
+      setHistories(prev=>({...prev,[profileKey]:[{id:convId,title,messages:[]}, ...prev[profileKey]]}));
+      setActiveId(prev=>({...prev,[profileKey]:convId}));
     }
-    setHistories(prev=>({...prev,[profile]:prev[profile].map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
+    setHistories(prev=>({...prev,[profileKey]:prev[profileKey].map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
     setLoading(true);
+    setStreaming(false);
+
     try {
-      const res = await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-opus-4-5",max_tokens:1500,system:SYSTEM_PROMPT,tools:[{type:"web_search_20250305",name:"web_search"}],messages:newMsgs.map(m=>({role:m.role,content:m.content}))})});
-      const data = await res.json();
-      if (data.error) throw new Error(typeof data.error==="object"?JSON.stringify(data.error):data.error);
-      const reply = data.content?.filter(b=>b.type==="text").map(b=>b.text).join("\n")||"Pas de réponse.";
-      setHistories(prev=>({...prev,[profile]:prev[profile].map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:reply}]}:h)}));
+      const res = await fetch("/api/chat",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          model:"claude-opus-4-5",
+          max_tokens:1500,
+          system:SYSTEM_PROMPT,
+          tools:[{type:"web_search_20250305",name:"web_search"}],
+          messages:newMsgs.map(m=>({role:m.role,content:m.content}))
+        })
+      });
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+      let started = false;
+
+      while (true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6);
+            if (data === "[DONE]") continue;
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.type === "content_block_delta" && parsed.delta?.type === "text_delta") {
+                if (!started) { started = true; setStreaming(true); updateLastMsg(convId, profileKey, ""); }
+                fullText += parsed.delta.text;
+                updateLastMsg(convId, profileKey, fullText);
+              }
+            } catch {}
+          }
+        }
+      }
+      setStreaming(false);
+      if (!started) {
+        updateLastMsg(convId, profileKey, "Pas de réponse.");
+      }
     } catch(err) {
-      setHistories(prev=>({...prev,[profile]:prev[profile].map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:`Erreur : ${err.message}`}]}:h)}));
+      setStreaming(false);
+      updateLastMsg(activeId[profileKey] || "", profileKey, `Erreur : ${err.message}`);
     } finally {
       setLoading(false);
       setTimeout(()=>inputRef.current?.focus(),100);
@@ -221,6 +276,7 @@ export default function App() {
   const currentCat = currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
   const messages = currentMessages();
   const profileHistory = histories[profile];
+  const isStreaming = streaming && messages.length > 0 && messages[messages.length-1]?.role === "assistant";
 
   return (
     <div style={{display:"flex",height:640,background:"#fff",borderRadius:16,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.10)",border:`1px solid rgba(0,0,0,0.08)`}}>
@@ -270,6 +326,7 @@ export default function App() {
             <div><p style={{margin:0,fontWeight:500,fontSize:14,color:"#1a1a1a"}}>{currentCat.label}</p><p style={{margin:0,fontSize:11,color:"#666"}}>{currentCat.desc}</p></div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:7}}>
+            {isStreaming && <span style={{fontSize:11,color:NAVY,background:"#fff8e6",padding:"3px 10px",borderRadius:20,border:`1px solid ${YELLOW}`}}>✍️ Rédaction...</span>}
             <span style={{fontSize:11,color:"#666",background:"#f5f7f9",padding:"3px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.08)`}}>{currentProfile.label}</span>
             {messages.length>0&&<span style={{fontSize:11,color:"#999",background:"#f5f7f9",padding:"3px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.08)`}}>{messages.filter(m=>m.role==="user").length} échange{messages.filter(m=>m.role==="user").length>1?"s":""}</span>}
           </div>
@@ -289,7 +346,7 @@ export default function App() {
                 ))}
               </div>
             </div>
-          ):messages.map((msg,i)=><Message key={i} msg={msg}/>)}
+          ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming && i===messages.length-1}/>)}
           <div ref={bottomRef}/>
         </div>
         <div style={{padding:"10px 16px 14px",borderTop:`1px solid rgba(0,0,0,0.08)`,background:"#fff"}}>
