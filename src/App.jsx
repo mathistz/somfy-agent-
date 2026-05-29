@@ -134,18 +134,18 @@ function Message({ msg, streaming }) {
       <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:"#fff8e6",border:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2}}><i className="ti ti-user" style={{fontSize:14,color:NAVY}}/></div>
     </div>
   );
-  const isLoading = msg.content === "...";
-  const {text, chart} = isLoading ? {text:"...", chart:null} : parseMessage(msg.content);
+  const isLoading = msg.content==="...";
+  const {text,chart} = isLoading?{text:"...",chart:null}:parseMessage(msg.content);
   return (
     <div style={{display:"flex",justifyContent:"flex-start",marginBottom:16,gap:9,alignItems:"flex-start"}}>
       <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:NAVY,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2}}><i className="ti ti-sparkles" style={{fontSize:14,color:YELLOW}}/></div>
       <div style={{maxWidth:"82%",minWidth:0}}>
         <div style={{background:"#f5f7f9",border:`1px solid rgba(0,0,0,0.08)`,borderRadius:"4px 16px 16px 16px",padding:"11px 15px",fontSize:14,lineHeight:1.75,color:"#1a1a1a",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>
-          {isLoading ? <TypingDots/> : text}
-          {streaming && <span style={{display:"inline-block",width:2,height:14,background:NAVY,marginLeft:2,animation:"blink 1s infinite"}}/>}
+          {isLoading?<TypingDots/>:text}
+          {streaming&&<span style={{display:"inline-block",width:2,height:14,background:NAVY,marginLeft:2,animation:"blink 1s infinite"}}/>}
           <style>{`@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}`}</style>
         </div>
-        {!streaming && chart && <ChartBlock chart={chart}/>}
+        {!streaming&&chart&&<ChartBlock chart={chart}/>}
       </div>
     </div>
   );
@@ -163,6 +163,54 @@ function HistoryItem({ item, active, onClick, onDelete }) {
       onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.3)"}><i className="ti ti-x"/></button>
     </div>
   );
+}
+
+function exportPDF(messages, profile, title) {
+  const date = new Date().toLocaleDateString("fr-FR", { day:"2-digit", month:"long", year:"numeric" });
+  const content = messages.map(m => {
+    const { text } = parseMessage(m.content);
+    if (m.role === "user") {
+      return `<div class="message user"><div class="label">Question</div><div class="bubble user-bubble">${text}</div></div>`;
+    }
+    return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
+  }).join("");
+
+  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/>
+  <title>Somfy Agent — ${title}</title>
+  <style>
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 40px; color: #1a1a1a; background: #fff; }
+    .header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 20px; border-bottom: 2px solid #25485A; margin-bottom: 30px; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 40px; height: 40px; background: #25485A; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .logo-sun { width: 24px; height: 24px; background: #FFB71E; border-radius: 50%; }
+    .logo-text h1 { margin: 0; font-size: 18px; color: #25485A; font-weight: 700; }
+    .logo-text p { margin: 0; font-size: 12px; color: #666; }
+    .meta { text-align: right; font-size: 12px; color: #666; }
+    .meta strong { color: #25485A; }
+    .conversation { max-width: 700px; margin: 0 auto; }
+    .message { margin-bottom: 20px; }
+    .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; color: #999; }
+    .bubble { padding: 14px 18px; border-radius: 12px; font-size: 14px; line-height: 1.7; }
+    .user-bubble { background: #25485A; color: #fff; border-radius: 16px 4px 16px 16px; }
+    .agent-bubble { background: #f5f7f9; color: #1a1a1a; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px 16px 16px 16px; }
+    .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 11px; color: #bbb; text-align: center; }
+    @media print { body { padding: 20px; } }
+  </style></head><body>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon"><div class="logo-sun"></div></div>
+      <div class="logo-text"><h1>Somfy Agent</h1><p>Protection solaire tertiaire</p></div>
+    </div>
+    <div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div>
+  </div>
+  <div class="conversation">${content}</div>
+  <div class="footer">Généré par Somfy Agent — ${date}</div>
+  <script>window.onload=()=>window.print();</script>
+  </body></html>`;
+
+  const win = window.open("","_blank");
+  win.document.write(html);
+  win.document.close();
 }
 
 export default function App() {
@@ -183,6 +231,13 @@ export default function App() {
     return conv ? conv.messages : [];
   };
 
+  const currentTitle = () => {
+    const id = activeId[profile];
+    if (!id) return "Conversation";
+    const conv = histories[profile].find(h=>h.id===id);
+    return conv ? conv.title : "Conversation";
+  };
+
   useEffect(() => { bottomRef.current?.scrollIntoView({behavior:"smooth"}); }, [histories, activeId, profile]);
 
   function newConversation() { setActiveId(prev=>({...prev,[profile]:null})); }
@@ -191,10 +246,7 @@ export default function App() {
   function updateLastMsg(convId, profileKey, content) {
     setHistories(prev=>({
       ...prev,
-      [profileKey]: prev[profileKey].map(h=>h.id===convId ? {
-        ...h,
-        messages: h.messages.slice(0,-1).concat([{role:"assistant",content}])
-      } : h)
+      [profileKey]: prev[profileKey].map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)
     }));
   }
 
@@ -215,52 +267,37 @@ export default function App() {
     setHistories(prev=>({...prev,[profileKey]:prev[profileKey].map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
     setLoading(true);
     setStreaming(false);
-
     try {
-      const res = await fetch("/api/chat",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          model:"claude-opus-4-5",
-          max_tokens:1500,
-          system:SYSTEM_PROMPT,
-          tools:[{type:"web_search_20250305",name:"web_search"}],
-          messages:newMsgs.map(m=>({role:m.role,content:m.content}))
-        })
-      });
-
+      const res = await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-opus-4-5",max_tokens:1500,system:SYSTEM_PROMPT,tools:[{type:"web_search_20250305",name:"web_search"}],messages:newMsgs.map(m=>({role:m.role,content:m.content}))})});
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let fullText = "";
       let started = false;
-
       while (true) {
-        const {done, value} = await reader.read();
+        const {done,value} = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value);
         const lines = chunk.split("\n");
         for (const line of lines) {
           if (line.startsWith("data: ")) {
             const data = line.slice(6);
-            if (data === "[DONE]") continue;
+            if (data==="[DONE]") continue;
             try {
               const parsed = JSON.parse(data);
-              if (parsed.type === "content_block_delta" && parsed.delta?.type === "text_delta") {
-                if (!started) { started = true; setStreaming(true); updateLastMsg(convId, profileKey, ""); }
+              if (parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta") {
+                if (!started) { started=true; setStreaming(true); updateLastMsg(convId,profileKey,""); }
                 fullText += parsed.delta.text;
-                updateLastMsg(convId, profileKey, fullText);
+                updateLastMsg(convId,profileKey,fullText);
               }
             } catch {}
           }
         }
       }
       setStreaming(false);
-      if (!started) {
-        updateLastMsg(convId, profileKey, "Pas de réponse.");
-      }
+      if (!started) updateLastMsg(convId,profileKey,"Pas de réponse.");
     } catch(err) {
       setStreaming(false);
-      updateLastMsg(activeId[profileKey] || "", profileKey, `Erreur : ${err.message}`);
+      updateLastMsg(activeId[profileKey]||"",profileKey,`Erreur : ${err.message}`);
     } finally {
       setLoading(false);
       setTimeout(()=>inputRef.current?.focus(),100);
@@ -276,7 +313,7 @@ export default function App() {
   const currentCat = currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
   const messages = currentMessages();
   const profileHistory = histories[profile];
-  const isStreaming = streaming && messages.length > 0 && messages[messages.length-1]?.role === "assistant";
+  const isStreaming = streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
 
   return (
     <div style={{display:"flex",height:640,background:"#fff",borderRadius:16,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.10)",border:`1px solid rgba(0,0,0,0.08)`}}>
@@ -326,7 +363,12 @@ export default function App() {
             <div><p style={{margin:0,fontWeight:500,fontSize:14,color:"#1a1a1a"}}>{currentCat.label}</p><p style={{margin:0,fontSize:11,color:"#666"}}>{currentCat.desc}</p></div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:7}}>
-            {isStreaming && <span style={{fontSize:11,color:NAVY,background:"#fff8e6",padding:"3px 10px",borderRadius:20,border:`1px solid ${YELLOW}`}}>✍️ Rédaction...</span>}
+            {isStreaming&&<span style={{fontSize:11,color:NAVY,background:"#fff8e6",padding:"3px 10px",borderRadius:20,border:`1px solid ${YELLOW}`}}>✍️ Rédaction...</span>}
+            {messages.length>0&&!isStreaming&&(
+              <button onClick={()=>exportPDF(messages, currentProfile.label, currentTitle())} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.12)`,background:"#f5f7f9",cursor:"pointer",fontSize:11,color:"#25485A",fontWeight:500}}>
+                <i className="ti ti-file-download" style={{fontSize:13}}/> Exporter PDF
+              </button>
+            )}
             <span style={{fontSize:11,color:"#666",background:"#f5f7f9",padding:"3px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.08)`}}>{currentProfile.label}</span>
             {messages.length>0&&<span style={{fontSize:11,color:"#999",background:"#f5f7f9",padding:"3px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.08)`}}>{messages.filter(m=>m.role==="user").length} échange{messages.filter(m=>m.role==="user").length>1?"s":""}</span>}
           </div>
@@ -346,7 +388,7 @@ export default function App() {
                 ))}
               </div>
             </div>
-          ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming && i===messages.length-1}/>)}
+          ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming&&i===messages.length-1}/>)}
           <div ref={bottomRef}/>
         </div>
         <div style={{padding:"10px 16px 14px",borderTop:`1px solid rgba(0,0,0,0.08)`,background:"#fff"}}>
