@@ -3,6 +3,7 @@ import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Cart
 
 const NAVY = "#25485A";
 const YELLOW = "#FFB71E";
+const LOGO_URL = "https://companieslogo.com/img/orig/SO.PA-fea83676.png";
 const CHART_COLORS = ["#25485A","#FFB71E","#1a6b4a","#e07b00","#5a8fa3","#f0c040","#2e7d5e","#c9600a"];
 
 const SYSTEM_PROMPT = `Tu es un assistant IA expert en protection solaire tertiaire, travaillant avec les équipes de Somfy France.
@@ -20,6 +21,7 @@ STYLE DE RÉPONSE :
 - Tu peux répondre à n'importe quelle question, pas seulement sur Somfy
 - Si un fichier est joint, analyse-le et réponds en te basant sur son contenu
 - Utilise la recherche web pour toute question d'actualité
+- Pour les appels d'offres, consulte systématiquement marches-publics.gouv.fr (plateforme PLACE) et boamp.fr
 
 GRAPHIQUES : quand tu as des données chiffrées comparatives, ajoute à la fin :
 CHART_START
@@ -33,10 +35,10 @@ const PROFILES = {
     categories: [
       { id:"prospection", label:"Prospection", icon:"ti-target", desc:"Appels d'offres et projets",
         prompts:[
-          { label:"AO rénovation écoles", text:"Quels sont les appels d'offres publics pour la rénovation d'écoles en France ce mois-ci ?" },
+          { label:"AO rénovation écoles", text:"Recherche les appels d'offres publics sur marches-publics.gouv.fr pour la rénovation d'écoles avec volets roulants ou protection solaire en France ce mois-ci." },
           { label:"Projets tertiaires en cours", text:"Quels sont les grands projets de rénovation tertiaire en France avec besoin potentiel en protection solaire ?" },
-          { label:"Hôpitaux en rénovation", text:"Y a-t-il des appels d'offres pour la rénovation d'hôpitaux en France actuellement ?" },
-          { label:"Collectivités actives", text:"Quelles collectivités françaises ont annoncé des plans de rénovation thermique de leur patrimoine ?" },
+          { label:"Hôpitaux en rénovation", text:"Recherche les appels d'offres sur marches-publics.gouv.fr pour la rénovation d'hôpitaux ou bâtiments de santé en France." },
+          { label:"Collectivités actives", text:"Quelles collectivités françaises ont annoncé des plans de rénovation thermique de leur patrimoine immobilier ?" },
         ]},
       { id:"pitch", label:"Arguments de vente", icon:"ti-speakerphone", desc:"Pitch par interlocuteur",
         prompts:[
@@ -91,6 +93,35 @@ const PROFILES = {
   }
 };
 
+function PlaceSearchWidget({ onSearch }) {
+  const [keywords, setKeywords] = useState("");
+  function handleSubmit() {
+    if (!keywords.trim()) return;
+    const url = `https://www.marches-publics.gouv.fr/?page=Entreprise.EntrepriseAdvancedSearch&searchAnnCons&keyWord=${encodeURIComponent(keywords)}&categorie=0&localisations=`;
+    window.open(url, "_blank");
+    onSearch(`Recherche les appels d'offres publics sur la plateforme PLACE (marches-publics.gouv.fr) pour les mots clés : "${keywords}". Trouve et résume les appels d'offres les plus pertinents pour Somfy, notamment ceux concernant la protection solaire, les volets roulants, les BSO, les stores ou la rénovation thermique de bâtiments.`);
+    setKeywords("");
+  }
+  return (
+    <div style={{ margin:"8px 0 4px", padding:"10px", background:"rgba(255,255,255,0.05)", borderRadius:8, border:"1px solid rgba(255,255,255,0.1)" }}>
+      <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:7 }}>
+        <span style={{ fontSize:14 }}>🇫🇷</span>
+        <span style={{ fontSize:11, fontWeight:600, color:YELLOW, letterSpacing:"0.04em" }}>Recherche PLACE</span>
+      </div>
+      <p style={{ margin:"0 0 7px", fontSize:10, color:"rgba(255,255,255,0.45)", lineHeight:1.4 }}>
+        Tape des mots clés pour chercher sur marches-publics.gouv.fr
+      </p>
+      <div style={{ display:"flex", gap:5 }}>
+        <input value={keywords} onChange={e=>setKeywords(e.target.value)} onKeyDown={e=>{ if(e.key==="Enter") handleSubmit(); }} placeholder="ex: volets roulants école"
+          style={{ flex:1, padding:"6px 9px", borderRadius:6, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.1)", color:"#fff", fontSize:11, outline:"none", fontFamily:"inherit" }}/>
+        <button onClick={handleSubmit} disabled={!keywords.trim()} style={{ padding:"6px 10px", borderRadius:6, border:"none", cursor:keywords.trim()?"pointer":"default", background:keywords.trim()?YELLOW:"rgba(255,255,255,0.1)", color:keywords.trim()?NAVY:"rgba(255,255,255,0.3)", fontSize:11, fontWeight:600, flexShrink:0 }}>
+          Chercher
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function parseMessage(content) {
   const match = content.match(/CHART_START\s*([\s\S]*?)\s*CHART_END/);
   if (!match) return { text: content, chart: null };
@@ -142,7 +173,9 @@ function Message({ msg, streaming }) {
   const {text,chart} = isLoading?{text:"...",chart:null}:parseMessage(msg.content);
   return (
     <div style={{display:"flex",justifyContent:"flex-start",marginBottom:16,gap:9,alignItems:"flex-start"}}>
-      <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:NAVY,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2}}><i className="ti ti-sparkles" style={{fontSize:14,color:YELLOW}}/></div>
+      <div style={{width:30,height:30,borderRadius:"50%",flexShrink:0,background:"#fff",border:`1px solid rgba(0,0,0,0.1)`,display:"flex",alignItems:"center",justifyContent:"center",marginTop:2,overflow:"hidden",padding:3}}>
+        <img src={LOGO_URL} alt="Somfy" style={{width:"100%",height:"auto"}}/>
+      </div>
       <div style={{maxWidth:"82%",minWidth:0}}>
         <div style={{background:"#f5f7f9",border:`1px solid rgba(0,0,0,0.08)`,borderRadius:"4px 16px 16px 16px",padding:"11px 15px",fontSize:14,lineHeight:1.75,color:"#1a1a1a",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>
           {isLoading?<TypingDots/>:text}
@@ -179,8 +212,8 @@ function exportPDF(messages, profile, title) {
     }
     return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
   }).join("");
-  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:40px;color:#1a1a1a;background:#fff}.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:2px solid #25485A;margin-bottom:30px}.logo{display:flex;align-items:center;gap:12px}.logo-box{width:40px;height:40px;background:#25485A;border-radius:10px;display:flex;align-items:center;justify-content:center}.logo-sun{width:22px;height:22px;background:#FFB71E;border-radius:50%}.logo-text h1{margin:0;font-size:18px;color:#25485A;font-weight:700}.logo-text p{margin:0;font-size:12px;color:#666}.meta{text-align:right;font-size:12px;color:#666}.meta strong{color:#25485A}.message{margin-bottom:20px}.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;color:#999}.bubble{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f5f7f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:12px;color:#25485A;margin-bottom:6px}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#bbb;text-align:center}</style></head><body>
-  <div class="header"><div class="logo"><div class="logo-box"><div class="logo-sun"></div></div><div class="logo-text"><h1>Somfy Agent</h1><p>Protection solaire tertiaire</p></div></div><div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
+  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:40px;color:#1a1a1a;background:#fff}.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:2px solid #25485A;margin-bottom:30px}.logo{display:flex;align-items:center;gap:12px}.logo-img{height:32px;width:auto}.logo-text p{margin:0;font-size:12px;color:#666}.meta{text-align:right;font-size:12px;color:#666}.meta strong{color:#25485A}.message{margin-bottom:20px}.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;color:#999}.bubble{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f5f7f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:12px;color:#25485A;margin-bottom:6px}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#bbb;text-align:center}</style></head><body>
+  <div class="header"><div class="logo"><img class="logo-img" src="${LOGO_URL}" alt="Somfy"/><div class="logo-text"><p>Protection solaire tertiaire</p></div></div><div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
   ${content}<div class="footer">Généré par Somfy Agent — ${date}</div>
   <script>window.onload=()=>window.print();</script></body></html>`;
   const win = window.open("","_blank");
@@ -191,85 +224,26 @@ function exportPDF(messages, profile, title) {
 async function readFileAsBase64(file) {
   return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result.split(",")[1]); r.onerror=()=>reject(new Error("Lecture impossible")); r.readAsDataURL(file); });
 }
-
 async function readFileAsText(file) {
   return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=()=>reject(new Error("Lecture impossible")); r.readAsText(file); });
 }
-
 async function readDocxAsText(file) {
-  return new Promise((resolve,reject)=>{
-    const r=new FileReader();
-    r.onload=async(e)=>{
-      try{
-        const result=await window.mammoth.extractRawText({arrayBuffer:e.target.result});
-        resolve(result.value);
-      }catch(err){ reject(err); }
-    };
-    r.onerror=()=>reject(new Error("Lecture impossible"));
-    r.readAsArrayBuffer(file);
-  });
+  return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=async(e)=>{ try{ const result=await window.mammoth.extractRawText({arrayBuffer:e.target.result}); resolve(result.value); }catch(err){ reject(err); } }; r.onerror=()=>reject(new Error("Lecture impossible")); r.readAsArrayBuffer(file); });
 }
-
 async function readXlsxAsText(file) {
-  return new Promise((resolve,reject)=>{
-    const r=new FileReader();
-    r.onload=(e)=>{
-      try{
-        const wb=window.XLSX.read(e.target.result,{type:"array"});
-        let text="";
-        wb.SheetNames.forEach(name=>{
-          text+=`\n[Feuille : ${name}]\n`;
-          text+=window.XLSX.utils.sheet_to_csv(wb.Sheets[name]);
-        });
-        resolve(text);
-      }catch(err){ reject(err); }
-    };
-    r.onerror=()=>reject(new Error("Lecture impossible"));
-    r.readAsArrayBuffer(file);
-  });
+  return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=(e)=>{ try{ const wb=window.XLSX.read(e.target.result,{type:"array"}); let text=""; wb.SheetNames.forEach(name=>{ text+=`\n[Feuille : ${name}]\n`; text+=window.XLSX.utils.sheet_to_csv(wb.Sheets[name]); }); resolve(text); }catch(err){ reject(err); } }; r.onerror=()=>reject(new Error("Lecture impossible")); r.readAsArrayBuffer(file); });
 }
-
 async function buildMessageContent(userText,file){
   if(!file) return userText;
   const ext=file.name.split(".").pop().toLowerCase();
-  if(["jpg","jpeg","png","gif","webp"].includes(ext)){
-    const b64=await readFileAsBase64(file);
-    const mt=ext==="jpg"||ext==="jpeg"?"image/jpeg":ext==="png"?"image/png":ext==="gif"?"image/gif":"image/webp";
-    return [{type:"image",source:{type:"base64",media_type:mt,data:b64}},{type:"text",text:userText||"Analyse cette image."}];
-  }
-  if(ext==="pdf"){
-    const b64=await readFileAsBase64(file);
-    return [{type:"document",source:{type:"base64",media_type:"application/pdf",data:b64}},{type:"text",text:userText||"Analyse ce document PDF."}];
-  }
-  if(ext==="docx"||ext==="doc"){
-    const text=await readDocxAsText(file);
-    return `[Fichier Word : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce document."}`;
-  }
-  if(ext==="xlsx"||ext==="xls"){
-    const text=await readXlsxAsText(file);
-    return `[Fichier Excel : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce fichier Excel."}`;
-  }
-  const text=await readFileAsText(file);
-  return `[Fichier : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce fichier."}`;
+  if(["jpg","jpeg","png","gif","webp"].includes(ext)){ const b64=await readFileAsBase64(file); const mt=ext==="jpg"||ext==="jpeg"?"image/jpeg":ext==="png"?"image/png":ext==="gif"?"image/gif":"image/webp"; return [{type:"image",source:{type:"base64",media_type:mt,data:b64}},{type:"text",text:userText||"Analyse cette image."}]; }
+  if(ext==="pdf"){ const b64=await readFileAsBase64(file); return [{type:"document",source:{type:"base64",media_type:"application/pdf",data:b64}},{type:"text",text:userText||"Analyse ce document PDF."}]; }
+  if(ext==="docx"||ext==="doc"){ const text=await readDocxAsText(file); return `[Fichier Word : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce document."}`; }
+  if(ext==="xlsx"||ext==="xls"){ const text=await readXlsxAsText(file); return `[Fichier Excel : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce fichier Excel."}`; }
+  const text=await readFileAsText(file); return `[Fichier : ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse ce fichier."}`;
 }
-
-function getFileIcon(name) {
-  const ext=name.split(".").pop().toLowerCase();
-  if(ext==="pdf") return "ti-file-type-pdf";
-  if(["jpg","jpeg","png","gif","webp"].includes(ext)) return "ti-photo";
-  if(["doc","docx"].includes(ext)) return "ti-file-type-doc";
-  if(["xls","xlsx","csv"].includes(ext)) return "ti-file-type-xls";
-  return "ti-file";
-}
-
-function getFileColor(name) {
-  const ext=name.split(".").pop().toLowerCase();
-  if(ext==="pdf") return "#e74c3c";
-  if(["jpg","jpeg","png","gif","webp"].includes(ext)) return "#9b59b6";
-  if(["doc","docx"].includes(ext)) return "#2980b9";
-  if(["xls","xlsx","csv"].includes(ext)) return "#27ae60";
-  return "#666";
-}
+function getFileIcon(name){ const ext=name.split(".").pop().toLowerCase(); if(ext==="pdf") return "ti-file-type-pdf"; if(["jpg","jpeg","png","gif","webp"].includes(ext)) return "ti-photo"; if(["doc","docx"].includes(ext)) return "ti-file-type-doc"; if(["xls","xlsx","csv"].includes(ext)) return "ti-file-type-xls"; return "ti-file"; }
+function getFileColor(name){ const ext=name.split(".").pop().toLowerCase(); if(ext==="pdf") return "#e74c3c"; if(["jpg","jpeg","png","gif","webp"].includes(ext)) return "#9b59b6"; if(["doc","docx"].includes(ext)) return "#2980b9"; if(["xls","xlsx","csv"].includes(ext)) return "#27ae60"; return "#666"; }
 
 export default function App() {
   const [profile,setProfile]=useState("commercial");
@@ -303,8 +277,7 @@ export default function App() {
     const ext=file.name.split(".").pop().toLowerCase();
     const allowed=["pdf","jpg","jpeg","png","gif","webp","doc","docx","xls","xlsx","csv","txt"];
     if(!allowed.includes(ext)){ alert("Format non supporté. Acceptés : PDF, images, Word, Excel, CSV, TXT"); return; }
-    setPendingFile(file);
-    inputRef.current?.focus();
+    setPendingFile(file); inputRef.current?.focus();
   }
 
   async function sendMessage(text){
@@ -330,13 +303,11 @@ export default function App() {
       const msgContent=await buildMessageContent(userText,file);
       const apiMessages=[...msgs.map(m=>({role:m.role,content:m.content})),{role:"user",content:msgContent}];
       const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-opus-4-5",max_tokens:1500,system:SYSTEM_PROMPT,tools:[{type:"web_search_20250305",name:"web_search"}],messages:apiMessages})});
-      const reader=res.body.getReader();
-      const decoder=new TextDecoder();
+      const reader=res.body.getReader(); const decoder=new TextDecoder();
       let fullText=""; let started=false;
       while(true){
         const {done,value}=await reader.read(); if(done) break;
-        const chunk=decoder.decode(value);
-        const lines=chunk.split("\n");
+        const chunk=decoder.decode(value); const lines=chunk.split("\n");
         for(const line of lines){
           if(line.startsWith("data: ")){
             const data=line.slice(6); if(data==="[DONE]") continue;
@@ -351,7 +322,7 @@ export default function App() {
         }
       }
       setStreaming(false);
-      if(!started) updateLastMsg(convId,profileKey,"Je n'ai pas pu analyser ce fichier. Essaie avec un autre format.");
+      if(!started) updateLastMsg(convId,profileKey,"Je n'ai pas pu obtenir de réponse. Réessaie.");
     }catch(err){ setStreaming(false); updateLastMsg(convId,profileKey,`Erreur : ${err.message}`); }
     finally{ setLoading(false); setTimeout(()=>inputRef.current?.focus(),100); }
   }
@@ -367,13 +338,9 @@ export default function App() {
   return (
     <div style={{display:"flex",height:640,background:"#fff",borderRadius:16,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.10)",border:`1px solid rgba(0,0,0,0.08)`}}>
       <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
-
       <div style={{width:220,background:NAVY,display:"flex",flexDirection:"column",flexShrink:0,overflow:"hidden"}}>
         <div style={{padding:"16px 14px 13px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
-          <div style={{display:"flex",alignItems:"center",gap:9}}>
-            <div style={{width:30,height:30,borderRadius:7,background:YELLOW,display:"flex",alignItems:"center",justifyContent:"center"}}><i className="ti ti-sun" style={{fontSize:16,color:NAVY}}/></div>
-            <div><p style={{margin:0,fontWeight:600,fontSize:14,color:"#fff"}}>Somfy Agent</p><p style={{margin:0,fontSize:10,color:"rgba(255,255,255,0.4)"}}>Protection solaire tertiaire</p></div>
-          </div>
+          <img src={LOGO_URL} alt="Somfy" style={{height:28,width:"auto",filter:"brightness(0) invert(1)"}}/>
         </div>
         <div style={{padding:"11px 11px 7px"}}>
           <p style={{margin:"0 0 7px 3px",fontSize:10,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em"}}>Profil</p>
@@ -392,7 +359,12 @@ export default function App() {
               <button onClick={()=>setOpenCat(openCat===cat.id?null:cat.id)} style={{width:"100%",padding:"7px 10px",borderRadius:7,cursor:"pointer",marginBottom:2,background:openCat===cat.id?"rgba(255,183,30,0.18)":"transparent",border:`1px solid ${openCat===cat.id?"rgba(255,183,30,0.4)":"transparent"}`,color:openCat===cat.id?YELLOW:"rgba(255,255,255,0.7)",fontSize:12,display:"flex",alignItems:"center",gap:8,textAlign:"left"}}>
                 <i className={`ti ${cat.icon}`} style={{fontSize:14,flexShrink:0}}/><span style={{flex:1}}>{cat.label}</span><i className={`ti ti-chevron-${openCat===cat.id?"down":"right"}`} style={{fontSize:11,opacity:0.5}}/>
               </button>
-              {openCat===cat.id&&<div style={{marginLeft:10,marginBottom:4,borderLeft:`1.5px solid rgba(255,183,30,0.25)`,paddingLeft:9}}>{cat.prompts.map((p,i)=><button key={i} onClick={()=>sendMessage(p.text)} style={{width:"100%",padding:"4px 6px",borderRadius:5,cursor:"pointer",textAlign:"left",background:"transparent",border:"none",color:"rgba(255,255,255,0.5)",fontSize:11,lineHeight:1.4,display:"block",marginBottom:1}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.5)"}>{p.label}</button>)}</div>}
+              {openCat===cat.id&&(
+                <div style={{marginLeft:10,marginBottom:4,borderLeft:`1.5px solid rgba(255,183,30,0.25)`,paddingLeft:9}}>
+                  {cat.prompts.map((p,i)=><button key={i} onClick={()=>sendMessage(p.text)} style={{width:"100%",padding:"4px 6px",borderRadius:5,cursor:"pointer",textAlign:"left",background:"transparent",border:"none",color:"rgba(255,255,255,0.5)",fontSize:11,lineHeight:1.4,display:"block",marginBottom:1}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.5)"}>{p.label}</button>)}
+                  {cat.id==="prospection"&&profile==="commercial"&&<PlaceSearchWidget onSearch={sendMessage}/>}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -407,7 +379,6 @@ export default function App() {
           <div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:7,height:7,borderRadius:"50%",background:"#3dba6e"}}/><span style={{fontSize:11,color:"rgba(255,255,255,0.3)"}}>Recherche web active</span></div>
         </div>
       </div>
-
       <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
         <div style={{padding:"12px 18px",borderBottom:`1px solid rgba(0,0,0,0.08)`,display:"flex",alignItems:"center",justifyContent:"space-between",background:"#fff"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -421,9 +392,8 @@ export default function App() {
             {messages.length>0&&<span style={{fontSize:11,color:"#999",background:"#f5f7f9",padding:"3px 10px",borderRadius:20,border:`1px solid rgba(0,0,0,0.08)`}}>{messages.filter(m=>m.role==="user").length} échange{messages.filter(m=>m.role==="user").length>1?"s":""}</span>}
           </div>
         </div>
-
         <div style={{flex:1,overflowY:"auto",padding:"18px 20px 10px",background:dragOver?"#f0f8ff":"#fff",transition:"background 0.2s",position:"relative"}}>
-          {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.06)",border:`2px dashed ${NAVY}`,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><i className="ti ti-upload" style={{fontSize:32,color:NAVY,display:"block",marginBottom:8}}/><p style={{margin:0,fontWeight:500,color:NAVY}}>Déposez votre fichier ici</p><p style={{margin:"4px 0 0",fontSize:12,color:"#666"}}>PDF, image, Word, Excel, CSV</p></div></div>}
+          {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.06)",border:`2px dashed ${NAVY}`,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><i className="ti ti-cloud-upload" style={{fontSize:32,color:NAVY,display:"block",marginBottom:8}}/><p style={{margin:0,fontWeight:500,color:NAVY}}>Déposez votre fichier ici</p><p style={{margin:"4px 0 0",fontSize:12,color:"#666"}}>PDF, image, Word, Excel, CSV</p></div></div>}
           {messages.length===0?(
             <div style={{paddingTop:6}}>
               <p style={{margin:"0 0 5px",fontSize:15,fontWeight:500,color:"#1a1a1a"}}>Bonjour, que puis-je faire pour vous ?</p>
@@ -439,7 +409,6 @@ export default function App() {
           ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming&&i===messages.length-1}/>)}
           <div ref={bottomRef}/>
         </div>
-
         {pendingFile&&(
           <div style={{padding:"8px 16px",background:"#f0f8f4",borderTop:`1px solid rgba(0,0,0,0.06)`,display:"flex",alignItems:"center",gap:10}}>
             <i className={`ti ${getFileIcon(pendingFile.name)}`} style={{fontSize:18,color:getFileColor(pendingFile.name),flexShrink:0}}/>
@@ -450,18 +419,17 @@ export default function App() {
             <button onClick={()=>setPendingFile(null)} style={{background:"none",border:"none",cursor:"pointer",color:"#999",fontSize:16}}><i className="ti ti-x"/></button>
           </div>
         )}
-
         <div style={{padding:"10px 16px 14px",borderTop:`1px solid rgba(0,0,0,0.08)`,background:"#fff"}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f7f9",borderRadius:12,border:`1px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.12)"}`,padding:"8px 8px 8px 14px",transition:"border-color 0.15s"}}>
             <button onClick={()=>fileRef.current?.click()} style={{width:30,height:30,borderRadius:7,border:`1px solid rgba(0,0,0,0.12)`,background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:"#666"}} onMouseEnter={e=>{e.currentTarget.style.borderColor=NAVY;e.currentTarget.style.color=NAVY;}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(0,0,0,0.12)";e.currentTarget.style.color="#666";}}>
-              <i className="ti ti-paperclip" style={{fontSize:15}}/>
+              <i className="ti ti-cloud-upload" style={{fontSize:15}}/>
             </button>
             <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message ou envoyez directement...":"Posez votre question ou déposez un fichier..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto"}}/>
             <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:9,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#e8e8e8",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s",flexShrink:0}}>
               <i className="ti ti-arrow-up" style={{fontSize:16,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa"}}/>
             </button>
           </div>
-          <p style={{margin:"6px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · 📎 pour joindre un fichier · ou glissez-déposez</p>
+          <p style={{margin:"6px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier · ou glissez-déposez</p>
         </div>
       </div>
     </div>
