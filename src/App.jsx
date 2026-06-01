@@ -21,7 +21,7 @@ STYLE DE RÉPONSE :
 - Tu peux répondre à n'importe quelle question, pas seulement sur Somfy
 - Si un fichier est joint, analyse-le et réponds en te basant sur son contenu
 - Utilise la recherche web pour toute question d'actualité
-- Pour les appels d'offres, consulte systématiquement marches-publics.gouv.fr (plateforme PLACE) et boamp.fr
+- Pour les appels d'offres, consulte systématiquement le BOAMP et marches-publics.gouv.fr
 
 GRAPHIQUES : quand tu as des données chiffrées comparatives, ajoute à la fin :
 CHART_START
@@ -35,9 +35,9 @@ const PROFILES = {
     categories: [
       { id:"prospection", label:"Prospection", icon:"ti-target", desc:"Appels d'offres et projets",
         prompts:[
-          { label:"AO rénovation écoles", text:"Recherche les appels d'offres publics sur marches-publics.gouv.fr pour la rénovation d'écoles avec volets roulants ou protection solaire en France ce mois-ci." },
+          { label:"AO rénovation écoles", text:"Recherche les appels d'offres publics sur le BOAMP pour la rénovation d'écoles avec volets roulants ou protection solaire en France ce mois-ci." },
           { label:"Projets tertiaires en cours", text:"Quels sont les grands projets de rénovation tertiaire en France avec besoin potentiel en protection solaire ?" },
-          { label:"Hôpitaux en rénovation", text:"Recherche les appels d'offres sur marches-publics.gouv.fr pour la rénovation d'hôpitaux ou bâtiments de santé en France." },
+          { label:"Hôpitaux en rénovation", text:"Recherche les appels d'offres sur le BOAMP pour la rénovation d'hôpitaux ou bâtiments de santé en France." },
           { label:"Collectivités actives", text:"Quelles collectivités françaises ont annoncé des plans de rénovation thermique de leur patrimoine immobilier ?" },
         ]},
       { id:"pitch", label:"Arguments de vente", icon:"ti-speakerphone", desc:"Pitch par interlocuteur",
@@ -95,27 +95,54 @@ const PROFILES = {
 
 function PlaceSearchWidget({ onSearch }) {
   const [keywords, setKeywords] = useState("");
-  function handleSubmit() {
+  const [loadingAO, setLoadingAO] = useState(false);
+
+  async function handleSubmit() {
     if (!keywords.trim()) return;
-    const url = `https://www.marches-publics.gouv.fr/?page=Entreprise.EntrepriseAdvancedSearch&searchAnnCons&keyWord=${encodeURIComponent(keywords)}&categorie=0&localisations=`;
-    window.open(url, "_blank");
-    onSearch(`Recherche les appels d'offres publics sur la plateforme PLACE (marches-publics.gouv.fr) pour les mots clés : "${keywords}". Trouve et résume les appels d'offres les plus pertinents pour Somfy, notamment ceux concernant la protection solaire, les volets roulants, les BSO, les stores ou la rénovation thermique de bâtiments.`);
-    setKeywords("");
+    setLoadingAO(true);
+    try {
+      const res = await fetch("/api/boamp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keywords: keywords.trim() })
+      });
+      const data = await res.json();
+      const results = data.results || [];
+      if (results.length === 0) {
+        onSearch(`J'ai recherché "${keywords}" sur le BOAMP mais aucun appel d'offres n'a été trouvé. Suggère d'autres mots clés pertinents pour Somfy.`);
+      } else {
+        const summary = results.slice(0, 8).map((r, i) => {
+          const title = r.titre || r.intitule || "Sans titre";
+          const org = r.donnees?.identite?.denomination || r.organisme || "";
+          const date = r.dateparution || r.date || "";
+          const dept = r.donnees?.lieu?.departement || "";
+          return `${i+1}. ${title}${org ? ` — ${org}` : ""}${dept ? ` (${dept})` : ""}${date ? ` — publié le ${date}` : ""}`;
+        }).join("\n");
+        onSearch(`Voici ${results.length} appels d'offres trouvés sur le BOAMP pour "${keywords}" :\n\n${summary}\n\nAnalyse ces résultats : lesquels sont les plus pertinents pour Somfy ? Y a-t-il des opportunités concrètes à saisir ?`);
+      }
+    } catch (err) {
+      onSearch(`Recherche BOAMP pour "${keywords}" — analyse les opportunités d'appels d'offres publics français pour Somfy sur ce sujet.`);
+    } finally {
+      setLoadingAO(false);
+      setKeywords("");
+    }
   }
+
   return (
     <div style={{ margin:"8px 0 4px", padding:"10px", background:"rgba(255,255,255,0.05)", borderRadius:8, border:"1px solid rgba(255,255,255,0.1)" }}>
-      <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:7 }}>
-        <span style={{ fontSize:14 }}>🇫🇷</span>
-        <span style={{ fontSize:11, fontWeight:600, color:YELLOW, letterSpacing:"0.04em" }}>Recherche PLACE</span>
+      <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:5 }}>
+        <span style={{ fontSize:13 }}>🇫🇷</span>
+        <span style={{ fontSize:11, fontWeight:600, color:YELLOW }}>Recherche BOAMP</span>
+        {loadingAO && <span style={{ fontSize:10, color:"rgba(255,255,255,0.4)", fontStyle:"italic" }}>Recherche...</span>}
       </div>
-      <p style={{ margin:"0 0 7px", fontSize:10, color:"rgba(255,255,255,0.45)", lineHeight:1.4 }}>
-        Tape des mots clés pour chercher sur marches-publics.gouv.fr
+      <p style={{ margin:"0 0 7px", fontSize:10, color:"rgba(255,255,255,0.4)", lineHeight:1.4 }}>
+        Résultats directs dans le chat — base officielle des AO
       </p>
       <div style={{ display:"flex", gap:5 }}>
-        <input value={keywords} onChange={e=>setKeywords(e.target.value)} onKeyDown={e=>{ if(e.key==="Enter") handleSubmit(); }} placeholder="ex: volets roulants école"
+        <input value={keywords} onChange={e=>setKeywords(e.target.value)} onKeyDown={e=>{ if(e.key==="Enter") handleSubmit(); }} placeholder="ex: volets roulants école" disabled={loadingAO}
           style={{ flex:1, padding:"6px 9px", borderRadius:6, border:"1px solid rgba(255,255,255,0.2)", background:"rgba(255,255,255,0.1)", color:"#fff", fontSize:11, outline:"none", fontFamily:"inherit" }}/>
-        <button onClick={handleSubmit} disabled={!keywords.trim()} style={{ padding:"6px 10px", borderRadius:6, border:"none", cursor:keywords.trim()?"pointer":"default", background:keywords.trim()?YELLOW:"rgba(255,255,255,0.1)", color:keywords.trim()?NAVY:"rgba(255,255,255,0.3)", fontSize:11, fontWeight:600, flexShrink:0 }}>
-          Chercher
+        <button onClick={handleSubmit} disabled={!keywords.trim()||loadingAO} style={{ padding:"6px 10px", borderRadius:6, border:"none", cursor:keywords.trim()&&!loadingAO?"pointer":"default", background:keywords.trim()&&!loadingAO?YELLOW:"rgba(255,255,255,0.1)", color:keywords.trim()&&!loadingAO?NAVY:"rgba(255,255,255,0.3)", fontSize:11, fontWeight:600, flexShrink:0 }}>
+          {loadingAO ? "..." : "Go"}
         </button>
       </div>
     </div>
@@ -212,8 +239,8 @@ function exportPDF(messages, profile, title) {
     }
     return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
   }).join("");
-  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:40px;color:#1a1a1a;background:#fff}.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:2px solid #25485A;margin-bottom:30px}.logo{display:flex;align-items:center;gap:12px}.logo-img{height:32px;width:auto}.logo-text p{margin:0;font-size:12px;color:#666}.meta{text-align:right;font-size:12px;color:#666}.meta strong{color:#25485A}.message{margin-bottom:20px}.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;color:#999}.bubble{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f5f7f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:12px;color:#25485A;margin-bottom:6px}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#bbb;text-align:center}</style></head><body>
-  <div class="header"><div class="logo"><img class="logo-img" src="${LOGO_URL}" alt="Somfy"/><div class="logo-text"><p>Protection solaire tertiaire</p></div></div><div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
+  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:40px;color:#1a1a1a;background:#fff}.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:2px solid #25485A;margin-bottom:30px}.logo-img{height:32px;width:auto}.meta{text-align:right;font-size:12px;color:#666}.meta strong{color:#25485A}.message{margin-bottom:20px}.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;color:#999}.bubble{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f5f7f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:12px;color:#25485A;margin-bottom:6px}.footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#bbb;text-align:center}</style></head><body>
+  <div class="header"><img class="logo-img" src="${LOGO_URL}" alt="Somfy"/><div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
   ${content}<div class="footer">Généré par Somfy Agent — ${date}</div>
   <script>window.onload=()=>window.print();</script></body></html>`;
   const win = window.open("","_blank");
