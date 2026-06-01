@@ -4,7 +4,6 @@ import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Cart
 const NAVY = "#25485A";
 const YELLOW = "#FFB71E";
 const CHART_COLORS = ["#25485A","#FFB71E","#1a6b4a","#e07b00","#5a8fa3","#f0c040","#2e7d5e","#c9600a"];
-const LOGO_URL = "https://companieslogo.com/img/orig/SO.PA-fea83676.png";
 
 const SYSTEM_PROMPT = `Tu es un assistant IA expert en protection solaire tertiaire, travaillant avec les équipes de Somfy France.
 
@@ -154,42 +153,40 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 function ChartBlock({ chart }) {
   if (!chart) return null;
-  const h=220;
-  const card={marginTop:12,background:"#fff",borderRadius:10,border:"1px solid rgba(0,0,0,0.08)",padding:"14px 10px 8px",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"};
-  const title={margin:"0 0 10px",fontWeight:600,fontSize:13,color:NAVY,textAlign:"center"};
+  const h=200;
+  const card={marginTop:10,background:"#fff",borderRadius:10,border:"1px solid rgba(0,0,0,0.08)",padding:"12px 8px 6px",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"};
+  const title={margin:"0 0 8px",fontWeight:600,fontSize:12,color:NAVY,textAlign:"center"};
   if (chart.type==="pie") {
     const data=chart.labels.map((l,i)=>({name:l,value:chart.datasets[0].data[i]}));
-    return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><PieChart><Pie data={data} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({name,percent})=>`${name} ${(percent*100).toFixed(0)}%`} labelLine={false} fontSize={11}>{data.map((_,i)=><Cell key={i} fill={CHART_COLORS[i%CHART_COLORS.length]}/>)}</Pie><Tooltip content={<CustomTooltip/>}/></PieChart></ResponsiveContainer></div>;
+    return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><PieChart><Pie data={data} cx="50%" cy="50%" outerRadius={70} dataKey="value" label={({name,percent})=>`${name} ${(percent*100).toFixed(0)}%`} labelLine={false} fontSize={10}>{data.map((_,i)=><Cell key={i} fill={CHART_COLORS[i%CHART_COLORS.length]}/>)}</Pie><Tooltip content={<CustomTooltip/>}/></PieChart></ResponsiveContainer></div>;
   }
   const data=chart.labels.map((l,i)=>{const pt={label:l};chart.datasets.forEach(ds=>{pt[ds.label]=ds.data[i];});return pt;});
-  if (chart.type==="line") return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><LineChart data={data} margin={{top:4,right:16,left:-20,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:11,fill:"#666"}}/><YAxis tick={{fontSize:11,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:12}}/>}{chart.datasets.map((ds,i)=><Line key={i} type="monotone" dataKey={ds.label} stroke={ds.color||CHART_COLORS[i]} strokeWidth={2.5} dot={{r:3}}/>)}</LineChart></ResponsiveContainer></div>;
-  return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><BarChart data={data} margin={{top:4,right:16,left:-20,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:11,fill:"#666"}}/><YAxis tick={{fontSize:11,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:12}}/>}{chart.datasets.map((ds,i)=><Bar key={i} dataKey={ds.label} fill={ds.color||CHART_COLORS[i]} radius={[4,4,0,0]}/>)}</BarChart></ResponsiveContainer></div>;
+  if (chart.type==="line") return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><LineChart data={data} margin={{top:4,right:8,left:-24,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:10,fill:"#666"}}/><YAxis tick={{fontSize:10,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:11}}/>}{chart.datasets.map((ds,i)=><Line key={i} type="monotone" dataKey={ds.label} stroke={ds.color||CHART_COLORS[i]} strokeWidth={2} dot={{r:2}}/>)}</LineChart></ResponsiveContainer></div>;
+  return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><BarChart data={data} margin={{top:4,right:8,left:-24,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:10,fill:"#666"}}/><YAxis tick={{fontSize:10,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:11}}/>}{chart.datasets.map((ds,i)=><Bar key={i} dataKey={ds.label} fill={ds.color||CHART_COLORS[i]} radius={[3,3,0,0]}/>)}</BarChart></ResponsiveContainer></div>;
 }
 
 function TypingDots() {
   return <div style={{display:"flex",gap:5,alignItems:"center",padding:"4px 0"}}>{[0,1,2].map(i=><div key={i} style={{width:7,height:7,borderRadius:"50%",background:YELLOW,animation:"sb 1.2s ease-in-out infinite",animationDelay:`${i*0.2}s`}}/>)}<style>{`@keyframes sb{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}`}</style></div>;
 }
 
-function Message({ msg, streaming }) {
+function Message({ msg, streaming, isMobile }) {
   const isUser = msg.role==="user";
   if (isUser) return (
-    <div style={{display:"flex",justifyContent:"flex-end",marginBottom:16,gap:10,alignItems:"flex-start"}}>
-      <div style={{maxWidth:"74%"}}>
-        {msg.fileName&&<div style={{background:"#e8f0f4",borderRadius:"8px 8px 0 0",padding:"7px 13px",fontSize:12,color:NAVY,display:"flex",alignItems:"center",gap:6,borderBottom:"1px solid rgba(37,72,90,0.12)"}}><span>📎</span>{msg.fileName}</div>}
-        <div style={{background:NAVY,borderRadius:msg.fileName?"0 0 14px 14px":"14px 2px 14px 14px",padding:"11px 16px",fontSize:14,lineHeight:1.7,color:"#fff",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>{msg.content}</div>
+    <div style={{display:"flex",justifyContent:"flex-end",marginBottom:14,gap:8,alignItems:"flex-start"}}>
+      <div style={{maxWidth:isMobile?"88%":"74%"}}>
+        {msg.fileName&&<div style={{background:"#e8f0f4",borderRadius:"8px 8px 0 0",padding:"6px 12px",fontSize:11,color:NAVY,display:"flex",alignItems:"center",gap:5}}><span>📎</span>{msg.fileName}</div>}
+        <div style={{background:NAVY,borderRadius:msg.fileName?"0 0 14px 14px":"14px 2px 14px 14px",padding:"10px 14px",fontSize:isMobile?13:14,lineHeight:1.7,color:"#fff",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>{msg.content}</div>
       </div>
-      <div style={{width:32,height:32,borderRadius:8,background:"#e8f0f4",border:`2px solid ${YELLOW}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:2}}>
-        <span style={{fontSize:14}}>👤</span>
-      </div>
+      {!isMobile&&<div style={{width:30,height:30,borderRadius:7,background:"#e8f0f4",border:`2px solid ${YELLOW}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:2,fontSize:13}}>👤</div>}
     </div>
   );
   const isLoading = msg.content==="...";
   const {text,chart} = isLoading?{text:"...",chart:null}:parseMessage(msg.content);
   return (
-    <div style={{display:"flex",justifyContent:"flex-start",marginBottom:16,gap:10,alignItems:"flex-start"}}>
-      <div style={{width:32,height:32,borderRadius:8,background:YELLOW,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:2,fontWeight:900,fontSize:13,color:NAVY,letterSpacing:"-0.5px"}}>S</div>
-      <div style={{maxWidth:"80%",minWidth:0}}>
-        <div style={{background:"#fff",border:"1px solid rgba(37,72,90,0.1)",borderRadius:"2px 14px 14px 14px",padding:"11px 16px",fontSize:14,lineHeight:1.75,color:"#1a1a1a",whiteSpace:"pre-wrap",wordBreak:"break-word",boxShadow:"0 2px 8px rgba(0,0,0,0.05)"}}>
+    <div style={{display:"flex",justifyContent:"flex-start",marginBottom:14,gap:8,alignItems:"flex-start"}}>
+      <div style={{width:30,height:30,borderRadius:7,background:YELLOW,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:2,fontWeight:900,fontSize:12,color:NAVY}}>S</div>
+      <div style={{maxWidth:isMobile?"88%":"80%",minWidth:0}}>
+        <div style={{background:"#fff",border:"1px solid rgba(37,72,90,0.1)",borderRadius:"2px 14px 14px 14px",padding:"10px 14px",fontSize:isMobile?13:14,lineHeight:1.75,color:"#1a1a1a",whiteSpace:"pre-wrap",wordBreak:"break-word",boxShadow:"0 2px 8px rgba(0,0,0,0.05)"}}>
           {isLoading?<TypingDots/>:text}
           {streaming&&<span style={{display:"inline-block",width:2,height:14,background:NAVY,marginLeft:2,animation:"blink 1s infinite"}}/>}
           <style>{`@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}`}</style>
@@ -202,12 +199,12 @@ function Message({ msg, streaming }) {
 
 function HistoryItem({ item, active, onClick, onDelete }) {
   return (
-    <div onClick={onClick} style={{display:"flex",alignItems:"center",gap:6,padding:"7px 10px",borderRadius:6,cursor:"pointer",background:active?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${active?YELLOW:"transparent"}`,marginBottom:2,transition:"all 0.15s"}}
-    onMouseEnter={e=>{ if(!active){e.currentTarget.style.background="rgba(255,255,255,0.06)";e.currentTarget.style.borderLeftColor="rgba(255,183,30,0.3)";}}}
-    onMouseLeave={e=>{ if(!active){e.currentTarget.style.background="transparent";e.currentTarget.style.borderLeftColor="transparent";}}}>
+    <div onClick={onClick} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 10px",borderRadius:6,cursor:"pointer",background:active?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${active?YELLOW:"transparent"}`,marginBottom:2}}
+    onMouseEnter={e=>{ if(!active)e.currentTarget.style.background="rgba(255,255,255,0.06)";}}
+    onMouseLeave={e=>{ if(!active)e.currentTarget.style.background="transparent";}}>
       <span style={{fontSize:12}}>💬</span>
       <span style={{flex:1,fontSize:11,color:active?"#fff":"rgba(255,255,255,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.title}</span>
-      <button onClick={e=>{e.stopPropagation();onDelete();}} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,0.25)",fontSize:12,padding:"0 2px",lineHeight:1}}
+      <button onClick={e=>{e.stopPropagation();onDelete();}} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,0.25)",fontSize:13,padding:"0 2px"}}
       onMouseEnter={e=>e.currentTarget.style.color="#ff6b6b"}
       onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.25)"}>✕</button>
     </div>
@@ -221,12 +218,12 @@ function exportPDF(messages, profile, title) {
     if(m.role==="user"){const ft=m.fileName?`<div class="file-tag">📎 ${m.fileName}</div>`:"";return `<div class="message user">${ft}<div class="label">Question</div><div class="bubble user-bubble">${text}</div></div>`;}
     return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
   }).join("");
-  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:0;color:#1a1a1a;background:#fff}.header{background:#FFB71E;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}.header-title{font-size:22px;font-weight:900;color:#25485A;letter-spacing:-0.5px}.header-sub{font-size:11px;color:rgba(37,72,90,0.6);font-weight:600;text-transform:uppercase;letter-spacing:0.05em}.meta{text-align:right;font-size:12px;color:rgba(37,72,90,0.7)}.body{padding:0 40px 40px}.message{margin-bottom:20px}.label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;color:#999}.bubble{padding:14px 18px;border-radius:10px;font-size:14px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f9f9f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:12px;color:#25485A;margin-bottom:6px}.footer{margin-top:40px;padding:16px 40px;border-top:3px solid #FFB71E;font-size:11px;color:#999;display:flex;justify-content:space-between;align-items:center}</style></head><body>
-  <div class="header"><div><div class="header-title">SOMFY</div><div class="header-sub">Agent IA — Protection solaire tertiaire</div></div><div class="meta"><strong>${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
+  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:0;color:#1a1a1a;background:#fff}.header{background:#FFB71E;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.ht{font-size:20px;font-weight:900;color:#25485A}.meta{text-align:right;font-size:12px;color:rgba(37,72,90,0.7)}.body{padding:0 32px 32px}.message{margin-bottom:18px}.label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;color:#999}.bubble{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f9f9f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:11px;color:#25485A;margin-bottom:5px}.footer{margin-top:32px;padding:12px 32px;border-top:3px solid #FFB71E;font-size:11px;color:#999;display:flex;justify-content:space-between}</style></head><body>
+  <div class="header"><div><div class="ht">SOMFY Agent IA</div></div><div class="meta"><strong>${profile}</strong> · ${date} · ${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
   <div class="body">${content}</div>
-  <div class="footer"><span>Généré par Somfy Agent</span><span>${date}</span></div>
+  <div class="footer"><span>Somfy Agent — Protection solaire tertiaire</span><span>${date}</span></div>
   <script>window.onload=()=>window.print();</script></body></html>`;
-  const win=window.open("","_blank"); win.document.write(html); win.document.close();
+  const win=window.open("","_blank");win.document.write(html);win.document.close();
 }
 
 async function readFileAsBase64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result.split(",")[1]);r.onerror=()=>reject(new Error("Erreur"));r.readAsDataURL(file);});}
@@ -244,7 +241,70 @@ async function buildMessageContent(userText,file){
 }
 function getFileIcon(name){const ext=name.split(".").pop().toLowerCase();if(ext==="pdf")return "📄";if(["jpg","jpeg","png","gif","webp"].includes(ext))return "🖼️";if(["doc","docx"].includes(ext))return "📝";if(["xls","xlsx","csv"].includes(ext))return "📊";return "📁";}
 
+function Sidebar({ profile, setProfile, openCat, setOpenCat, currentProfile, sendMessage, newConversation, profileHistory, activeId, setActiveId, deleteConv, isMobile, closeSidebar }) {
+  function switchProfile(p){ setProfile(p); setOpenCat(PROFILES[p].categories[0].id); if(isMobile) closeSidebar(); }
+  return (
+    <div style={{width:isMobile?"100%":"220px",background:NAVY,display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
+      {/* Bandeau SOMFY */}
+      <div style={{background:`linear-gradient(90deg,${YELLOW},#f0a800)`,padding:"13px 16px",borderBottom:"2px solid rgba(37,72,90,0.2)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div>
+          <div style={{display:"flex",alignItems:"baseline",gap:8}}>
+            <span style={{fontSize:19,fontWeight:900,color:NAVY,letterSpacing:"-0.5px"}}>SOMFY</span>
+            <span style={{fontSize:9,color:"rgba(37,72,90,0.55)",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em"}}>Agent IA</span>
+          </div>
+          <p style={{margin:"1px 0 0",fontSize:10,color:"rgba(37,72,90,0.55)"}}>Protection solaire tertiaire</p>
+        </div>
+        {isMobile&&<button onClick={closeSidebar} style={{background:"rgba(37,72,90,0.15)",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",fontSize:18,color:NAVY,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>}
+      </div>
+
+      {/* Profil */}
+      <div style={{padding:"12px 12px 8px"}}>
+        <div style={{display:"flex",gap:4}}>
+          {Object.entries(PROFILES).map(([key,p])=>(
+            <button key={key} onClick={()=>switchProfile(key)} style={{flex:1,padding:"8px 4px",borderRadius:6,cursor:"pointer",background:profile===key?YELLOW:"rgba(255,255,255,0.07)",border:profile===key?"none":"1px solid rgba(255,255,255,0.1)",color:profile===key?NAVY:"rgba(255,255,255,0.5)",fontSize:12,fontWeight:profile===key?700:400,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+              <span style={{fontSize:16}}>{p.icon}</span>{p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Catégories */}
+      <div style={{padding:"0 10px 8px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
+        <p style={{margin:"4px 2px 8px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Navigation</p>
+        {currentProfile.categories.map(cat=>(
+          <div key={cat.id}>
+            <button onClick={()=>setOpenCat(openCat===cat.id?null:cat.id)} style={{width:"100%",padding:"9px 10px",borderRadius:6,cursor:"pointer",marginBottom:2,background:openCat===cat.id?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${openCat===cat.id?YELLOW:"transparent"}`,color:openCat===cat.id?"#fff":"rgba(255,255,255,0.55)",fontSize:13,display:"flex",alignItems:"center",gap:8,textAlign:"left"}}>
+              <span style={{fontSize:15}}>{cat.icon}</span><span style={{flex:1}}>{cat.label}</span><span style={{fontSize:10,opacity:0.4}}>{openCat===cat.id?"▼":"▶"}</span>
+            </button>
+            {openCat===cat.id&&(
+              <div style={{marginLeft:12,paddingLeft:10,borderLeft:"2px solid rgba(255,183,30,0.3)",marginBottom:4}}>
+                {cat.prompts.map((p,i)=><button key={i} onClick={()=>{sendMessage(p.text);if(isMobile)closeSidebar();}} style={{width:"100%",padding:"6px 6px",borderRadius:5,cursor:"pointer",textAlign:"left",background:"transparent",border:"none",color:"rgba(255,255,255,0.45)",fontSize:12,lineHeight:1.4,display:"block",marginBottom:1}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.45)"}>{p.label}</button>)}
+                {cat.id==="prospection"&&profile==="commercial"&&<PlaceSearchWidget onSearch={(t)=>{sendMessage(t);if(isMobile)closeSidebar();}}/>}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Historique */}
+      <div style={{flex:1,overflowY:"auto",padding:"8px 10px 4px"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
+          <p style={{margin:0,fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Historique</p>
+          <button onClick={()=>{newConversation();if(isMobile)closeSidebar();}} style={{background:"rgba(255,183,30,0.12)",border:"1px solid rgba(255,183,30,0.25)",borderRadius:5,padding:"3px 8px",cursor:"pointer",color:YELLOW,fontSize:10,fontWeight:700}}>+ Nouveau</button>
+        </div>
+        {profileHistory.length===0?<p style={{fontSize:11,color:"rgba(255,255,255,0.2)",fontStyle:"italic",margin:"4px 2px"}}>Aucune conversation</p>:profileHistory.map(h=><HistoryItem key={h.id} item={h} active={activeId[profile]===h.id} onClick={()=>{setActiveId(prev=>({...prev,[profile]:h.id}));if(isMobile)closeSidebar();}} onDelete={()=>deleteConv(h.id)}/>)}
+      </div>
+
+      <div style={{padding:"8px 12px 10px",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
+        <div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:6,height:6,borderRadius:"50%",background:"#3dba6e"}}/><span style={{fontSize:10,color:"rgba(255,255,255,0.3)"}}>Recherche web active</span></div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
+  const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profile,setProfile]=useState("commercial");
   const [openCat,setOpenCat]=useState("prospection");
   const [input,setInput]=useState("");
@@ -258,17 +318,21 @@ export default function App() {
   const inputRef=useRef(null);
   const fileRef=useRef(null);
 
+  const isMobile = windowWidth < 768;
+
+  useEffect(()=>{
+    const handleResize=()=>setWindowWidth(window.innerWidth);
+    window.addEventListener("resize",handleResize);
+    return ()=>window.removeEventListener("resize",handleResize);
+  },[]);
+
   const currentMessages=()=>{const id=activeId[profile];if(!id)return[];const conv=histories[profile].find(h=>h.id===id);return conv?conv.messages:[];};
   const currentTitle=()=>{const id=activeId[profile];if(!id)return "Conversation";const conv=histories[profile].find(h=>h.id===id);return conv?conv.title:"Conversation";};
 
   useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[histories,activeId,profile]);
 
   function newConversation(){setActiveId(prev=>({...prev,[profile]:null}));setPendingFile(null);}
-  function switchProfile(p){setProfile(p);setOpenCat(PROFILES[p].categories[0].id);}
-
-  function updateLastMsg(convId,profileKey,content){
-    setHistories(prev=>({...prev,[profileKey]:prev[profileKey].map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)}));
-  }
+  function updateLastMsg(convId,profileKey,content){setHistories(prev=>({...prev,[profileKey]:prev[profileKey].map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)}));}
 
   async function handleFile(file){
     if(!file)return;
@@ -307,8 +371,7 @@ export default function App() {
         const {done,value}=await reader.read();if(done)break;
         const chunk=decoder.decode(value);const lines=chunk.split("\n");
         for(const line of lines){
-          if(line.startsWith("data: ")){
-            const data=line.slice(6);if(data==="[DONE]")continue;
+          if(line.startsWith("data: ")){const data=line.slice(6);if(data==="[DONE]")continue;
             try{const parsed=JSON.parse(data);if(parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta"){if(!started){started=true;setStreaming(true);updateLastMsg(convId,profileKey,"");}fullText+=parsed.delta.text;updateLastMsg(convId,profileKey,fullText);}}catch{}
           }
         }
@@ -327,140 +390,109 @@ export default function App() {
   const profileHistory=histories[profile];
   const isStreaming=streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
 
+  const sidebarProps = {
+    profile, setProfile, openCat, setOpenCat, currentProfile, sendMessage,
+    newConversation, profileHistory, activeId, setActiveId, deleteConv,
+    isMobile, closeSidebar: ()=>setSidebarOpen(false)
+  };
+
   return (
-    <div style={{display:"flex",height:640,background:"#fafafa",borderRadius:16,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.12)",border:"1px solid rgba(0,0,0,0.06)"}}>
+    <div style={{display:"flex",height:isMobile?"100dvh":"640px",background:"#fafafa",borderRadius:isMobile?0:16,overflow:"hidden",boxShadow:isMobile?"none":"0 4px 24px rgba(0,0,0,0.12)",border:isMobile?"none":"1px solid rgba(0,0,0,0.06)",position:"relative",fontFamily:"'Inter',system-ui,sans-serif"}}>
       <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
 
-      {/* ── Sidebar style Somfy officiel ── */}
-      <div style={{width:220,background:NAVY,display:"flex",flexDirection:"column",flexShrink:0,overflow:"hidden"}}>
+      {/* Sidebar desktop — fixe */}
+      {!isMobile&&(
+        <div style={{width:220,flexShrink:0,height:"100%"}}>
+          <Sidebar {...sidebarProps}/>
+        </div>
+      )}
 
-        {/* Bandeau jaune SOMFY */}
-        <div style={{background:`linear-gradient(90deg, ${YELLOW}, #f0a800)`,padding:"13px 16px",borderBottom:`2px solid rgba(37,72,90,0.2)`}}>
-          <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-            <span style={{fontSize:20,fontWeight:900,color:NAVY,letterSpacing:"-0.5px"}}>SOMFY</span>
-            <span style={{fontSize:9,color:"rgba(37,72,90,0.55)",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em"}}>Agent IA</span>
+      {/* Sidebar mobile — overlay coulissant */}
+      {isMobile&&sidebarOpen&&(
+        <>
+          <div onClick={()=>setSidebarOpen(false)} style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.5)",zIndex:40}}/>
+          <div style={{position:"absolute",left:0,top:0,bottom:0,width:"85%",maxWidth:320,zIndex:50,display:"flex",flexDirection:"column",animation:"slideIn 0.25s ease"}}>
+            <style>{`@keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}`}</style>
+            <Sidebar {...sidebarProps}/>
           </div>
-          <p style={{margin:"2px 0 0",fontSize:10,color:"rgba(37,72,90,0.55)"}}>Protection solaire tertiaire</p>
-        </div>
+        </>
+      )}
 
-        {/* Switcher profil */}
-        <div style={{padding:"12px 12px 8px"}}>
-          <div style={{display:"flex",gap:4}}>
-            {Object.entries(PROFILES).map(([key,p])=>(
-              <button key={key} onClick={()=>switchProfile(key)} style={{flex:1,padding:"7px 4px",borderRadius:6,cursor:"pointer",background:profile===key?YELLOW:"rgba(255,255,255,0.07)",border:profile===key?"none":"1px solid rgba(255,255,255,0.1)",color:profile===key?NAVY:"rgba(255,255,255,0.5)",fontSize:11,fontWeight:profile===key?700:400,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-                <span style={{fontSize:14}}>{p.icon}</span>{p.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Navigation catégories */}
-        <div style={{padding:"0 10px 8px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
-          <p style={{margin:"4px 2px 8px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Navigation</p>
-          {currentProfile.categories.map(cat=>(
-            <div key={cat.id}>
-              <button onClick={()=>setOpenCat(openCat===cat.id?null:cat.id)} style={{width:"100%",padding:"9px 10px",borderRadius:6,cursor:"pointer",marginBottom:2,background:openCat===cat.id?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${openCat===cat.id?YELLOW:"transparent"}`,color:openCat===cat.id?"#fff":"rgba(255,255,255,0.55)",fontSize:12,display:"flex",alignItems:"center",gap:8,textAlign:"left",transition:"all 0.15s"}}
-              onMouseEnter={e=>{if(openCat!==cat.id){e.currentTarget.style.background="rgba(255,255,255,0.05)";e.currentTarget.style.borderLeftColor="rgba(255,183,30,0.3)";}}}
-              onMouseLeave={e=>{if(openCat!==cat.id){e.currentTarget.style.background="transparent";e.currentTarget.style.borderLeftColor="transparent";}}}>
-                <span style={{fontSize:14}}>{cat.icon}</span><span style={{flex:1}}>{cat.label}</span>
-                <span style={{fontSize:10,opacity:0.4}}>{openCat===cat.id?"▼":"▶"}</span>
-              </button>
-              {openCat===cat.id&&(
-                <div style={{marginLeft:12,marginBottom:4,paddingLeft:10,borderLeft:"2px solid rgba(255,183,30,0.3)"}}>
-                  {cat.prompts.map((p,i)=><button key={i} onClick={()=>sendMessage(p.text)} style={{width:"100%",padding:"5px 6px",borderRadius:5,cursor:"pointer",textAlign:"left",background:"transparent",border:"none",color:"rgba(255,255,255,0.45)",fontSize:11,lineHeight:1.4,display:"block",marginBottom:1,transition:"color 0.1s"}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.45)"}>{p.label}</button>)}
-                  {cat.id==="prospection"&&profile==="commercial"&&<PlaceSearchWidget onSearch={sendMessage}/>}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Historique */}
-        <div style={{flex:1,overflowY:"auto",padding:"8px 10px 4px"}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
-            <p style={{margin:0,fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Historique</p>
-            <button onClick={newConversation} style={{background:"rgba(255,183,30,0.12)",border:"1px solid rgba(255,183,30,0.25)",borderRadius:5,padding:"2px 8px",cursor:"pointer",color:YELLOW,fontSize:10,fontWeight:700}}>+ Nouveau</button>
-          </div>
-          {profileHistory.length===0?<p style={{fontSize:11,color:"rgba(255,255,255,0.2)",fontStyle:"italic",margin:"4px 2px"}}>Aucune conversation</p>:profileHistory.map(h=><HistoryItem key={h.id} item={h} active={activeId[profile]===h.id} onClick={()=>setActiveId(prev=>({...prev,[profile]:h.id}))} onDelete={()=>deleteConv(h.id)}/>)}
-        </div>
-
-        {/* Footer */}
-        <div style={{padding:"8px 12px 10px",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
-          <div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:6,height:6,borderRadius:"50%",background:"#3dba6e"}}/><span style={{fontSize:10,color:"rgba(255,255,255,0.3)"}}>Recherche web active</span></div>
-        </div>
-      </div>
-
-      {/* ── Zone principale ── */}
+      {/* Zone principale */}
       <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
 
-        {/* Header avec bordure jaune en bas */}
-        <div style={{background:"#fff",borderBottom:`3px solid ${YELLOW}`,padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <span style={{fontSize:20}}>{currentCat.icon}</span>
-            <div>
-              <p style={{margin:0,fontWeight:700,fontSize:14,color:NAVY}}>{currentCat.label}</p>
-              <p style={{margin:0,fontSize:11,color:"#888"}}>{currentCat.desc}</p>
+        {/* Header */}
+        <div style={{background:"#fff",borderBottom:`3px solid ${YELLOW}`,padding:isMobile?"10px 14px":"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
+            {isMobile&&(
+              <button onClick={()=>setSidebarOpen(true)} style={{width:38,height:38,borderRadius:8,background:NAVY,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <span style={{color:YELLOW,fontSize:18,fontWeight:700}}>☰</span>
+              </button>
+            )}
+            <span style={{fontSize:isMobile?18:20}}>{currentCat.icon}</span>
+            <div style={{minWidth:0}}>
+              <p style={{margin:0,fontWeight:700,fontSize:isMobile?13:14,color:NAVY,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{currentCat.label}</p>
+              {!isMobile&&<p style={{margin:0,fontSize:11,color:"#888"}}>{currentCat.desc}</p>}
             </div>
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:8}}>
-            {isStreaming&&<span style={{fontSize:11,background:"#fff8e6",color:NAVY,padding:"3px 10px",borderRadius:20,border:`1px solid ${YELLOW}`,fontWeight:500}}>✍️ Rédaction...</span>}
+          <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+            {isStreaming&&<span style={{fontSize:10,background:"#fff8e6",color:NAVY,padding:"3px 8px",borderRadius:20,border:`1px solid ${YELLOW}`,fontWeight:500}}>✍️</span>}
             {messages.length>0&&!isStreaming&&(
-              <button onClick={()=>exportPDF(messages,currentProfile.label,currentTitle())} style={{display:"flex",alignItems:"center",gap:5,padding:"5px 12px",borderRadius:6,background:NAVY,border:"none",cursor:"pointer",fontSize:11,color:YELLOW,fontWeight:700}}>
+              <button onClick={()=>exportPDF(messages,currentProfile.label,currentTitle())} style={{display:"flex",alignItems:"center",gap:4,padding:"5px 10px",borderRadius:6,background:NAVY,border:"none",cursor:"pointer",fontSize:11,color:YELLOW,fontWeight:700}}>
                 ↓ PDF
               </button>
             )}
-            <span style={{fontSize:11,background:"rgba(37,72,90,0.08)",color:NAVY,padding:"3px 10px",borderRadius:20,fontWeight:600}}>{currentProfile.label}</span>
-            {messages.length>0&&<span style={{fontSize:11,color:"#888",background:"#f0f0f0",padding:"3px 10px",borderRadius:20}}>{messages.filter(m=>m.role==="user").length} échange{messages.filter(m=>m.role==="user").length>1?"s":""}</span>}
+            {!isMobile&&<span style={{fontSize:11,background:"rgba(37,72,90,0.08)",color:NAVY,padding:"3px 10px",borderRadius:20,fontWeight:600}}>{currentProfile.label}</span>}
           </div>
         </div>
 
         {/* Messages */}
-        <div style={{flex:1,overflowY:"auto",padding:"20px 22px 10px",background:dragOver?"#f0f8ff":"#fafafa",transition:"background 0.2s",position:"relative"}}>
-          {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.05)",border:`2px dashed ${NAVY}`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><span style={{fontSize:32,display:"block",marginBottom:8}}>☁️</span><p style={{margin:0,fontWeight:700,color:NAVY}}>Déposez votre fichier ici</p></div></div>}
+        <div style={{flex:1,overflowY:"auto",padding:isMobile?"14px 14px 8px":"20px 22px 10px",background:dragOver?"#f0f8ff":"#fafafa",transition:"background 0.2s",position:"relative"}}>
+          {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.05)",border:`2px dashed ${NAVY}`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><span style={{fontSize:32,display:"block",marginBottom:8}}>☁️</span><p style={{margin:0,fontWeight:700,color:NAVY,fontSize:14}}>Déposez ici</p></div></div>}
           {messages.length===0?(
-            <div style={{paddingTop:4}}>
-              <p style={{margin:"0 0 4px",fontSize:16,fontWeight:700,color:NAVY}}>Bonjour, que puis-je faire pour vous ?</p>
-              <p style={{margin:"0 0 20px",fontSize:13,color:"#888"}}>Choisissez une suggestion ou posez directement votre question.</p>
+            <div>
+              <p style={{margin:"0 0 4px",fontSize:isMobile?15:16,fontWeight:700,color:NAVY}}>Bonjour !</p>
+              <p style={{margin:"0 0 16px",fontSize:13,color:"#888"}}>Choisissez une suggestion ou posez votre question.</p>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {currentCat.prompts.map((p,i)=>(
-                  <button key={i} onClick={()=>sendMessage(p.text)} style={{padding:"12px 16px",borderRadius:8,cursor:"pointer",textAlign:"left",background:"#fff",border:`1px solid rgba(0,0,0,0.08)`,display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:13,color:NAVY,fontWeight:500,boxShadow:"0 1px 4px rgba(0,0,0,0.04)",transition:"all 0.15s"}}
-                  onMouseEnter={e=>{e.currentTarget.style.borderColor=YELLOW;e.currentTarget.style.boxShadow=`0 2px 8px rgba(255,183,30,0.2)`;}}
-                  onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(0,0,0,0.08)";e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)";}}>
-                    <span>{p.label}</span><span style={{color:YELLOW,fontWeight:700,fontSize:16}}>→</span>
+                  <button key={i} onClick={()=>sendMessage(p.text)} style={{padding:"11px 14px",borderRadius:8,cursor:"pointer",textAlign:"left",background:"#fff",border:"1px solid rgba(0,0,0,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:13,color:NAVY,fontWeight:500,boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}
+                  onMouseEnter={e=>e.currentTarget.style.borderColor=YELLOW}
+                  onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.08)"}>
+                    <span>{p.label}</span><span style={{color:YELLOW,fontWeight:700,fontSize:15}}>→</span>
                   </button>
                 ))}
               </div>
             </div>
-          ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming&&i===messages.length-1}/>)}
+          ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming&&i===messages.length-1} isMobile={isMobile}/>)}
           <div ref={bottomRef}/>
         </div>
 
         {/* Fichier en attente */}
         {pendingFile&&(
-          <div style={{padding:"8px 16px",background:"#fff8e6",borderTop:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",gap:10}}>
-            <span style={{fontSize:20}}>{getFileIcon(pendingFile.name)}</span>
+          <div style={{padding:"7px 14px",background:"#fff8e6",borderTop:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",gap:8}}>
+            <span style={{fontSize:18}}>{getFileIcon(pendingFile.name)}</span>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{margin:0,fontSize:13,fontWeight:600,color:NAVY,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pendingFile.name}</p>
-              <p style={{margin:0,fontSize:11,color:"#888"}}>{(pendingFile.size/1024).toFixed(0)} Ko — prêt à envoyer</p>
+              <p style={{margin:0,fontSize:12,fontWeight:600,color:NAVY,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pendingFile.name}</p>
+              <p style={{margin:0,fontSize:10,color:"#888"}}>{(pendingFile.size/1024).toFixed(0)} Ko</p>
             </div>
-            <button onClick={()=>setPendingFile(null)} style={{background:"none",border:"none",cursor:"pointer",color:"#999",fontSize:18,lineHeight:1}}>✕</button>
+            <button onClick={()=>setPendingFile(null)} style={{background:"none",border:"none",cursor:"pointer",color:"#999",fontSize:18}}>✕</button>
           </div>
         )}
 
-        {/* Saisie */}
-        <div style={{padding:"10px 16px 14px",borderTop:"1px solid rgba(0,0,0,0.06)",background:"#fff"}}>
+        {/* Input */}
+        <div style={{padding:isMobile?"8px 12px 12px":"10px 16px 14px",borderTop:"1px solid rgba(0,0,0,0.06)",background:"#fff"}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f5f5",borderRadius:10,border:`2px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.1)"}`,padding:"8px 8px 8px 12px",transition:"border-color 0.15s"}}>
-            <button onClick={()=>fileRef.current?.click()} style={{width:32,height:32,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16,transition:"all 0.15s"}}
-            onMouseEnter={e=>{e.currentTarget.style.borderColor=NAVY;e.currentTarget.style.background="#f0f4f6";}}
-            onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(0,0,0,0.1)";e.currentTarget.style.background="#fff";}}>
+            <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY}
+            onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>
               ☁️
             </button>
-            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message ou envoyez directement...":"Posez votre question ou déposez un fichier..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
-            <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.15s",flexShrink:0,fontSize:16,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>
+            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message...":"Posez votre question..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:isMobile?14:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
+            <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>
               ↑
             </button>
           </div>
-          <p style={{margin:"6px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier · ou glissez-déposez</p>
+          {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier</p>}
         </div>
       </div>
     </div>
