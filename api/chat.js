@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01',
         'anthropic-beta': 'web-search-2025-03-05'
       },
-      body: JSON.stringify({ ...body, stream: true })
+      body: JSON.stringify({ ...body, model: 'claude-haiku-4-5-20251001', stream: true })
     });
 
     const reader = response.body.getReader();
