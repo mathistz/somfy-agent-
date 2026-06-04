@@ -5,6 +5,13 @@ const NAVY = "#25485A";
 const YELLOW = "#FFB71E";
 const CHART_COLORS = ["#25485A","#FFB71E","#1a6b4a","#e07b00","#5a8fa3","#f0c040","#2e7d5e","#c9600a"];
 
+const PPTX_INSTRUCTIONS = `
+PRÉSENTATIONS POWERPOINT : quand l'utilisateur demande une présentation, des slides ou un PowerPoint, génère le contenu dans ce format JSON exact (sans texte avant ou après) :
+PPTX_START
+{"title":"Titre de la présentation","slides":[{"type":"cover","title":"Titre","subtitle":"Sous-titre"},{"type":"content","title":"Titre slide","bullets":["Point 1","Point 2","Point 3"]},{"type":"two_col","title":"Comparaison","left":{"title":"Colonne gauche","bullets":["A","B"]},"right":{"title":"Colonne droite","bullets":["C","D"]}},{"type":"closing","title":"Merci","subtitle":"Message final"}]}
+PPTX_END
+Types disponibles : "cover" (slide de titre), "content" (titre + bullets), "two_col" (deux colonnes), "closing" (slide de fin). Maximum 10 slides. Génère des slides pertinents et complets.`;
+
 const SYSTEM_PROMPTS = {
   tertiaire: `Tu es un assistant IA expert en protection solaire tertiaire, travaillant avec les équipes de Somfy France.
 
@@ -27,17 +34,16 @@ GRAPHIQUES : quand tu as des données chiffrées comparatives, ajoute à la fin 
 CHART_START
 {"type":"bar","title":"Titre","labels":["A","B"],"datasets":[{"label":"Série","data":[10,20],"color":"#25485A"}]}
 CHART_END
-Types disponibles : bar, line, pie, multibar.`,
+Types disponibles : bar, line, pie, multibar.
+${PPTX_INSTRUCTIONS}`,
 
   residentiel: `Tu es un assistant IA expert en protection solaire résidentielle, travaillant avec les équipes de Somfy France.
 
 Contexte Somfy Résidentiel : leader du marché avec ~75% de parts de marché en France. Produits clés : TaHoma switch (box domotique), io-homecontrol (protocole bidirectionnel propriétaire), Connexoon (box entrée de gamme), volets roulants, stores, BSO résidentiels. Cibles principales : installateurs, particuliers, promoteurs immobiliers résidentiels.
 
-Concurrents résidentiels : Nice (Home Evolution), Delta Dore (Tydom), Legrand (Netatmo), Velux, Bubendorf, Cherubini. Somfy est leader mais doit défendre sa position face à l'essor des solutions connectées.
+Concurrents résidentiels : Nice (Home Evolution), Delta Dore (Tydom), Legrand (Netatmo), Velux, Bubendorf, Cherubini.
 
-Réglementation clé : RE2020 (depuis janvier 2022, exigences thermiques renforcées), MaPrimeRénov' (aides à la rénovation), CEE (Certificats d'Économies d'Énergie), BBC Rénovation, label RGE pour les installateurs.
-
-Arguments clés : confort thermique, économies d'énergie, domotique et maison connectée, sécurité, valeur ajoutée au logement, compatibilité avec les assistants vocaux (Google, Alexa, Apple HomeKit).
+Réglementation clé : RE2020, MaPrimeRénov', CEE, BBC Rénovation, label RGE.
 
 STYLE DE RÉPONSE :
 - Écris de façon naturelle et fluide, comme un consultant qui parle à un collègue
@@ -53,14 +59,13 @@ GRAPHIQUES : quand tu as des données chiffrées comparatives, ajoute à la fin 
 CHART_START
 {"type":"bar","title":"Titre","labels":["A","B"],"datasets":[{"label":"Série","data":[10,20],"color":"#25485A"}]}
 CHART_END
-Types disponibles : bar, line, pie, multibar.`
+Types disponibles : bar, line, pie, multibar.
+${PPTX_INSTRUCTIONS}`
 };
 
 const SECTORS = {
   tertiaire: {
-    label: "Tertiaire",
-    icon: "🏢",
-    badge: "Décret BACS • BOAMP • GTB",
+    label: "Tertiaire", icon: "🏢", badge: "Décret BACS • BOAMP • GTB",
     profiles: {
       commercial: {
         label: "Commercial", icon: "🎯",
@@ -90,6 +95,7 @@ const SECTORS = {
             prompts:[
               { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire tertiaire ?" },
               { label:"Arguments pour installateurs", text:"Comment convaincre un installateur résidentiel de se lancer sur le marché tertiaire avec Somfy ?" },
+              { label:"Présentation tertiaire", text:"Crée une présentation PowerPoint sur l'opportunité du marché tertiaire pour les installateurs Somfy." },
             ]},
         ]
       },
@@ -107,7 +113,7 @@ const SECTORS = {
             prompts:[
               { label:"Décret BACS complet", text:"Explique-moi le décret BACS, ses obligations, ses seuils et son impact pour Somfy." },
               { label:"Décret tertiaire 2025", text:"Où en est l'application du décret tertiaire en 2025 et quelles sont les obligations actuelles ?" },
-              { label:"Normes NF protection solaire", text:"Quelles normes NF et européennes s'appliquent aux protections solaires ?" },
+              { label:"Présentation BACS", text:"Crée une présentation PowerPoint sur le Décret BACS et les opportunités pour Somfy." },
             ]},
           { id:"confort_ete", label:"Confort d'été", icon:"☀️", desc:"Arguments thermiques",
             prompts:[
@@ -119,16 +125,14 @@ const SECTORS = {
             prompts:[
               { label:"Messages clés par segment", text:"Définis les messages clés Somfy pour les écoles, bureaux, bâtiments de santé et hôtels." },
               { label:"Arguments RSE", text:"Quels arguments RSE peut-on développer autour des protections solaires automatisées ?" },
-              { label:"Cas clients à documenter", text:"Quels cas clients Somfy devrait documenter en priorité pour crédibiliser son offre tertiaire ?" },
+              { label:"Présentation commerciale", text:"Crée une présentation PowerPoint de l'offre Somfy tertiaire pour une réunion client." },
             ]},
         ]
       }
     }
   },
   residentiel: {
-    label: "Résidentiel",
-    icon: "🏠",
-    badge: "TaHoma • io-homecontrol • RE2020",
+    label: "Résidentiel", icon: "🏠", badge: "TaHoma • io-homecontrol • RE2020",
     profiles: {
       commercial: {
         label: "Commercial", icon: "🎯",
@@ -138,7 +142,7 @@ const SECTORS = {
               { label:"Gamme TaHoma switch", text:"Présente-moi la gamme TaHoma switch de Somfy : fonctionnalités, compatibilités, positionnement marché." },
               { label:"io-homecontrol expliqué", text:"Explique le protocole io-homecontrol de Somfy et ses avantages face aux protocoles concurrents." },
               { label:"Compatibilités domotique", text:"Avec quels systèmes domotiques et assistants vocaux les produits Somfy résidentiels sont-ils compatibles ?" },
-              { label:"Argument maison connectée", text:"Quels sont les arguments pour convaincre un particulier d'investir dans une maison connectée avec Somfy ?" },
+              { label:"Présentation TaHoma", text:"Crée une présentation PowerPoint sur la gamme TaHoma switch pour des installateurs." },
             ]},
           { id:"installateurs_resi", label:"Cibles & Installateurs", icon:"👥", desc:"Réseau et clients finaux",
             prompts:[
@@ -152,14 +156,14 @@ const SECTORS = {
               { label:"Somfy vs Nice Home", text:"Compare Somfy et Nice Home Evolution sur le marché résidentiel connecté." },
               { label:"Somfy vs Delta Dore Tydom", text:"Compare TaHoma switch et Tydom de Delta Dore : fonctionnalités, prix, réseau installateurs." },
               { label:"Somfy vs Legrand Netatmo", text:"Compare Somfy et Legrand Netatmo sur la domotique résidentielle." },
-              { label:"Parts de marché résidentiel", text:"Quelles sont les parts de marché des acteurs de l'automatisme résidentiel en France ?" },
+              { label:"Présentation benchmark", text:"Crée une présentation PowerPoint de comparaison des concurrents résidentiels de Somfy." },
             ]},
           { id:"aides_resi", label:"Aides & Réglementation", icon:"🌿", desc:"RE2020, MaPrimeRénov'",
             prompts:[
               { label:"MaPrimeRénov' et Somfy", text:"Comment les produits Somfy s'inscrivent-ils dans le dispositif MaPrimeRénov' ?" },
               { label:"RE2020 et protection solaire", text:"Quelles sont les exigences de la RE2020 concernant la protection solaire en résidentiel ?" },
-              { label:"CEE protection solaire", text:"Existe-t-il des CEE (Certificats d'Économies d'Énergie) applicables aux protections solaires résidentielles ?" },
-              { label:"Label RGE installateurs", text:"Qu'est-ce que le label RGE et comment aide-t-il les installateurs Somfy à vendre plus ?" },
+              { label:"CEE protection solaire", text:"Existe-t-il des CEE applicables aux protections solaires résidentielles ?" },
+              { label:"Présentation aides", text:"Crée une présentation PowerPoint sur les aides disponibles pour la protection solaire résidentielle." },
             ]},
         ]
       },
@@ -171,21 +175,20 @@ const SECTORS = {
               { label:"Marché smart home France", text:"Quelles sont les tendances du marché de la maison connectée en France en 2025 ?" },
               { label:"Domotique et IoT", text:"Comment évolue le marché de l'IoT résidentiel et quelles opportunités pour Somfy ?" },
               { label:"Attentes des particuliers", text:"Quelles sont les attentes des particuliers français sur la domotique et la maison connectée ?" },
-              { label:"Croissance marché volets", text:"Quels sont les chiffres du marché des volets roulants et stores motorisés en France ?" },
+              { label:"Présentation smart home", text:"Crée une présentation PowerPoint sur les tendances du marché smart home et la position de Somfy." },
             ]},
           { id:"confort_resi", label:"Confort & Économies", icon:"☀️", desc:"Arguments particuliers",
             prompts:[
               { label:"Économies énergie concrètes", text:"Quelles économies d'énergie concrètes un particulier peut-il espérer avec des volets automatisés Somfy ?" },
               { label:"Confort thermique maison", text:"Comment la protection solaire automatisée améliore-t-elle le confort thermique d'une maison en été ?" },
-              { label:"Sécurité et simulation présence", text:"Quels sont les arguments sécurité des volets connectés Somfy (simulation de présence, etc.) ?" },
+              { label:"Sécurité et simulation présence", text:"Quels sont les arguments sécurité des volets connectés Somfy ?" },
               { label:"Valeur immobilière", text:"La domotique et les volets automatisés augmentent-ils la valeur d'un bien immobilier ?" },
             ]},
           { id:"communication_resi", label:"Communication B2C", icon:"📣", desc:"Messages grand public",
             prompts:[
               { label:"Messages clés grand public", text:"Quels sont les messages clés à communiquer aux particuliers pour les convaincre d'adopter Somfy ?" },
               { label:"Campagne réseaux sociaux", text:"Propose une stratégie de contenu pour les réseaux sociaux Somfy ciblant les particuliers." },
-              { label:"Argumentaire showroom", text:"Rédige un argumentaire pour un showroom présentant les solutions Somfy résidentielles." },
-              { label:"FAQ particuliers", text:"Quelles sont les questions les plus fréquentes des particuliers sur les volets automatisés Somfy ?" },
+              { label:"Présentation B2C", text:"Crée une présentation PowerPoint des arguments Somfy pour les particuliers." },
             ]},
           { id:"veille_resi", label:"Veille concurrentielle", icon:"🔍", desc:"Suivi concurrents résidentiels",
             prompts:[
@@ -221,9 +224,8 @@ function PlaceSearchWidget({ onSearch }) {
         }).join("\n");
         onSearch(`Voici ${results.length} appels d'offres trouvés sur le BOAMP pour "${keywords}" :\n\n${summary}\n\nAnalyse ces résultats : lesquels sont les plus pertinents pour Somfy ?`);
       }
-    } catch {
-      onSearch(`Recherche BOAMP pour "${keywords}" — analyse les opportunités d'appels d'offres publics français pour Somfy.`);
-    } finally { setLoadingAO(false); setKeywords(""); }
+    } catch { onSearch(`Recherche BOAMP pour "${keywords}" — analyse les opportunités d'appels d'offres publics français pour Somfy.`); }
+    finally { setLoadingAO(false); setKeywords(""); }
   }
   return (
     <div style={{margin:"10px 0 4px",padding:"10px 12px",background:"rgba(255,183,30,0.08)",borderRadius:8,border:"1px solid rgba(255,183,30,0.25)"}}>
@@ -241,11 +243,20 @@ function PlaceSearchWidget({ onSearch }) {
 }
 
 function parseMessage(content) {
-  const match = content.match(/CHART_START\s*([\s\S]*?)\s*CHART_END/);
-  if (!match) return { text: content, chart: null };
-  const text = content.replace(/CHART_START\s*([\s\S]*?)\s*CHART_END/, "").trim();
-  try { return { text, chart: JSON.parse(match[1].trim()) }; }
-  catch { return { text: content, chart: null }; }
+  let text = content;
+  let chart = null;
+  let pptx = null;
+  const chartMatch = text.match(/CHART_START\s*([\s\S]*?)\s*CHART_END/);
+  if (chartMatch) {
+    text = text.replace(/CHART_START\s*([\s\S]*?)\s*CHART_END/, "").trim();
+    try { chart = JSON.parse(chartMatch[1].trim()); } catch {}
+  }
+  const pptxMatch = text.match(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/);
+  if (pptxMatch) {
+    text = text.replace(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/, "").trim();
+    try { pptx = JSON.parse(pptxMatch[1].trim()); } catch {}
+  }
+  return { text, chart, pptx };
 }
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -272,6 +283,36 @@ function ChartBlock({ chart }) {
   return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><BarChart data={data} margin={{top:4,right:8,left:-24,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:10,fill:"#666"}}/><YAxis tick={{fontSize:10,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:11}}/>}{chart.datasets.map((ds,i)=><Bar key={i} dataKey={ds.label} fill={ds.color||CHART_COLORS[i]} radius={[3,3,0,0]}/>)}</BarChart></ResponsiveContainer></div>;
 }
 
+function PPTXButton({ pptxData }) {
+  const [loading, setLoading] = useState(false);
+  async function handleDownload() {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/pptx', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(pptxData) });
+      if (!res.ok) throw new Error('Erreur génération');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${(pptxData.title||'presentation').replace(/[^a-zA-Z0-9\-_ ]/g,'_')}.pptx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch(err) { alert('Erreur : ' + err.message); }
+    finally { setLoading(false); }
+  }
+  return (
+    <div style={{marginTop:10,padding:"12px 16px",background:`linear-gradient(135deg, ${NAVY}, #1a3a47)`,borderRadius:10,border:`1px solid rgba(255,183,30,0.3)`}}>
+      <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📊 Présentation PowerPoint prête</p>
+      <p style={{margin:"0 0 10px",fontSize:11,color:"rgba(255,255,255,0.6)"}}>{pptxData.slides?.length || 0} slides — {pptxData.title}</p>
+      <button onClick={handleDownload} disabled={loading} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderRadius:7,border:"none",background:loading?"rgba(255,255,255,0.1)":YELLOW,cursor:loading?"default":"pointer",fontSize:12,fontWeight:700,color:loading?"rgba(255,255,255,0.4)":NAVY,transition:"all 0.15s"}}>
+        {loading ? "⏳ Génération en cours..." : "⬇️ Télécharger le PowerPoint"}
+      </button>
+    </div>
+  );
+}
+
 function TypingDots() {
   return <div style={{display:"flex",gap:5,alignItems:"center",padding:"4px 0"}}>{[0,1,2].map(i=><div key={i} style={{width:7,height:7,borderRadius:"50%",background:YELLOW,animation:"sb 1.2s ease-in-out infinite",animationDelay:`${i*0.2}s`}}/>)}<style>{`@keyframes sb{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}`}</style></div>;
 }
@@ -288,7 +329,7 @@ function Message({ msg, streaming, isMobile }) {
     </div>
   );
   const isLoading = msg.content==="...";
-  const {text,chart} = isLoading?{text:"...",chart:null}:parseMessage(msg.content);
+  const {text,chart,pptx} = isLoading?{text:"...",chart:null,pptx:null}:parseMessage(msg.content);
   return (
     <div style={{display:"flex",justifyContent:"flex-start",marginBottom:14,gap:8,alignItems:"flex-start"}}>
       <div style={{width:30,height:30,borderRadius:7,background:YELLOW,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:2,fontWeight:900,fontSize:12,color:NAVY}}>S</div>
@@ -299,6 +340,7 @@ function Message({ msg, streaming, isMobile }) {
           <style>{`@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}`}</style>
         </div>
         {!streaming&&chart&&<ChartBlock chart={chart}/>}
+        {!streaming&&pptx&&<PPTXButton pptxData={pptx}/>}
       </div>
     </div>
   );
@@ -325,9 +367,9 @@ function exportPDF(messages, sector, profile, title) {
     if(m.role==="user"){const ft=m.fileName?`<div class="file-tag">📎 ${m.fileName}</div>`:"";return `<div class="message user">${ft}<div class="label">Question</div><div class="bubble user-bubble">${text}</div></div>`;}
     return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
   }).join("");
-  const sectorLabel = SECTORS[sector].label;
+  const sectorLabel=SECTORS[sector].label;
   const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:0;color:#1a1a1a;background:#fff}.header{background:#FFB71E;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.ht{font-size:20px;font-weight:900;color:#25485A}.meta{text-align:right;font-size:12px;color:rgba(37,72,90,0.7)}.body{padding:0 32px 32px}.message{margin-bottom:18px}.label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;color:#999}.bubble{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f9f9f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:11px;color:#25485A;margin-bottom:5px}.footer{margin-top:32px;padding:12px 32px;border-top:3px solid #FFB71E;font-size:11px;color:#999;display:flex;justify-content:space-between}</style></head><body>
-  <div class="header"><div><div class="ht">SOMFY Agent IA</div></div><div class="meta"><strong>${sectorLabel} — ${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
+  <div class="header"><div><div class="ht">SOMFY Agent IA</div></div><div class="meta"><strong>${sectorLabel} — ${profile}</strong><br/>${date}</div></div>
   <div class="body">${content}</div>
   <div class="footer"><span>Somfy Agent — ${sectorLabel}</span><span>${date}</span></div>
   <script>window.onload=()=>window.print();</script></body></html>`;
@@ -352,24 +394,10 @@ function getFileIcon(name){const ext=name.split(".").pop().toLowerCase();if(ext=
 function Sidebar({ sector, setSector, profile, setProfile, openCat, setOpenCat, sendMessage, newConversation, profileHistory, activeId, setActiveId, deleteConv, isMobile, closeSidebar }) {
   const currentSector = SECTORS[sector];
   const currentProfile = currentSector.profiles[profile];
-
-  function switchSector(s) {
-    setSector(s);
-    setProfile("commercial");
-    setOpenCat(SECTORS[s].profiles.commercial.categories[0].id);
-    if(isMobile) closeSidebar();
-  }
-
-  function switchProfile(p) {
-    setProfile(p);
-    setOpenCat(currentSector.profiles[p].categories[0].id);
-    if(isMobile) closeSidebar();
-  }
-
+  function switchSector(s){ setSector(s); setProfile("commercial"); setOpenCat(SECTORS[s].profiles.commercial.categories[0].id); if(isMobile)closeSidebar(); }
+  function switchProfile(p){ setProfile(p); setOpenCat(currentSector.profiles[p].categories[0].id); if(isMobile)closeSidebar(); }
   return (
     <div style={{width:isMobile?"100%":"220px",background:NAVY,display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
-
-      {/* Bandeau SOMFY */}
       <div style={{background:`linear-gradient(90deg,${YELLOW},#f0a800)`,padding:"12px 16px",borderBottom:"2px solid rgba(37,72,90,0.2)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div>
           <div style={{display:"flex",alignItems:"baseline",gap:8}}>
@@ -380,34 +408,26 @@ function Sidebar({ sector, setSector, profile, setProfile, openCat, setOpenCat, 
         </div>
         {isMobile&&<button onClick={closeSidebar} style={{background:"rgba(37,72,90,0.15)",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",fontSize:18,color:NAVY,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>}
       </div>
-
-      {/* Sélecteur Secteur */}
       <div style={{padding:"10px 10px 6px"}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>Secteur</p>
         <div style={{display:"flex",gap:4}}>
           {Object.entries(SECTORS).map(([key,s])=>(
             <button key={key} onClick={()=>switchSector(key)} style={{flex:1,padding:"7px 4px",borderRadius:7,cursor:"pointer",background:sector===key?YELLOW:"rgba(255,255,255,0.07)",border:sector===key?"none":"1px solid rgba(255,255,255,0.1)",color:sector===key?NAVY:"rgba(255,255,255,0.45)",fontSize:10,fontWeight:sector===key?700:400,display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"all 0.15s"}}>
-              <span style={{fontSize:14}}>{s.icon}</span>
-              <span>{s.label}</span>
+              <span style={{fontSize:14}}>{s.icon}</span><span>{s.label}</span>
             </button>
           ))}
         </div>
       </div>
-
-      {/* Sélecteur Profil */}
       <div style={{padding:"2px 10px 8px",borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>Profil</p>
         <div style={{display:"flex",gap:4}}>
           {Object.entries(currentSector.profiles).map(([key,p])=>(
             <button key={key} onClick={()=>switchProfile(key)} style={{flex:1,padding:"7px 4px",borderRadius:6,cursor:"pointer",background:profile===key?"rgba(255,255,255,0.15)":"rgba(255,255,255,0.05)",border:profile===key?"1px solid rgba(255,255,255,0.25)":"1px solid rgba(255,255,255,0.08)",color:profile===key?"#fff":"rgba(255,255,255,0.4)",fontSize:10,fontWeight:profile===key?600:400,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-              <span style={{fontSize:13}}>{p.icon}</span>
-              <span>{p.label}</span>
+              <span style={{fontSize:13}}>{p.icon}</span><span>{p.label}</span>
             </button>
           ))}
         </div>
       </div>
-
-      {/* Navigation catégories */}
       <div style={{padding:"6px 10px 6px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>Navigation</p>
         {currentProfile.categories.map(cat=>(
@@ -415,8 +435,7 @@ function Sidebar({ sector, setSector, profile, setProfile, openCat, setOpenCat, 
             <button onClick={()=>setOpenCat(openCat===cat.id?null:cat.id)} style={{width:"100%",padding:"8px 10px",borderRadius:6,cursor:"pointer",marginBottom:2,background:openCat===cat.id?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${openCat===cat.id?YELLOW:"transparent"}`,color:openCat===cat.id?"#fff":"rgba(255,255,255,0.55)",fontSize:11,display:"flex",alignItems:"center",gap:7,textAlign:"left",transition:"all 0.15s"}}
             onMouseEnter={e=>{if(openCat!==cat.id){e.currentTarget.style.background="rgba(255,255,255,0.05)";e.currentTarget.style.borderLeftColor="rgba(255,183,30,0.3)";}}}
             onMouseLeave={e=>{if(openCat!==cat.id){e.currentTarget.style.background="transparent";e.currentTarget.style.borderLeftColor="transparent";}}}>
-              <span style={{fontSize:13}}>{cat.icon}</span><span style={{flex:1}}>{cat.label}</span>
-              <span style={{fontSize:9,opacity:0.4}}>{openCat===cat.id?"▼":"▶"}</span>
+              <span style={{fontSize:13}}>{cat.icon}</span><span style={{flex:1}}>{cat.label}</span><span style={{fontSize:9,opacity:0.4}}>{openCat===cat.id?"▼":"▶"}</span>
             </button>
             {openCat===cat.id&&(
               <div style={{marginLeft:12,paddingLeft:10,borderLeft:"2px solid rgba(255,183,30,0.3)",marginBottom:4}}>
@@ -427,17 +446,13 @@ function Sidebar({ sector, setSector, profile, setProfile, openCat, setOpenCat, 
           </div>
         ))}
       </div>
-
-      {/* Historique */}
       <div style={{flex:1,overflowY:"auto",padding:"6px 10px 4px"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
           <p style={{margin:0,fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>Historique</p>
           <button onClick={()=>{newConversation();if(isMobile)closeSidebar();}} style={{background:"rgba(255,183,30,0.12)",border:"1px solid rgba(255,183,30,0.25)",borderRadius:5,padding:"2px 8px",cursor:"pointer",color:YELLOW,fontSize:10,fontWeight:700}}>+ Nouveau</button>
         </div>
-        {profileHistory.length===0?<p style={{fontSize:11,color:"rgba(255,255,255,0.2)",fontStyle:"italic",margin:"4px 2px"}}>Aucune conversation</p>:profileHistory.map(h=><HistoryItem key={h.id} item={h} active={activeId[`${sector}_${profile}`]===h.id} onClick={()=>{setActiveId(prev=>({...prev,[`${sector}_${profile}`]:h.id}));if(isMobile)closeSidebar();}} onDelete={()=>deleteConv(h.id)}/>)}
+        {profileHistory.length===0?<p style={{fontSize:11,color:"rgba(255,255,255,0.2)",fontStyle:"italic",margin:"4px 2px"}}>Aucune conversation</p>:profileHistory.map(h=><HistoryItem key={h.id} item={h} active={activeId===h.id} onClick={()=>{setActiveId(h.id);if(isMobile)closeSidebar();}} onDelete={()=>deleteConv(h.id)}/>)}
       </div>
-
-      {/* Badge secteur actif + web */}
       <div style={{padding:"8px 10px 10px",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
         <div style={{background:"rgba(255,183,30,0.08)",border:"1px solid rgba(255,183,30,0.2)",borderRadius:6,padding:"6px 8px",marginBottom:6}}>
           <p style={{margin:"0 0 2px",fontSize:10,color:YELLOW,fontWeight:700}}>{currentSector.icon} Mode {currentSector.label}</p>
@@ -450,50 +465,38 @@ function Sidebar({ sector, setSector, profile, setProfile, openCat, setOpenCat, 
 }
 
 export default function App() {
-  const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sector, setSector] = useState("tertiaire");
-  const [profile, setProfile] = useState("commercial");
-  const [openCat, setOpenCat] = useState("prospection");
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [streaming, setStreaming] = useState(false);
-  const [histories, setHistories] = useState({});
-  const [activeId, setActiveId] = useState({});
-  const [pendingFile, setPendingFile] = useState(null);
-  const [dragOver, setDragOver] = useState(false);
-  const bottomRef = useRef(null);
-  const inputRef = useRef(null);
-  const fileRef = useRef(null);
+  const [windowWidth,setWindowWidth]=useState(typeof window!=="undefined"?window.innerWidth:1024);
+  const [sidebarOpen,setSidebarOpen]=useState(false);
+  const [sector,setSector]=useState("tertiaire");
+  const [profile,setProfile]=useState("commercial");
+  const [openCat,setOpenCat]=useState("prospection");
+  const [input,setInput]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [streaming,setStreaming]=useState(false);
+  const [allHistories,setAllHistories]=useState({});
+  const [allActiveIds,setAllActiveIds]=useState({});
+  const [pendingFile,setPendingFile]=useState(null);
+  const [dragOver,setDragOver]=useState(false);
+  const bottomRef=useRef(null);
+  const inputRef=useRef(null);
+  const fileRef=useRef(null);
 
-  const isMobile = windowWidth < 768;
-  const historyKey = `${sector}_${profile}`;
+  const isMobile=windowWidth<768;
+  const hKey=`${sector}_${profile}`;
+  const history=allHistories[hKey]||[];
+  const activeId=allActiveIds[hKey]||null;
 
-  useEffect(()=>{
-    const handleResize=()=>setWindowWidth(window.innerWidth);
-    window.addEventListener("resize",handleResize);
-    return ()=>window.removeEventListener("resize",handleResize);
-  },[]);
+  useEffect(()=>{const h=()=>setWindowWidth(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);
 
-  const currentMessages=()=>{
-    const id=activeId[historyKey];
-    if(!id) return [];
-    const conv=(histories[historyKey]||[]).find(h=>h.id===id);
-    return conv?conv.messages:[];
-  };
-  const currentTitle=()=>{
-    const id=activeId[historyKey];
-    if(!id) return "Conversation";
-    const conv=(histories[historyKey]||[]).find(h=>h.id===id);
-    return conv?conv.title:"Conversation";
-  };
+  const currentMessages=()=>{if(!activeId)return[];const conv=history.find(h=>h.id===activeId);return conv?conv.messages:[];};
+  const currentTitle=()=>{if(!activeId)return"Conversation";const conv=history.find(h=>h.id===activeId);return conv?conv.title:"Conversation";};
 
-  useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[histories,activeId,sector,profile]);
+  useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[allHistories,allActiveIds,sector,profile]);
 
-  function newConversation(){setActiveId(prev=>({...prev,[historyKey]:null}));setPendingFile(null);}
+  function newConversation(){setAllActiveIds(prev=>({...prev,[hKey]:null}));setPendingFile(null);}
 
   function updateLastMsg(convId,key,content){
-    setHistories(prev=>({...prev,[key]:(prev[key]||[]).map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)}));
+    setAllHistories(prev=>({...prev,[key]:(prev[key]||[]).map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)}));
   }
 
   async function handleFile(file){
@@ -513,15 +516,15 @@ export default function App() {
     const msgs=currentMessages();
     const newUserMsg={role:"user",content:displayText,fileName:file?.name};
     const newMsgs=[...msgs,newUserMsg];
-    let convId=activeId[historyKey];
-    const key=historyKey;
+    let convId=activeId;
+    const key=hKey;
     if(!convId){
       convId=Date.now().toString();
       const title=displayText.slice(0,40)+(displayText.length>40?"...":"");
-      setHistories(prev=>({...prev,[key]:[{id:convId,title,messages:[]},...(prev[key]||[])]}));
-      setActiveId(prev=>({...prev,[key]:convId}));
+      setAllHistories(prev=>({...prev,[key]:[{id:convId,title,messages:[]},...(prev[key]||[])]}));
+      setAllActiveIds(prev=>({...prev,[key]:convId}));
     }
-    setHistories(prev=>({...prev,[key]:(prev[key]||[]).map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
+    setAllHistories(prev=>({...prev,[key]:(prev[key]||[]).map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
     setLoading(true);setStreaming(false);
     try{
       const msgContent=await buildMessageContent(userText,file);
@@ -545,18 +548,17 @@ export default function App() {
   }
 
   function deleteConv(id){
-    setHistories(prev=>({...prev,[historyKey]:(prev[historyKey]||[]).filter(h=>h.id!==id)}));
-    if(activeId[historyKey]===id)setActiveId(prev=>({...prev,[historyKey]:null}));
+    setAllHistories(prev=>({...prev,[hKey]:(prev[hKey]||[]).filter(h=>h.id!==id)}));
+    if(activeId===id)setAllActiveIds(prev=>({...prev,[hKey]:null}));
   }
 
-  const currentSector = SECTORS[sector];
-  const currentProfile = currentSector.profiles[profile];
-  const currentCat = currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
-  const messages = currentMessages();
-  const profileHistory = histories[historyKey]||[];
-  const isStreaming = streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
+  const currentSector=SECTORS[sector];
+  const currentProfile=currentSector.profiles[profile];
+  const currentCat=currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
+  const messages=currentMessages();
+  const isStreaming=streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
 
-  const sidebarProps = { sector, setSector, profile, setProfile, openCat, setOpenCat, sendMessage, newConversation, profileHistory, activeId, setActiveId, deleteConv, isMobile, closeSidebar:()=>setSidebarOpen(false) };
+  const sidebarProps={sector,setSector,profile,setProfile,openCat,setOpenCat,sendMessage,newConversation,profileHistory:history,activeId,setActiveId:(id)=>setAllActiveIds(prev=>({...prev,[hKey]:id})),deleteConv,isMobile,closeSidebar:()=>setSidebarOpen(false)};
 
   return (
     <div style={{display:"flex",height:isMobile?"100dvh":"640px",background:"#fafafa",borderRadius:isMobile?0:16,overflow:"hidden",boxShadow:isMobile?"none":"0 4px 24px rgba(0,0,0,0.12)",border:isMobile?"none":"1px solid rgba(0,0,0,0.06)",position:"relative",fontFamily:"'Inter',system-ui,sans-serif"}}>
@@ -575,14 +577,9 @@ export default function App() {
       )}
 
       <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
-
         <div style={{background:"#fff",borderBottom:`3px solid ${YELLOW}`,padding:isMobile?"10px 14px":"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
           <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
-            {isMobile&&(
-              <button onClick={()=>setSidebarOpen(true)} style={{width:38,height:38,borderRadius:8,background:NAVY,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <span style={{color:YELLOW,fontSize:18,fontWeight:700}}>☰</span>
-              </button>
-            )}
+            {isMobile&&<button onClick={()=>setSidebarOpen(true)} style={{width:38,height:38,borderRadius:8,background:NAVY,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:YELLOW,fontSize:18,fontWeight:700}}>☰</span></button>}
             <span style={{fontSize:isMobile?18:20}}>{currentCat.icon}</span>
             <div style={{minWidth:0}}>
               <p style={{margin:0,fontWeight:700,fontSize:isMobile?13:14,color:NAVY,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{currentCat.label}</p>
@@ -632,10 +629,10 @@ export default function App() {
             <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}}
             onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY}
             onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️</button>
-            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message...":"Posez votre question..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
+            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message...":"Posez votre question ou demandez une présentation PowerPoint..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
             <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>↑</button>
           </div>
-          {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier</p>}
+          {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier · Demande une présentation PowerPoint</p>}
         </div>
       </div>
     </div>
