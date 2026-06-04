@@ -5,9 +5,10 @@ const NAVY = "#25485A";
 const YELLOW = "#FFB71E";
 const CHART_COLORS = ["#25485A","#FFB71E","#1a6b4a","#e07b00","#5a8fa3","#f0c040","#2e7d5e","#c9600a"];
 
-const SYSTEM_PROMPT = `Tu es un assistant IA expert en protection solaire tertiaire, travaillant avec les équipes de Somfy France.
+const SYSTEM_PROMPTS = {
+  tertiaire: `Tu es un assistant IA expert en protection solaire tertiaire, travaillant avec les équipes de Somfy France.
 
-Contexte Somfy : leader en résidentiel (75% de part de marché, ~430M€ de CA), challenger en tertiaire face à Schneider, Siemens, Varema, Nice. Produits clés : BSO, screens, volets roulants motorisés. Solution tertiaire : Animeo Suite (radio IO) et offres filaires. Compatibilité GTB/BMS prévue automne 2025. Concurrents notables : Yokis (bas coût), Bubendorf, Cherubini.
+Contexte Somfy Tertiaire : leader en résidentiel (75% de part de marché, ~430M€ de CA), challenger en tertiaire face à Schneider, Siemens, Varema, Nice. Produits clés : BSO, screens, volets roulants motorisés. Solution tertiaire : Animeo Suite (radio IO) et offres filaires. Compatibilité GTB/BMS prévue automne 2025. Concurrents notables : Yokis (bas coût), Bubendorf, Cherubini.
 
 Réglementation clé : Décret BACS (automatisation obligatoire >290kW), Décret Tertiaire (-40% conso 2030), argument confort d'été et réduction des degrés-heures.
 
@@ -26,69 +27,175 @@ GRAPHIQUES : quand tu as des données chiffrées comparatives, ajoute à la fin 
 CHART_START
 {"type":"bar","title":"Titre","labels":["A","B"],"datasets":[{"label":"Série","data":[10,20],"color":"#25485A"}]}
 CHART_END
-Types disponibles : bar, line, pie, multibar.`;
+Types disponibles : bar, line, pie, multibar.`,
 
-const PROFILES = {
-  commercial: {
-    label: "Commercial", icon: "🎯",
-    categories: [
-      { id:"prospection", label:"Prospection", icon:"🎯", desc:"Appels d'offres et projets",
-        prompts:[
-          { label:"AO rénovation écoles", text:"Recherche les appels d'offres publics sur le BOAMP pour la rénovation d'écoles avec volets roulants ou protection solaire en France ce mois-ci." },
-          { label:"Projets tertiaires en cours", text:"Quels sont les grands projets de rénovation tertiaire en France avec besoin potentiel en protection solaire ?" },
-          { label:"Hôpitaux en rénovation", text:"Recherche les appels d'offres sur le BOAMP pour la rénovation d'hôpitaux ou bâtiments de santé en France." },
-          { label:"Collectivités actives", text:"Quelles collectivités françaises ont annoncé des plans de rénovation thermique de leur patrimoine immobilier ?" },
-        ]},
-      { id:"pitch", label:"Arguments de vente", icon:"💬", desc:"Pitch par interlocuteur",
-        prompts:[
-          { label:"Pitch bureau d'études", text:"Rédige-moi un pitch fluide pour convaincre un bureau d'études thermique de prescrire les solutions Somfy." },
-          { label:"Pitch mairie / école", text:"Comment convaincre un élu de mairie d'investir dans des protections solaires automatisées pour ses écoles ?" },
-          { label:"Pitch facility manager", text:"Quels arguments pour un facility manager sur les bénéfices concrets des protections solaires automatisées ?" },
-          { label:"Pitch promoteur", text:"Comment convaincre un promoteur immobilier tertiaire d'intégrer Somfy dès la conception ?" },
-        ]},
-      { id:"concurrence", label:"Analyse concurrents", icon:"📊", desc:"Benchmark et veille",
-        prompts:[
-          { label:"Yokis vs Somfy", text:"Compare l'offre Yokis face à Somfy sur la protection solaire tertiaire." },
-          { label:"Benchmark concurrents", text:"Compare Somfy, Schneider, Varema, Nice et Yokis sur l'automatisme de protection solaire tertiaire." },
-          { label:"Parts de marché tertiaire", text:"Quelles sont les parts de marché estimées des acteurs sur l'automatisme de protection solaire tertiaire en France ?" },
-          { label:"Nouveaux entrants", text:"Y a-t-il de nouveaux acteurs sur le marché de l'automatisation des protections solaires en tertiaire ?" },
-        ]},
-      { id:"installateurs", label:"Réseau installateurs", icon:"🔧", desc:"Formation et animation réseau",
-        prompts:[
-          { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire tertiaire ?" },
-          { label:"Arguments pour installateurs", text:"Comment convaincre un installateur résidentiel de se lancer sur le marché tertiaire avec Somfy ?" },
-        ]},
-    ]
+  residentiel: `Tu es un assistant IA expert en protection solaire résidentielle, travaillant avec les équipes de Somfy France.
+
+Contexte Somfy Résidentiel : leader du marché avec ~75% de parts de marché en France. Produits clés : TaHoma switch (box domotique), io-homecontrol (protocole bidirectionnel propriétaire), Connexoon (box entrée de gamme), volets roulants, stores, BSO résidentiels. Cibles principales : installateurs, particuliers, promoteurs immobiliers résidentiels.
+
+Concurrents résidentiels : Nice (Home Evolution), Delta Dore (Tydom), Legrand (Netatmo), Velux, Bubendorf, Cherubini. Somfy est leader mais doit défendre sa position face à l'essor des solutions connectées.
+
+Réglementation clé : RE2020 (depuis janvier 2022, exigences thermiques renforcées), MaPrimeRénov' (aides à la rénovation), CEE (Certificats d'Économies d'Énergie), BBC Rénovation, label RGE pour les installateurs.
+
+Arguments clés : confort thermique, économies d'énergie, domotique et maison connectée, sécurité, valeur ajoutée au logement, compatibilité avec les assistants vocaux (Google, Alexa, Apple HomeKit).
+
+STYLE DE RÉPONSE :
+- Écris de façon naturelle et fluide, comme un consultant qui parle à un collègue
+- Pas de bullet points ni de listes à tirets sauf si vraiment nécessaire
+- Pas de texte en gras avec des étoiles comme ça
+- Des paragraphes courts et clairs
+- Un ton direct, professionnel mais accessible
+- Tu peux répondre à n'importe quelle question, pas seulement sur Somfy
+- Si un fichier est joint, analyse-le et réponds en te basant sur son contenu
+- Utilise la recherche web pour toute question d'actualité
+
+GRAPHIQUES : quand tu as des données chiffrées comparatives, ajoute à la fin :
+CHART_START
+{"type":"bar","title":"Titre","labels":["A","B"],"datasets":[{"label":"Série","data":[10,20],"color":"#25485A"}]}
+CHART_END
+Types disponibles : bar, line, pie, multibar.`
+};
+
+const SECTORS = {
+  tertiaire: {
+    label: "Tertiaire",
+    icon: "🏢",
+    badge: "Décret BACS • BOAMP • GTB",
+    profiles: {
+      commercial: {
+        label: "Commercial", icon: "🎯",
+        categories: [
+          { id:"prospection", label:"Prospection", icon:"🎯", desc:"Appels d'offres et projets",
+            prompts:[
+              { label:"AO rénovation écoles", text:"Recherche les appels d'offres publics sur le BOAMP pour la rénovation d'écoles avec volets roulants ou protection solaire en France ce mois-ci." },
+              { label:"Projets tertiaires en cours", text:"Quels sont les grands projets de rénovation tertiaire en France avec besoin potentiel en protection solaire ?" },
+              { label:"Hôpitaux en rénovation", text:"Recherche les appels d'offres sur le BOAMP pour la rénovation d'hôpitaux ou bâtiments de santé en France." },
+              { label:"Collectivités actives", text:"Quelles collectivités françaises ont annoncé des plans de rénovation thermique de leur patrimoine immobilier ?" },
+            ]},
+          { id:"pitch", label:"Arguments de vente", icon:"💬", desc:"Pitch par interlocuteur",
+            prompts:[
+              { label:"Pitch bureau d'études", text:"Rédige-moi un pitch fluide pour convaincre un bureau d'études thermique de prescrire les solutions Somfy." },
+              { label:"Pitch mairie / école", text:"Comment convaincre un élu de mairie d'investir dans des protections solaires automatisées pour ses écoles ?" },
+              { label:"Pitch facility manager", text:"Quels arguments pour un facility manager sur les bénéfices concrets des protections solaires automatisées ?" },
+              { label:"Pitch promoteur tertiaire", text:"Comment convaincre un promoteur immobilier tertiaire d'intégrer Somfy dès la conception ?" },
+            ]},
+          { id:"concurrence", label:"Analyse concurrents", icon:"📊", desc:"Benchmark et veille",
+            prompts:[
+              { label:"Yokis vs Somfy", text:"Compare l'offre Yokis face à Somfy sur la protection solaire tertiaire." },
+              { label:"Benchmark concurrents", text:"Compare Somfy, Schneider, Varema, Nice et Yokis sur l'automatisme de protection solaire tertiaire." },
+              { label:"Parts de marché tertiaire", text:"Quelles sont les parts de marché estimées des acteurs sur l'automatisme de protection solaire tertiaire en France ?" },
+              { label:"Nouveaux entrants", text:"Y a-t-il de nouveaux acteurs sur le marché de l'automatisation des protections solaires en tertiaire ?" },
+            ]},
+          { id:"installateurs", label:"Réseau installateurs", icon:"🔧", desc:"Formation et animation",
+            prompts:[
+              { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire tertiaire ?" },
+              { label:"Arguments pour installateurs", text:"Comment convaincre un installateur résidentiel de se lancer sur le marché tertiaire avec Somfy ?" },
+            ]},
+        ]
+      },
+      marketing: {
+        label: "Marketing", icon: "📈",
+        categories: [
+          { id:"veille", label:"Veille marché", icon:"📡", desc:"Tendances et actualités",
+            prompts:[
+              { label:"Tendances 2025", text:"Quelles sont les grandes tendances du marché de la protection solaire tertiaire en France en 2025 ?" },
+              { label:"Chiffres marché France", text:"Quels sont les chiffres clés du marché de la protection solaire tertiaire en France ?" },
+              { label:"Protocoles GTB émergents", text:"Quels protocoles GTB gagnent du terrain en France en 2025 ?" },
+              { label:"Actualités bâtiment", text:"Quelles sont les dernières actualités du secteur bâtiment tertiaire sur l'efficacité énergétique ?" },
+            ]},
+          { id:"reglementation", label:"Réglementation", icon:"📋", desc:"Décrets et normes",
+            prompts:[
+              { label:"Décret BACS complet", text:"Explique-moi le décret BACS, ses obligations, ses seuils et son impact pour Somfy." },
+              { label:"Décret tertiaire 2025", text:"Où en est l'application du décret tertiaire en 2025 et quelles sont les obligations actuelles ?" },
+              { label:"Normes NF protection solaire", text:"Quelles normes NF et européennes s'appliquent aux protections solaires ?" },
+            ]},
+          { id:"confort_ete", label:"Confort d'été", icon:"☀️", desc:"Arguments thermiques",
+            prompts:[
+              { label:"Gains thermiques BSO", text:"Quels sont les gains thermiques concrets avec des BSO ou screens automatisés ?" },
+              { label:"Protection solaire vs clim", text:"Compare les bénéfices d'une protection solaire automatisée face à la climatisation." },
+              { label:"Projections chaleur 2050", text:"Quelles sont les projections de chaleur pour les villes françaises d'ici 2050 ?" },
+            ]},
+          { id:"communication", label:"Communication", icon:"📣", desc:"Contenu et messages",
+            prompts:[
+              { label:"Messages clés par segment", text:"Définis les messages clés Somfy pour les écoles, bureaux, bâtiments de santé et hôtels." },
+              { label:"Arguments RSE", text:"Quels arguments RSE peut-on développer autour des protections solaires automatisées ?" },
+              { label:"Cas clients à documenter", text:"Quels cas clients Somfy devrait documenter en priorité pour crédibiliser son offre tertiaire ?" },
+            ]},
+        ]
+      }
+    }
   },
-  marketing: {
-    label: "Marketing", icon: "📈",
-    categories: [
-      { id:"veille", label:"Veille marché", icon:"📡", desc:"Tendances et actualités",
-        prompts:[
-          { label:"Tendances 2025", text:"Quelles sont les grandes tendances du marché de la protection solaire tertiaire en France en 2025 ?" },
-          { label:"Chiffres marché France", text:"Quels sont les chiffres clés du marché de la protection solaire tertiaire en France ?" },
-          { label:"Protocoles GTB émergents", text:"Quels protocoles GTB gagnent du terrain en France en 2025 ?" },
-          { label:"Actualités bâtiment", text:"Quelles sont les dernières actualités du secteur bâtiment tertiaire sur l'efficacité énergétique ?" },
-        ]},
-      { id:"reglementation", label:"Réglementation", icon:"📋", desc:"Décrets et normes",
-        prompts:[
-          { label:"Décret BACS complet", text:"Explique-moi le décret BACS, ses obligations, ses seuils et son impact pour Somfy." },
-          { label:"Décret tertiaire 2025", text:"Où en est l'application du décret tertiaire en 2025 et quelles sont les obligations actuelles ?" },
-          { label:"Normes NF protection solaire", text:"Quelles normes NF et européennes s'appliquent aux protections solaires ?" },
-        ]},
-      { id:"confort_ete", label:"Confort d'été", icon:"☀️", desc:"Arguments thermiques et données",
-        prompts:[
-          { label:"Gains thermiques BSO", text:"Quels sont les gains thermiques concrets avec des BSO ou screens automatisés ?" },
-          { label:"Protection solaire vs clim", text:"Compare les bénéfices d'une protection solaire automatisée face à la climatisation." },
-          { label:"Projections chaleur 2050", text:"Quelles sont les projections de chaleur pour les villes françaises d'ici 2050 ?" },
-        ]},
-      { id:"communication", label:"Communication", icon:"📣", desc:"Contenu et messages clés",
-        prompts:[
-          { label:"Messages clés par segment", text:"Définis les messages clés Somfy pour les écoles, bureaux, bâtiments de santé et hôtels." },
-          { label:"Arguments RSE", text:"Quels arguments RSE peut-on développer autour des protections solaires automatisées ?" },
-          { label:"Cas clients à documenter", text:"Quels cas clients Somfy devrait documenter en priorité pour crédibiliser son offre tertiaire ?" },
-        ]},
-    ]
+  residentiel: {
+    label: "Résidentiel",
+    icon: "🏠",
+    badge: "TaHoma • io-homecontrol • RE2020",
+    profiles: {
+      commercial: {
+        label: "Commercial", icon: "🎯",
+        categories: [
+          { id:"tahoma", label:"Produits TaHoma", icon:"🏠", desc:"Gamme résidentielle connectée",
+            prompts:[
+              { label:"Gamme TaHoma switch", text:"Présente-moi la gamme TaHoma switch de Somfy : fonctionnalités, compatibilités, positionnement marché." },
+              { label:"io-homecontrol expliqué", text:"Explique le protocole io-homecontrol de Somfy et ses avantages face aux protocoles concurrents." },
+              { label:"Compatibilités domotique", text:"Avec quels systèmes domotiques et assistants vocaux les produits Somfy résidentiels sont-ils compatibles ?" },
+              { label:"Argument maison connectée", text:"Quels sont les arguments pour convaincre un particulier d'investir dans une maison connectée avec Somfy ?" },
+            ]},
+          { id:"installateurs_resi", label:"Cibles & Installateurs", icon:"👥", desc:"Réseau et clients finaux",
+            prompts:[
+              { label:"Pitch installateur résidentiel", text:"Comment convaincre un installateur électricien de proposer les solutions Somfy résidentielles à ses clients ?" },
+              { label:"Pitch particulier", text:"Rédige un pitch pour convaincre un particulier d'automatiser ses volets et stores avec Somfy." },
+              { label:"Pitch promoteur résidentiel", text:"Comment convaincre un promoteur immobilier d'intégrer TaHoma et io-homecontrol dans ses programmes neufs ?" },
+              { label:"Fidélisation installateurs", text:"Quelles actions mettre en place pour fidéliser les installateurs Somfy résidentiels ?" },
+            ]},
+          { id:"concurrence_resi", label:"Concurrents résidentiels", icon:"📊", desc:"Benchmark marché résidentiel",
+            prompts:[
+              { label:"Somfy vs Nice Home", text:"Compare Somfy et Nice Home Evolution sur le marché résidentiel connecté." },
+              { label:"Somfy vs Delta Dore Tydom", text:"Compare TaHoma switch et Tydom de Delta Dore : fonctionnalités, prix, réseau installateurs." },
+              { label:"Somfy vs Legrand Netatmo", text:"Compare Somfy et Legrand Netatmo sur la domotique résidentielle." },
+              { label:"Parts de marché résidentiel", text:"Quelles sont les parts de marché des acteurs de l'automatisme résidentiel en France ?" },
+            ]},
+          { id:"aides_resi", label:"Aides & Réglementation", icon:"🌿", desc:"RE2020, MaPrimeRénov'",
+            prompts:[
+              { label:"MaPrimeRénov' et Somfy", text:"Comment les produits Somfy s'inscrivent-ils dans le dispositif MaPrimeRénov' ?" },
+              { label:"RE2020 et protection solaire", text:"Quelles sont les exigences de la RE2020 concernant la protection solaire en résidentiel ?" },
+              { label:"CEE protection solaire", text:"Existe-t-il des CEE (Certificats d'Économies d'Énergie) applicables aux protections solaires résidentielles ?" },
+              { label:"Label RGE installateurs", text:"Qu'est-ce que le label RGE et comment aide-t-il les installateurs Somfy à vendre plus ?" },
+            ]},
+        ]
+      },
+      marketing: {
+        label: "Marketing", icon: "📈",
+        categories: [
+          { id:"tendances_resi", label:"Tendances Smart Home", icon:"📡", desc:"Marché connecté résidentiel",
+            prompts:[
+              { label:"Marché smart home France", text:"Quelles sont les tendances du marché de la maison connectée en France en 2025 ?" },
+              { label:"Domotique et IoT", text:"Comment évolue le marché de l'IoT résidentiel et quelles opportunités pour Somfy ?" },
+              { label:"Attentes des particuliers", text:"Quelles sont les attentes des particuliers français sur la domotique et la maison connectée ?" },
+              { label:"Croissance marché volets", text:"Quels sont les chiffres du marché des volets roulants et stores motorisés en France ?" },
+            ]},
+          { id:"confort_resi", label:"Confort & Économies", icon:"☀️", desc:"Arguments particuliers",
+            prompts:[
+              { label:"Économies énergie concrètes", text:"Quelles économies d'énergie concrètes un particulier peut-il espérer avec des volets automatisés Somfy ?" },
+              { label:"Confort thermique maison", text:"Comment la protection solaire automatisée améliore-t-elle le confort thermique d'une maison en été ?" },
+              { label:"Sécurité et simulation présence", text:"Quels sont les arguments sécurité des volets connectés Somfy (simulation de présence, etc.) ?" },
+              { label:"Valeur immobilière", text:"La domotique et les volets automatisés augmentent-ils la valeur d'un bien immobilier ?" },
+            ]},
+          { id:"communication_resi", label:"Communication B2C", icon:"📣", desc:"Messages grand public",
+            prompts:[
+              { label:"Messages clés grand public", text:"Quels sont les messages clés à communiquer aux particuliers pour les convaincre d'adopter Somfy ?" },
+              { label:"Campagne réseaux sociaux", text:"Propose une stratégie de contenu pour les réseaux sociaux Somfy ciblant les particuliers." },
+              { label:"Argumentaire showroom", text:"Rédige un argumentaire pour un showroom présentant les solutions Somfy résidentielles." },
+              { label:"FAQ particuliers", text:"Quelles sont les questions les plus fréquentes des particuliers sur les volets automatisés Somfy ?" },
+            ]},
+          { id:"veille_resi", label:"Veille concurrentielle", icon:"🔍", desc:"Suivi concurrents résidentiels",
+            prompts:[
+              { label:"Actualités Nice Home", text:"Quelles sont les dernières actualités et nouveautés de Nice Home Evolution ?" },
+              { label:"Actualités Delta Dore", text:"Quelles sont les dernières actualités de Delta Dore sur le marché résidentiel ?" },
+              { label:"Innovations domotique 2025", text:"Quelles sont les grandes innovations en domotique résidentielle attendues en 2025 ?" },
+            ]},
+        ]
+      }
+    }
   }
 };
 
@@ -199,7 +306,7 @@ function Message({ msg, streaming, isMobile }) {
 
 function HistoryItem({ item, active, onClick, onDelete }) {
   return (
-    <div onClick={onClick} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 10px",borderRadius:6,cursor:"pointer",background:active?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${active?YELLOW:"transparent"}`,marginBottom:2}}
+    <div onClick={onClick} style={{display:"flex",alignItems:"center",gap:6,padding:"7px 10px",borderRadius:6,cursor:"pointer",background:active?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${active?YELLOW:"transparent"}`,marginBottom:2}}
     onMouseEnter={e=>{ if(!active)e.currentTarget.style.background="rgba(255,255,255,0.06)";}}
     onMouseLeave={e=>{ if(!active)e.currentTarget.style.background="transparent";}}>
       <span style={{fontSize:12}}>💬</span>
@@ -211,17 +318,18 @@ function HistoryItem({ item, active, onClick, onDelete }) {
   );
 }
 
-function exportPDF(messages, profile, title) {
+function exportPDF(messages, sector, profile, title) {
   const date=new Date().toLocaleDateString("fr-FR",{day:"2-digit",month:"long",year:"numeric"});
   const content=messages.map(m=>{
     const {text}=parseMessage(m.content);
     if(m.role==="user"){const ft=m.fileName?`<div class="file-tag">📎 ${m.fileName}</div>`:"";return `<div class="message user">${ft}<div class="label">Question</div><div class="bubble user-bubble">${text}</div></div>`;}
     return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
   }).join("");
+  const sectorLabel = SECTORS[sector].label;
   const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:0;color:#1a1a1a;background:#fff}.header{background:#FFB71E;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.ht{font-size:20px;font-weight:900;color:#25485A}.meta{text-align:right;font-size:12px;color:rgba(37,72,90,0.7)}.body{padding:0 32px 32px}.message{margin-bottom:18px}.label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;color:#999}.bubble{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f9f9f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:11px;color:#25485A;margin-bottom:5px}.footer{margin-top:32px;padding:12px 32px;border-top:3px solid #FFB71E;font-size:11px;color:#999;display:flex;justify-content:space-between}</style></head><body>
-  <div class="header"><div><div class="ht">SOMFY Agent IA</div></div><div class="meta"><strong>${profile}</strong> · ${date} · ${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
+  <div class="header"><div><div class="ht">SOMFY Agent IA</div></div><div class="meta"><strong>${sectorLabel} — ${profile}</strong><br/>${date}<br/>${messages.filter(m=>m.role==="user").length} échange${messages.filter(m=>m.role==="user").length>1?"s":""}</div></div>
   <div class="body">${content}</div>
-  <div class="footer"><span>Somfy Agent — Protection solaire tertiaire</span><span>${date}</span></div>
+  <div class="footer"><span>Somfy Agent — ${sectorLabel}</span><span>${date}</span></div>
   <script>window.onload=()=>window.print();</script></body></html>`;
   const win=window.open("","_blank");win.document.write(html);win.document.close();
 }
@@ -241,45 +349,79 @@ async function buildMessageContent(userText,file){
 }
 function getFileIcon(name){const ext=name.split(".").pop().toLowerCase();if(ext==="pdf")return "📄";if(["jpg","jpeg","png","gif","webp"].includes(ext))return "🖼️";if(["doc","docx"].includes(ext))return "📝";if(["xls","xlsx","csv"].includes(ext))return "📊";return "📁";}
 
-function Sidebar({ profile, setProfile, openCat, setOpenCat, currentProfile, sendMessage, newConversation, profileHistory, activeId, setActiveId, deleteConv, isMobile, closeSidebar }) {
-  function switchProfile(p){ setProfile(p); setOpenCat(PROFILES[p].categories[0].id); if(isMobile) closeSidebar(); }
+function Sidebar({ sector, setSector, profile, setProfile, openCat, setOpenCat, sendMessage, newConversation, profileHistory, activeId, setActiveId, deleteConv, isMobile, closeSidebar }) {
+  const currentSector = SECTORS[sector];
+  const currentProfile = currentSector.profiles[profile];
+
+  function switchSector(s) {
+    setSector(s);
+    setProfile("commercial");
+    setOpenCat(SECTORS[s].profiles.commercial.categories[0].id);
+    if(isMobile) closeSidebar();
+  }
+
+  function switchProfile(p) {
+    setProfile(p);
+    setOpenCat(currentSector.profiles[p].categories[0].id);
+    if(isMobile) closeSidebar();
+  }
+
   return (
     <div style={{width:isMobile?"100%":"220px",background:NAVY,display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
+
       {/* Bandeau SOMFY */}
-      <div style={{background:`linear-gradient(90deg,${YELLOW},#f0a800)`,padding:"13px 16px",borderBottom:"2px solid rgba(37,72,90,0.2)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div style={{background:`linear-gradient(90deg,${YELLOW},#f0a800)`,padding:"12px 16px",borderBottom:"2px solid rgba(37,72,90,0.2)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div>
           <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-            <span style={{fontSize:19,fontWeight:900,color:NAVY,letterSpacing:"-0.5px"}}>SOMFY</span>
-            <span style={{fontSize:9,color:"rgba(37,72,90,0.55)",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em"}}>Agent IA</span>
+            <span style={{fontSize:18,fontWeight:900,color:NAVY,letterSpacing:"-0.5px"}}>SOMFY</span>
+            <span style={{fontSize:8,color:"rgba(37,72,90,0.55)",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em"}}>Agent IA</span>
           </div>
-          <p style={{margin:"1px 0 0",fontSize:10,color:"rgba(37,72,90,0.55)"}}>Protection solaire tertiaire</p>
+          <p style={{margin:"1px 0 0",fontSize:9,color:"rgba(37,72,90,0.55)"}}>Protection solaire</p>
         </div>
         {isMobile&&<button onClick={closeSidebar} style={{background:"rgba(37,72,90,0.15)",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",fontSize:18,color:NAVY,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>}
       </div>
 
-      {/* Profil */}
-      <div style={{padding:"12px 12px 8px"}}>
+      {/* Sélecteur Secteur */}
+      <div style={{padding:"10px 10px 6px"}}>
+        <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>Secteur</p>
         <div style={{display:"flex",gap:4}}>
-          {Object.entries(PROFILES).map(([key,p])=>(
-            <button key={key} onClick={()=>switchProfile(key)} style={{flex:1,padding:"8px 4px",borderRadius:6,cursor:"pointer",background:profile===key?YELLOW:"rgba(255,255,255,0.07)",border:profile===key?"none":"1px solid rgba(255,255,255,0.1)",color:profile===key?NAVY:"rgba(255,255,255,0.5)",fontSize:12,fontWeight:profile===key?700:400,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-              <span style={{fontSize:16}}>{p.icon}</span>{p.label}
+          {Object.entries(SECTORS).map(([key,s])=>(
+            <button key={key} onClick={()=>switchSector(key)} style={{flex:1,padding:"7px 4px",borderRadius:7,cursor:"pointer",background:sector===key?YELLOW:"rgba(255,255,255,0.07)",border:sector===key?"none":"1px solid rgba(255,255,255,0.1)",color:sector===key?NAVY:"rgba(255,255,255,0.45)",fontSize:10,fontWeight:sector===key?700:400,display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"all 0.15s"}}>
+              <span style={{fontSize:14}}>{s.icon}</span>
+              <span>{s.label}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Catégories */}
-      <div style={{padding:"0 10px 8px",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
-        <p style={{margin:"4px 2px 8px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Navigation</p>
+      {/* Sélecteur Profil */}
+      <div style={{padding:"2px 10px 8px",borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
+        <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>Profil</p>
+        <div style={{display:"flex",gap:4}}>
+          {Object.entries(currentSector.profiles).map(([key,p])=>(
+            <button key={key} onClick={()=>switchProfile(key)} style={{flex:1,padding:"7px 4px",borderRadius:6,cursor:"pointer",background:profile===key?"rgba(255,255,255,0.15)":"rgba(255,255,255,0.05)",border:profile===key?"1px solid rgba(255,255,255,0.25)":"1px solid rgba(255,255,255,0.08)",color:profile===key?"#fff":"rgba(255,255,255,0.4)",fontSize:10,fontWeight:profile===key?600:400,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+              <span style={{fontSize:13}}>{p.icon}</span>
+              <span>{p.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation catégories */}
+      <div style={{padding:"6px 10px 6px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+        <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>Navigation</p>
         {currentProfile.categories.map(cat=>(
           <div key={cat.id}>
-            <button onClick={()=>setOpenCat(openCat===cat.id?null:cat.id)} style={{width:"100%",padding:"9px 10px",borderRadius:6,cursor:"pointer",marginBottom:2,background:openCat===cat.id?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${openCat===cat.id?YELLOW:"transparent"}`,color:openCat===cat.id?"#fff":"rgba(255,255,255,0.55)",fontSize:13,display:"flex",alignItems:"center",gap:8,textAlign:"left"}}>
-              <span style={{fontSize:15}}>{cat.icon}</span><span style={{flex:1}}>{cat.label}</span><span style={{fontSize:10,opacity:0.4}}>{openCat===cat.id?"▼":"▶"}</span>
+            <button onClick={()=>setOpenCat(openCat===cat.id?null:cat.id)} style={{width:"100%",padding:"8px 10px",borderRadius:6,cursor:"pointer",marginBottom:2,background:openCat===cat.id?"rgba(255,183,30,0.12)":"transparent",borderLeft:`3px solid ${openCat===cat.id?YELLOW:"transparent"}`,color:openCat===cat.id?"#fff":"rgba(255,255,255,0.55)",fontSize:11,display:"flex",alignItems:"center",gap:7,textAlign:"left",transition:"all 0.15s"}}
+            onMouseEnter={e=>{if(openCat!==cat.id){e.currentTarget.style.background="rgba(255,255,255,0.05)";e.currentTarget.style.borderLeftColor="rgba(255,183,30,0.3)";}}}
+            onMouseLeave={e=>{if(openCat!==cat.id){e.currentTarget.style.background="transparent";e.currentTarget.style.borderLeftColor="transparent";}}}>
+              <span style={{fontSize:13}}>{cat.icon}</span><span style={{flex:1}}>{cat.label}</span>
+              <span style={{fontSize:9,opacity:0.4}}>{openCat===cat.id?"▼":"▶"}</span>
             </button>
             {openCat===cat.id&&(
               <div style={{marginLeft:12,paddingLeft:10,borderLeft:"2px solid rgba(255,183,30,0.3)",marginBottom:4}}>
-                {cat.prompts.map((p,i)=><button key={i} onClick={()=>{sendMessage(p.text);if(isMobile)closeSidebar();}} style={{width:"100%",padding:"6px 6px",borderRadius:5,cursor:"pointer",textAlign:"left",background:"transparent",border:"none",color:"rgba(255,255,255,0.45)",fontSize:12,lineHeight:1.4,display:"block",marginBottom:1}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.45)"}>{p.label}</button>)}
-                {cat.id==="prospection"&&profile==="commercial"&&<PlaceSearchWidget onSearch={(t)=>{sendMessage(t);if(isMobile)closeSidebar();}}/>}
+                {cat.prompts.map((p,i)=><button key={i} onClick={()=>{sendMessage(p.text);if(isMobile)closeSidebar();}} style={{width:"100%",padding:"5px 6px",borderRadius:5,cursor:"pointer",textAlign:"left",background:"transparent",border:"none",color:"rgba(255,255,255,0.45)",fontSize:11,lineHeight:1.4,display:"block",marginBottom:1}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.45)"}>{p.label}</button>)}
+                {cat.id==="prospection"&&sector==="tertiaire"&&profile==="commercial"&&<PlaceSearchWidget onSearch={(t)=>{sendMessage(t);if(isMobile)closeSidebar();}}/>}
               </div>
             )}
           </div>
@@ -287,16 +429,21 @@ function Sidebar({ profile, setProfile, openCat, setOpenCat, currentProfile, sen
       </div>
 
       {/* Historique */}
-      <div style={{flex:1,overflowY:"auto",padding:"8px 10px 4px"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
-          <p style={{margin:0,fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Historique</p>
-          <button onClick={()=>{newConversation();if(isMobile)closeSidebar();}} style={{background:"rgba(255,183,30,0.12)",border:"1px solid rgba(255,183,30,0.25)",borderRadius:5,padding:"3px 8px",cursor:"pointer",color:YELLOW,fontSize:10,fontWeight:700}}>+ Nouveau</button>
+      <div style={{flex:1,overflowY:"auto",padding:"6px 10px 4px"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
+          <p style={{margin:0,fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>Historique</p>
+          <button onClick={()=>{newConversation();if(isMobile)closeSidebar();}} style={{background:"rgba(255,183,30,0.12)",border:"1px solid rgba(255,183,30,0.25)",borderRadius:5,padding:"2px 8px",cursor:"pointer",color:YELLOW,fontSize:10,fontWeight:700}}>+ Nouveau</button>
         </div>
-        {profileHistory.length===0?<p style={{fontSize:11,color:"rgba(255,255,255,0.2)",fontStyle:"italic",margin:"4px 2px"}}>Aucune conversation</p>:profileHistory.map(h=><HistoryItem key={h.id} item={h} active={activeId[profile]===h.id} onClick={()=>{setActiveId(prev=>({...prev,[profile]:h.id}));if(isMobile)closeSidebar();}} onDelete={()=>deleteConv(h.id)}/>)}
+        {profileHistory.length===0?<p style={{fontSize:11,color:"rgba(255,255,255,0.2)",fontStyle:"italic",margin:"4px 2px"}}>Aucune conversation</p>:profileHistory.map(h=><HistoryItem key={h.id} item={h} active={activeId[`${sector}_${profile}`]===h.id} onClick={()=>{setActiveId(prev=>({...prev,[`${sector}_${profile}`]:h.id}));if(isMobile)closeSidebar();}} onDelete={()=>deleteConv(h.id)}/>)}
       </div>
 
-      <div style={{padding:"8px 12px 10px",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
-        <div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:6,height:6,borderRadius:"50%",background:"#3dba6e"}}/><span style={{fontSize:10,color:"rgba(255,255,255,0.3)"}}>Recherche web active</span></div>
+      {/* Badge secteur actif + web */}
+      <div style={{padding:"8px 10px 10px",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
+        <div style={{background:"rgba(255,183,30,0.08)",border:"1px solid rgba(255,183,30,0.2)",borderRadius:6,padding:"6px 8px",marginBottom:6}}>
+          <p style={{margin:"0 0 2px",fontSize:10,color:YELLOW,fontWeight:700}}>{currentSector.icon} Mode {currentSector.label}</p>
+          <p style={{margin:0,fontSize:9,color:"rgba(255,255,255,0.35)"}}>{currentSector.badge}</p>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:6,height:6,borderRadius:"50%",background:"#3dba6e"}}/><span style={{fontSize:9,color:"rgba(255,255,255,0.3)"}}>Recherche web active</span></div>
       </div>
     </div>
   );
@@ -305,20 +452,22 @@ function Sidebar({ profile, setProfile, openCat, setOpenCat, currentProfile, sen
 export default function App() {
   const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [profile,setProfile]=useState("commercial");
-  const [openCat,setOpenCat]=useState("prospection");
-  const [input,setInput]=useState("");
-  const [loading,setLoading]=useState(false);
-  const [streaming,setStreaming]=useState(false);
-  const [histories,setHistories]=useState({commercial:[],marketing:[]});
-  const [activeId,setActiveId]=useState({commercial:null,marketing:null});
-  const [pendingFile,setPendingFile]=useState(null);
-  const [dragOver,setDragOver]=useState(false);
-  const bottomRef=useRef(null);
-  const inputRef=useRef(null);
-  const fileRef=useRef(null);
+  const [sector, setSector] = useState("tertiaire");
+  const [profile, setProfile] = useState("commercial");
+  const [openCat, setOpenCat] = useState("prospection");
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [streaming, setStreaming] = useState(false);
+  const [histories, setHistories] = useState({});
+  const [activeId, setActiveId] = useState({});
+  const [pendingFile, setPendingFile] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
+  const bottomRef = useRef(null);
+  const inputRef = useRef(null);
+  const fileRef = useRef(null);
 
   const isMobile = windowWidth < 768;
+  const historyKey = `${sector}_${profile}`;
 
   useEffect(()=>{
     const handleResize=()=>setWindowWidth(window.innerWidth);
@@ -326,13 +475,26 @@ export default function App() {
     return ()=>window.removeEventListener("resize",handleResize);
   },[]);
 
-  const currentMessages=()=>{const id=activeId[profile];if(!id)return[];const conv=histories[profile].find(h=>h.id===id);return conv?conv.messages:[];};
-  const currentTitle=()=>{const id=activeId[profile];if(!id)return "Conversation";const conv=histories[profile].find(h=>h.id===id);return conv?conv.title:"Conversation";};
+  const currentMessages=()=>{
+    const id=activeId[historyKey];
+    if(!id) return [];
+    const conv=(histories[historyKey]||[]).find(h=>h.id===id);
+    return conv?conv.messages:[];
+  };
+  const currentTitle=()=>{
+    const id=activeId[historyKey];
+    if(!id) return "Conversation";
+    const conv=(histories[historyKey]||[]).find(h=>h.id===id);
+    return conv?conv.title:"Conversation";
+  };
 
-  useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[histories,activeId,profile]);
+  useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[histories,activeId,sector,profile]);
 
-  function newConversation(){setActiveId(prev=>({...prev,[profile]:null}));setPendingFile(null);}
-  function updateLastMsg(convId,profileKey,content){setHistories(prev=>({...prev,[profileKey]:prev[profileKey].map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)}));}
+  function newConversation(){setActiveId(prev=>({...prev,[historyKey]:null}));setPendingFile(null);}
+
+  function updateLastMsg(convId,key,content){
+    setHistories(prev=>({...prev,[key]:(prev[key]||[]).map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)}));
+  }
 
   async function handleFile(file){
     if(!file)return;
@@ -351,20 +513,20 @@ export default function App() {
     const msgs=currentMessages();
     const newUserMsg={role:"user",content:displayText,fileName:file?.name};
     const newMsgs=[...msgs,newUserMsg];
-    let convId=activeId[profile];
-    const profileKey=profile;
+    let convId=activeId[historyKey];
+    const key=historyKey;
     if(!convId){
       convId=Date.now().toString();
       const title=displayText.slice(0,40)+(displayText.length>40?"...":"");
-      setHistories(prev=>({...prev,[profileKey]:[{id:convId,title,messages:[]},...prev[profileKey]]}));
-      setActiveId(prev=>({...prev,[profileKey]:convId}));
+      setHistories(prev=>({...prev,[key]:[{id:convId,title,messages:[]},...(prev[key]||[])]}));
+      setActiveId(prev=>({...prev,[key]:convId}));
     }
-    setHistories(prev=>({...prev,[profileKey]:prev[profileKey].map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
+    setHistories(prev=>({...prev,[key]:(prev[key]||[]).map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
     setLoading(true);setStreaming(false);
     try{
       const msgContent=await buildMessageContent(userText,file);
       const apiMessages=[...msgs.map(m=>({role:m.role,content:m.content})),{role:"user",content:msgContent}];
-      const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-opus-4-5",max_tokens:1500,system:SYSTEM_PROMPT,tools:[{type:"web_search_20250305",name:"web_search"}],messages:apiMessages})});
+      const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-opus-4-5",max_tokens:1500,system:SYSTEM_PROMPTS[sector],tools:[{type:"web_search_20250305",name:"web_search"}],messages:apiMessages})});
       const reader=res.body.getReader();const decoder=new TextDecoder();
       let fullText="";let started=false;
       while(true){
@@ -372,42 +534,36 @@ export default function App() {
         const chunk=decoder.decode(value);const lines=chunk.split("\n");
         for(const line of lines){
           if(line.startsWith("data: ")){const data=line.slice(6);if(data==="[DONE]")continue;
-            try{const parsed=JSON.parse(data);if(parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta"){if(!started){started=true;setStreaming(true);updateLastMsg(convId,profileKey,"");}fullText+=parsed.delta.text;updateLastMsg(convId,profileKey,fullText);}}catch{}
+            try{const parsed=JSON.parse(data);if(parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta"){if(!started){started=true;setStreaming(true);updateLastMsg(convId,key,"");}fullText+=parsed.delta.text;updateLastMsg(convId,key,fullText);}}catch{}
           }
         }
       }
       setStreaming(false);
-      if(!started)updateLastMsg(convId,profileKey,"Je n'ai pas pu obtenir de réponse. Réessaie.");
-    }catch(err){setStreaming(false);updateLastMsg(convId,profileKey,`Erreur : ${err.message}`);}
+      if(!started)updateLastMsg(convId,key,"Je n'ai pas pu obtenir de réponse. Réessaie.");
+    }catch(err){setStreaming(false);updateLastMsg(convId,key,`Erreur : ${err.message}`);}
     finally{setLoading(false);setTimeout(()=>inputRef.current?.focus(),100);}
   }
 
-  function deleteConv(id){setHistories(prev=>({...prev,[profile]:prev[profile].filter(h=>h.id!==id)}));if(activeId[profile]===id)setActiveId(prev=>({...prev,[profile]:null}));}
+  function deleteConv(id){
+    setHistories(prev=>({...prev,[historyKey]:(prev[historyKey]||[]).filter(h=>h.id!==id)}));
+    if(activeId[historyKey]===id)setActiveId(prev=>({...prev,[historyKey]:null}));
+  }
 
-  const currentProfile=PROFILES[profile];
-  const currentCat=currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
-  const messages=currentMessages();
-  const profileHistory=histories[profile];
-  const isStreaming=streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
+  const currentSector = SECTORS[sector];
+  const currentProfile = currentSector.profiles[profile];
+  const currentCat = currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
+  const messages = currentMessages();
+  const profileHistory = histories[historyKey]||[];
+  const isStreaming = streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
 
-  const sidebarProps = {
-    profile, setProfile, openCat, setOpenCat, currentProfile, sendMessage,
-    newConversation, profileHistory, activeId, setActiveId, deleteConv,
-    isMobile, closeSidebar: ()=>setSidebarOpen(false)
-  };
+  const sidebarProps = { sector, setSector, profile, setProfile, openCat, setOpenCat, sendMessage, newConversation, profileHistory, activeId, setActiveId, deleteConv, isMobile, closeSidebar:()=>setSidebarOpen(false) };
 
   return (
     <div style={{display:"flex",height:isMobile?"100dvh":"640px",background:"#fafafa",borderRadius:isMobile?0:16,overflow:"hidden",boxShadow:isMobile?"none":"0 4px 24px rgba(0,0,0,0.12)",border:isMobile?"none":"1px solid rgba(0,0,0,0.06)",position:"relative",fontFamily:"'Inter',system-ui,sans-serif"}}>
       <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
 
-      {/* Sidebar desktop — fixe */}
-      {!isMobile&&(
-        <div style={{width:220,flexShrink:0,height:"100%"}}>
-          <Sidebar {...sidebarProps}/>
-        </div>
-      )}
+      {!isMobile&&<div style={{width:220,flexShrink:0,height:"100%"}}><Sidebar {...sidebarProps}/></div>}
 
-      {/* Sidebar mobile — overlay coulissant */}
       {isMobile&&sidebarOpen&&(
         <>
           <div onClick={()=>setSidebarOpen(false)} style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.5)",zIndex:40}}/>
@@ -418,10 +574,8 @@ export default function App() {
         </>
       )}
 
-      {/* Zone principale */}
       <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
 
-        {/* Header */}
         <div style={{background:"#fff",borderBottom:`3px solid ${YELLOW}`,padding:isMobile?"10px 14px":"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
           <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
             {isMobile&&(
@@ -437,27 +591,22 @@ export default function App() {
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
             {isStreaming&&<span style={{fontSize:10,background:"#fff8e6",color:NAVY,padding:"3px 8px",borderRadius:20,border:`1px solid ${YELLOW}`,fontWeight:500}}>✍️</span>}
-            {messages.length>0&&!isStreaming&&(
-              <button onClick={()=>exportPDF(messages,currentProfile.label,currentTitle())} style={{display:"flex",alignItems:"center",gap:4,padding:"5px 10px",borderRadius:6,background:NAVY,border:"none",cursor:"pointer",fontSize:11,color:YELLOW,fontWeight:700}}>
-                ↓ PDF
-              </button>
-            )}
-            {!isMobile&&<span style={{fontSize:11,background:"rgba(37,72,90,0.08)",color:NAVY,padding:"3px 10px",borderRadius:20,fontWeight:600}}>{currentProfile.label}</span>}
+            {!isMobile&&<span style={{fontSize:10,background:sector==="tertiaire"?"rgba(37,72,90,0.08)":"rgba(255,183,30,0.12)",color:NAVY,padding:"3px 10px",borderRadius:20,fontWeight:600,border:`1px solid ${sector==="tertiaire"?"rgba(37,72,90,0.15)":YELLOW}`}}>{currentSector.icon} {currentSector.label}</span>}
+            {messages.length>0&&!isStreaming&&<button onClick={()=>exportPDF(messages,sector,currentProfile.label,currentTitle())} style={{display:"flex",alignItems:"center",gap:4,padding:"5px 10px",borderRadius:6,background:NAVY,border:"none",cursor:"pointer",fontSize:11,color:YELLOW,fontWeight:700}}>↓ PDF</button>}
           </div>
         </div>
 
-        {/* Messages */}
         <div style={{flex:1,overflowY:"auto",padding:isMobile?"14px 14px 8px":"20px 22px 10px",background:dragOver?"#f0f8ff":"#fafafa",transition:"background 0.2s",position:"relative"}}>
           {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.05)",border:`2px dashed ${NAVY}`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><span style={{fontSize:32,display:"block",marginBottom:8}}>☁️</span><p style={{margin:0,fontWeight:700,color:NAVY,fontSize:14}}>Déposez ici</p></div></div>}
           {messages.length===0?(
             <div>
               <p style={{margin:"0 0 4px",fontSize:isMobile?15:16,fontWeight:700,color:NAVY}}>Bonjour !</p>
-              <p style={{margin:"0 0 16px",fontSize:13,color:"#888"}}>Choisissez une suggestion ou posez votre question.</p>
+              <p style={{margin:"0 0 16px",fontSize:13,color:"#888"}}>Mode {currentSector.label} — {currentProfile.label}. Choisissez une suggestion ou posez votre question.</p>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {currentCat.prompts.map((p,i)=>(
                   <button key={i} onClick={()=>sendMessage(p.text)} style={{padding:"11px 14px",borderRadius:8,cursor:"pointer",textAlign:"left",background:"#fff",border:"1px solid rgba(0,0,0,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:13,color:NAVY,fontWeight:500,boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}
-                  onMouseEnter={e=>e.currentTarget.style.borderColor=YELLOW}
-                  onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.08)"}>
+                  onMouseEnter={e=>{e.currentTarget.style.borderColor=YELLOW;e.currentTarget.style.boxShadow=`0 2px 8px rgba(255,183,30,0.2)`;}}
+                  onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(0,0,0,0.08)";e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)";}}>
                     <span>{p.label}</span><span style={{color:YELLOW,fontWeight:700,fontSize:15}}>→</span>
                   </button>
                 ))}
@@ -467,7 +616,6 @@ export default function App() {
           <div ref={bottomRef}/>
         </div>
 
-        {/* Fichier en attente */}
         {pendingFile&&(
           <div style={{padding:"7px 14px",background:"#fff8e6",borderTop:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",gap:8}}>
             <span style={{fontSize:18}}>{getFileIcon(pendingFile.name)}</span>
@@ -479,18 +627,13 @@ export default function App() {
           </div>
         )}
 
-        {/* Input */}
         <div style={{padding:isMobile?"8px 12px 12px":"10px 16px 14px",borderTop:"1px solid rgba(0,0,0,0.06)",background:"#fff"}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f5f5",borderRadius:10,border:`2px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.1)"}`,padding:"8px 8px 8px 12px",transition:"border-color 0.15s"}}>
             <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}}
             onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY}
-            onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>
-              ☁️
-            </button>
-            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message...":"Posez votre question..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:isMobile?14:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
-            <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>
-              ↑
-            </button>
+            onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️</button>
+            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message...":"Posez votre question..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
+            <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>↑</button>
           </div>
           {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier</p>}
         </div>
