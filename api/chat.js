@@ -16,10 +16,20 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-beta': 'web-search-2025-03-05'
       },
-      body: JSON.stringify({ ...body, model: 'claude-opus-4-6', stream: true })
+      body: JSON.stringify({
+        ...body,
+        model: 'claude-opus-4-6',
+        stream: true,
+        tools: undefined
+      })
     });
+
+    if (!response.ok) {
+      const err = await response.text();
+      res.status(response.status).json({ error: err });
+      return;
+    }
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -27,8 +37,7 @@ export default async function handler(req, res) {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      const chunk = decoder.decode(value);
-      res.write(chunk);
+      res.write(decoder.decode(value));
     }
     res.end();
   } catch (error) {
