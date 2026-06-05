@@ -6,11 +6,11 @@ const YELLOW = "#FFB71E";
 const CHART_COLORS = ["#25485A","#FFB71E","#1a6b4a","#e07b00","#5a8fa3","#f0c040","#2e7d5e","#c9600a"];
 
 const PPTX_INSTRUCTIONS = `
-PRÉSENTATIONS POWERPOINT : quand l'utilisateur demande une présentation, des slides ou un PowerPoint, génère le contenu dans ce format JSON exact (sans texte avant ou après) :
+PRÉSENTATIONS POWERPOINT : uniquement si l'utilisateur demande explicitement une présentation, des slides ou un PowerPoint, génère le contenu dans ce format JSON exact :
 PPTX_START
 {"title":"Titre de la présentation","slides":[{"type":"cover","title":"Titre","subtitle":"Sous-titre"},{"type":"content","title":"Titre slide","bullets":["Point 1","Point 2","Point 3"]},{"type":"two_col","title":"Comparaison","left":{"title":"Colonne gauche","bullets":["A","B"]},"right":{"title":"Colonne droite","bullets":["C","D"]}},{"type":"closing","title":"Merci","subtitle":"Message final"}]}
 PPTX_END
-Types disponibles : "cover" (slide de titre), "content" (titre + bullets), "two_col" (deux colonnes), "closing" (slide de fin). Maximum 10 slides. Génère des slides pertinents et complets.`;
+Types disponibles : "cover", "content", "two_col", "closing". Maximum 10 slides. Ne génère JAMAIS ce format sans demande explicite de l'utilisateur.`;
 
 const SYSTEM_PROMPTS = {
   tertiaire: `Tu es un assistant IA expert en protection solaire tertiaire, travaillant avec les équipes de Somfy France.
@@ -37,13 +37,23 @@ CHART_END
 Types disponibles : bar, line, pie, multibar.
 ${PPTX_INSTRUCTIONS}`,
 
-  residentiel: `Tu es un assistant IA expert en protection solaire résidentielle, travaillant avec les équipes de Somfy France.
+  residentiel: `Tu es un assistant IA expert en solutions résidentielles Somfy, travaillant avec les équipes de Somfy France.
 
-Contexte Somfy Résidentiel : leader du marché avec ~75% de parts de marché en France. Produits clés : TaHoma switch (box domotique), io-homecontrol (protocole bidirectionnel propriétaire), Connexoon (box entrée de gamme), volets roulants, stores, BSO résidentiels. Cibles principales : installateurs, particuliers, promoteurs immobiliers résidentiels.
+Contexte Somfy Résidentiel : leader du marché avec ~75% de parts de marché en France sur la motorisation résidentielle. Somfy propose une gamme complète couvrant plusieurs univers :
 
-Concurrents résidentiels : Nice (Home Evolution), Delta Dore (Tydom), Legrand (Netatmo), Velux, Bubendorf, Cherubini.
+PROTECTION SOLAIRE : volets roulants motorisés, BSO résidentiels, stores intérieurs et extérieurs, pergolas bioclimatiques motorisées, screens résidentiels. Protocole io-homecontrol bidirectionnel. Concurrents : Bubendorf, Cherubini, Velux (fenêtres de toit), Fakro.
 
-Réglementation clé : RE2020, MaPrimeRénov', CEE, BBC Rénovation, label RGE.
+SÉCURITÉ : gamme Somfy Protect — alarmes connectées, caméras intérieures et extérieures, détecteurs de mouvement, sirènes, IntelliTAG (détecteur d'ouverture/vibration), One+ (alarme tout-en-un). Concurrents : Ajax Systems, Philips Hue Secure, Arlo, Ring (Amazon), Risco.
+
+DOMOTIQUE & CONNECTIVITÉ : TaHoma switch (box centrale compatible 300+ marques), Connexoon (entrée de gamme), io-homecontrol (protocole propriétaire bidirectionnel), compatibilité Google Home / Alexa / Apple HomeKit / Matter. Concurrents : Nice (Home Evolution), Delta Dore (Tydom), Legrand (Netatmo).
+
+MOTORISATION PORTAILS & GARAGES : motorisations de portails coulissants et battants, portes de garage sectionnelles et basculantes, barrières levantes, interphones connectés. Concurrents : Came, BFT, Nice, Faac.
+
+ÉNERGIE & CONFORT : pilotage intelligent du chauffage via TaHoma, volets comme isolation thermique, gestion automatique selon météo et luminosité.
+
+Réglementation et aides : RE2020, MaPrimeRénov', CEE, BBC Rénovation, label RGE, TVA réduite 5,5% sur rénovation énergétique.
+
+Cibles principales : installateurs (électriciens, stores, serruristes), particuliers, promoteurs immobiliers, constructeurs de maisons individuelles.
 
 STYLE DE RÉPONSE :
 - Écris de façon naturelle et fluide, comme un consultant qui parle à un collègue
@@ -95,7 +105,6 @@ const SECTORS = {
             prompts:[
               { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire tertiaire ?" },
               { label:"Arguments pour installateurs", text:"Comment convaincre un installateur résidentiel de se lancer sur le marché tertiaire avec Somfy ?" },
-              { label:"Présentation tertiaire", text:"Crée une présentation PowerPoint sur l'opportunité du marché tertiaire pour les installateurs Somfy." },
             ]},
         ]
       },
@@ -113,7 +122,7 @@ const SECTORS = {
             prompts:[
               { label:"Décret BACS complet", text:"Explique-moi le décret BACS, ses obligations, ses seuils et son impact pour Somfy." },
               { label:"Décret tertiaire 2025", text:"Où en est l'application du décret tertiaire en 2025 et quelles sont les obligations actuelles ?" },
-              { label:"Présentation BACS", text:"Crée une présentation PowerPoint sur le Décret BACS et les opportunités pour Somfy." },
+              { label:"Normes NF protection solaire", text:"Quelles normes NF et européennes s'appliquent aux protections solaires ?" },
             ]},
           { id:"confort_ete", label:"Confort d'été", icon:"☀️", desc:"Arguments thermiques",
             prompts:[
@@ -125,75 +134,83 @@ const SECTORS = {
             prompts:[
               { label:"Messages clés par segment", text:"Définis les messages clés Somfy pour les écoles, bureaux, bâtiments de santé et hôtels." },
               { label:"Arguments RSE", text:"Quels arguments RSE peut-on développer autour des protections solaires automatisées ?" },
-              { label:"Présentation commerciale", text:"Crée une présentation PowerPoint de l'offre Somfy tertiaire pour une réunion client." },
+              { label:"Cas clients à documenter", text:"Quels cas clients Somfy devrait documenter en priorité pour crédibiliser son offre tertiaire ?" },
             ]},
         ]
       }
     }
   },
   residentiel: {
-    label: "Résidentiel", icon: "🏠", badge: "TaHoma • io-homecontrol • RE2020",
+    label: "Résidentiel", icon: "🏠", badge: "Protect • TaHoma • Portails • RE2020",
     profiles: {
       commercial: {
         label: "Commercial", icon: "🎯",
         categories: [
-          { id:"tahoma", label:"Produits TaHoma", icon:"🏠", desc:"Gamme résidentielle connectée",
+          { id:"solaire_resi", label:"Protection solaire", icon:"🪟", desc:"Volets, stores, pergolas",
             prompts:[
-              { label:"Gamme TaHoma switch", text:"Présente-moi la gamme TaHoma switch de Somfy : fonctionnalités, compatibilités, positionnement marché." },
-              { label:"io-homecontrol expliqué", text:"Explique le protocole io-homecontrol de Somfy et ses avantages face aux protocoles concurrents." },
-              { label:"Compatibilités domotique", text:"Avec quels systèmes domotiques et assistants vocaux les produits Somfy résidentiels sont-ils compatibles ?" },
-              { label:"Présentation TaHoma", text:"Crée une présentation PowerPoint sur la gamme TaHoma switch pour des installateurs." },
+              { label:"Gamme volets roulants", text:"Présente la gamme complète de volets roulants motorisés Somfy pour le résidentiel : moteurs, protocoles, compatibilités." },
+              { label:"Stores et pergolas", text:"Quelle est l'offre Somfy sur les stores extérieurs et pergolas bioclimatiques pour le résidentiel ?" },
+              { label:"Pitch installateur stores", text:"Comment convaincre un installateur de stores de rejoindre le réseau Somfy résidentiel ?" },
+              { label:"Somfy vs Bubendorf", text:"Compare Somfy et Bubendorf sur le marché de la motorisation résidentielle en France." },
             ]},
-          { id:"installateurs_resi", label:"Cibles & Installateurs", icon:"👥", desc:"Réseau et clients finaux",
+          { id:"securite_resi", label:"Sécurité", icon:"🔒", desc:"Somfy Protect & alarmes",
             prompts:[
-              { label:"Pitch installateur résidentiel", text:"Comment convaincre un installateur électricien de proposer les solutions Somfy résidentielles à ses clients ?" },
-              { label:"Pitch particulier", text:"Rédige un pitch pour convaincre un particulier d'automatiser ses volets et stores avec Somfy." },
-              { label:"Pitch promoteur résidentiel", text:"Comment convaincre un promoteur immobilier d'intégrer TaHoma et io-homecontrol dans ses programmes neufs ?" },
-              { label:"Fidélisation installateurs", text:"Quelles actions mettre en place pour fidéliser les installateurs Somfy résidentiels ?" },
+              { label:"Gamme Somfy Protect", text:"Présente la gamme Somfy Protect : alarmes, caméras, détecteurs, sirènes. Positionnement et arguments clés." },
+              { label:"Somfy vs Ajax Systems", text:"Compare Somfy Protect face à Ajax Systems sur le marché de l'alarme connectée résidentielle." },
+              { label:"Somfy vs Ring Amazon", text:"Compare Somfy Protect et Ring d'Amazon sur les caméras et alarmes connectées." },
+              { label:"Pitch sécurité particulier", text:"Rédige un pitch pour convaincre un particulier d'adopter Somfy Protect pour sécuriser sa maison." },
             ]},
-          { id:"concurrence_resi", label:"Concurrents résidentiels", icon:"📊", desc:"Benchmark marché résidentiel",
+          { id:"domotique_resi", label:"Domotique", icon:"🏠", desc:"TaHoma, connectivité, Matter",
             prompts:[
-              { label:"Somfy vs Nice Home", text:"Compare Somfy et Nice Home Evolution sur le marché résidentiel connecté." },
-              { label:"Somfy vs Delta Dore Tydom", text:"Compare TaHoma switch et Tydom de Delta Dore : fonctionnalités, prix, réseau installateurs." },
-              { label:"Somfy vs Legrand Netatmo", text:"Compare Somfy et Legrand Netatmo sur la domotique résidentielle." },
-              { label:"Présentation benchmark", text:"Crée une présentation PowerPoint de comparaison des concurrents résidentiels de Somfy." },
+              { label:"TaHoma switch complet", text:"Présente TaHoma switch : fonctionnalités, compatibilités avec les 300+ marques, protocoles supportés." },
+              { label:"io-homecontrol vs Matter", text:"Compare le protocole io-homecontrol de Somfy avec le standard Matter. Avantages et limites." },
+              { label:"Somfy vs Delta Dore Tydom", text:"Compare TaHoma switch et Tydom de Delta Dore sur la domotique résidentielle." },
+              { label:"Compatibilité assistants vocaux", text:"Quelles sont les compatibilités Somfy avec Google Home, Alexa et Apple HomeKit ?" },
             ]},
-          { id:"aides_resi", label:"Aides & Réglementation", icon:"🌿", desc:"RE2020, MaPrimeRénov'",
+          { id:"portails_resi", label:"Portails & Garages", icon:"🚗", desc:"Motorisations extérieures",
+            prompts:[
+              { label:"Gamme portails Somfy", text:"Présente la gamme Somfy pour la motorisation des portails coulissants et battants." },
+              { label:"Portes de garage Somfy", text:"Quelle est l'offre Somfy sur les portes de garage sectionnelles et basculantes ?" },
+              { label:"Somfy vs Nice portails", text:"Compare Somfy et Nice sur le marché de la motorisation de portails résidentiels." },
+              { label:"Pitch installateur portails", text:"Comment convaincre un installateur de portails de proposer les solutions Somfy ?" },
+            ]},
+          { id:"aides_resi", label:"Aides & Réglementation", icon:"🌿", desc:"RE2020, MaPrimeRénov', CEE",
             prompts:[
               { label:"MaPrimeRénov' et Somfy", text:"Comment les produits Somfy s'inscrivent-ils dans le dispositif MaPrimeRénov' ?" },
               { label:"RE2020 et protection solaire", text:"Quelles sont les exigences de la RE2020 concernant la protection solaire en résidentiel ?" },
-              { label:"CEE protection solaire", text:"Existe-t-il des CEE applicables aux protections solaires résidentielles ?" },
-              { label:"Présentation aides", text:"Crée une présentation PowerPoint sur les aides disponibles pour la protection solaire résidentielle." },
+              { label:"CEE et volets motorisés", text:"Existe-t-il des CEE applicables aux volets et protections solaires résidentielles ?" },
+              { label:"TVA réduite rénovation", text:"Comment les installateurs Somfy peuvent-ils faire bénéficier leurs clients de la TVA à 5,5% ?" },
             ]},
         ]
       },
       marketing: {
         label: "Marketing", icon: "📈",
         categories: [
-          { id:"tendances_resi", label:"Tendances Smart Home", icon:"📡", desc:"Marché connecté résidentiel",
+          { id:"tendances_resi", label:"Tendances marché", icon:"📡", desc:"Smart home & connectivité",
             prompts:[
               { label:"Marché smart home France", text:"Quelles sont les tendances du marché de la maison connectée en France en 2025 ?" },
-              { label:"Domotique et IoT", text:"Comment évolue le marché de l'IoT résidentiel et quelles opportunités pour Somfy ?" },
-              { label:"Attentes des particuliers", text:"Quelles sont les attentes des particuliers français sur la domotique et la maison connectée ?" },
-              { label:"Présentation smart home", text:"Crée une présentation PowerPoint sur les tendances du marché smart home et la position de Somfy." },
+              { label:"Marché alarme résidentielle", text:"Quels sont les chiffres et tendances du marché de l'alarme résidentielle en France ?" },
+              { label:"Marché motorisation portails", text:"Quels sont les chiffres du marché de la motorisation de portails et garages en France ?" },
+              { label:"Innovations Matter et IoT", text:"Comment le protocole Matter change-t-il le marché de la domotique résidentielle ?" },
             ]},
-          { id:"confort_resi", label:"Confort & Économies", icon:"☀️", desc:"Arguments particuliers",
+          { id:"confort_resi", label:"Arguments clients", icon:"☀️", desc:"Confort, sécurité, économies",
             prompts:[
-              { label:"Économies énergie concrètes", text:"Quelles économies d'énergie concrètes un particulier peut-il espérer avec des volets automatisés Somfy ?" },
-              { label:"Confort thermique maison", text:"Comment la protection solaire automatisée améliore-t-elle le confort thermique d'une maison en été ?" },
-              { label:"Sécurité et simulation présence", text:"Quels sont les arguments sécurité des volets connectés Somfy ?" },
-              { label:"Valeur immobilière", text:"La domotique et les volets automatisés augmentent-ils la valeur d'un bien immobilier ?" },
+              { label:"Économies énergie volets", text:"Quelles économies d'énergie concrètes un particulier peut-il espérer avec des volets automatisés Somfy ?" },
+              { label:"Arguments sécurité maison", text:"Quels sont les arguments pour convaincre un particulier d'investir dans la sécurité connectée Somfy ?" },
+              { label:"Valeur immobilière domotique", text:"La domotique et les équipements connectés Somfy augmentent-ils la valeur d'un bien immobilier ?" },
+              { label:"Confort thermique été", text:"Comment la protection solaire automatisée améliore-t-elle le confort thermique d'une maison en été ?" },
             ]},
           { id:"communication_resi", label:"Communication B2C", icon:"📣", desc:"Messages grand public",
             prompts:[
-              { label:"Messages clés grand public", text:"Quels sont les messages clés à communiquer aux particuliers pour les convaincre d'adopter Somfy ?" },
-              { label:"Campagne réseaux sociaux", text:"Propose une stratégie de contenu pour les réseaux sociaux Somfy ciblant les particuliers." },
-              { label:"Présentation B2C", text:"Crée une présentation PowerPoint des arguments Somfy pour les particuliers." },
+              { label:"Messages clés par gamme", text:"Définis les messages clés Somfy pour chaque gamme : protection solaire, sécurité, domotique, portails." },
+              { label:"Campagne réseaux sociaux", text:"Propose une stratégie de contenu pour les réseaux sociaux Somfy ciblant les particuliers en 2025." },
+              { label:"Arguments vs concurrents", text:"Quels sont les arguments différenciants Somfy face à Ring, Ajax et Delta Dore pour un particulier ?" },
             ]},
-          { id:"veille_resi", label:"Veille concurrentielle", icon:"🔍", desc:"Suivi concurrents résidentiels",
+          { id:"veille_resi", label:"Veille concurrentielle", icon:"🔍", desc:"Suivi concurrents",
             prompts:[
               { label:"Actualités Nice Home", text:"Quelles sont les dernières actualités et nouveautés de Nice Home Evolution ?" },
-              { label:"Actualités Delta Dore", text:"Quelles sont les dernières actualités de Delta Dore sur le marché résidentiel ?" },
+              { label:"Actualités Ajax Systems", text:"Quelles sont les dernières nouveautés d'Ajax Systems sur le marché de l'alarme ?" },
+              { label:"Actualités Ring Amazon", text:"Quelles sont les dernières actualités de Ring sur le marché de la sécurité connectée ?" },
               { label:"Innovations domotique 2025", text:"Quelles sont les grandes innovations en domotique résidentielle attendues en 2025 ?" },
             ]},
         ]
@@ -215,13 +232,7 @@ function PlaceSearchWidget({ onSearch }) {
       if (results.length === 0) {
         onSearch(`J'ai recherché "${keywords}" sur le BOAMP mais aucun appel d'offres n'a été trouvé. Suggère d'autres mots clés pertinents pour Somfy.`);
       } else {
-        const summary = results.slice(0,8).map((r,i)=>{
-          const title=r.titre||r.intitule||"Sans titre";
-          const org=r.donnees?.identite?.denomination||r.organisme||"";
-          const date=r.dateparution||r.date||"";
-          const dept=r.donnees?.lieu?.departement||"";
-          return `${i+1}. ${title}${org?` — ${org}`:""}${dept?` (${dept})`:""}${date?` — publié le ${date}`:""}`;
-        }).join("\n");
+        const summary = results.slice(0,8).map((r,i)=>{ const title=r.titre||r.intitule||"Sans titre"; const org=r.donnees?.identite?.denomination||r.organisme||""; const date=r.dateparution||r.date||""; const dept=r.donnees?.lieu?.departement||""; return `${i+1}. ${title}${org?` — ${org}`:""}${dept?` (${dept})`:""}${date?` — publié le ${date}`:""}`;}).join("\n");
         onSearch(`Voici ${results.length} appels d'offres trouvés sur le BOAMP pour "${keywords}" :\n\n${summary}\n\nAnalyse ces résultats : lesquels sont les plus pertinents pour Somfy ?`);
       }
     } catch { onSearch(`Recherche BOAMP pour "${keywords}" — analyse les opportunités d'appels d'offres publics français pour Somfy.`); }
@@ -232,52 +243,31 @@ function PlaceSearchWidget({ onSearch }) {
       <p style={{margin:"0 0 6px",fontSize:11,fontWeight:700,color:YELLOW}}>🇫🇷 BOAMP Direct</p>
       <p style={{margin:"0 0 7px",fontSize:10,color:"rgba(255,255,255,0.45)",lineHeight:1.4}}>Résultats officiels directement dans le chat</p>
       <div style={{display:"flex",gap:5}}>
-        <input value={keywords} onChange={e=>setKeywords(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")handleSubmit();}} placeholder="ex: volets roulants école" disabled={loadingAO}
-          style={{flex:1,padding:"6px 9px",borderRadius:6,border:"1px solid rgba(255,255,255,0.2)",background:"rgba(255,255,255,0.08)",color:"#fff",fontSize:11,outline:"none",fontFamily:"inherit"}}/>
-        <button onClick={handleSubmit} disabled={!keywords.trim()||loadingAO} style={{padding:"6px 12px",borderRadius:6,border:"none",cursor:keywords.trim()&&!loadingAO?"pointer":"default",background:keywords.trim()&&!loadingAO?YELLOW:"rgba(255,255,255,0.1)",color:keywords.trim()&&!loadingAO?NAVY:"rgba(255,255,255,0.3)",fontSize:11,fontWeight:700}}>
-          {loadingAO?"...":"Go"}
-        </button>
+        <input value={keywords} onChange={e=>setKeywords(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")handleSubmit();}} placeholder="ex: volets roulants école" disabled={loadingAO} style={{flex:1,padding:"6px 9px",borderRadius:6,border:"1px solid rgba(255,255,255,0.2)",background:"rgba(255,255,255,0.08)",color:"#fff",fontSize:11,outline:"none",fontFamily:"inherit"}}/>
+        <button onClick={handleSubmit} disabled={!keywords.trim()||loadingAO} style={{padding:"6px 12px",borderRadius:6,border:"none",cursor:keywords.trim()&&!loadingAO?"pointer":"default",background:keywords.trim()&&!loadingAO?YELLOW:"rgba(255,255,255,0.1)",color:keywords.trim()&&!loadingAO?NAVY:"rgba(255,255,255,0.3)",fontSize:11,fontWeight:700}}>{loadingAO?"...":"Go"}</button>
       </div>
     </div>
   );
 }
 
 function parseMessage(content) {
-  let text = content;
-  let chart = null;
-  let pptx = null;
+  let text = content; let chart = null; let pptx = null;
   const chartMatch = text.match(/CHART_START\s*([\s\S]*?)\s*CHART_END/);
-  if (chartMatch) {
-    text = text.replace(/CHART_START\s*([\s\S]*?)\s*CHART_END/, "").trim();
-    try { chart = JSON.parse(chartMatch[1].trim()); } catch {}
-  }
+  if (chartMatch) { text = text.replace(/CHART_START\s*([\s\S]*?)\s*CHART_END/, "").trim(); try { chart = JSON.parse(chartMatch[1].trim()); } catch {} }
   const pptxMatch = text.match(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/);
-  if (pptxMatch) {
-    text = text.replace(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/, "").trim();
-    try { pptx = JSON.parse(pptxMatch[1].trim()); } catch {}
-  }
+  if (pptxMatch) { text = text.replace(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/, "").trim(); try { pptx = JSON.parse(pptxMatch[1].trim()); } catch {} }
   return { text, chart, pptx };
 }
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
-  return (
-    <div style={{background:"#fff",border:"1px solid rgba(0,0,0,0.1)",borderRadius:8,padding:"8px 12px",fontSize:12}}>
-      {label&&<p style={{margin:"0 0 4px",fontWeight:500}}>{label}</p>}
-      {payload.map((p,i)=><p key={i} style={{margin:"2px 0",color:p.color}}>{p.name} : <strong>{p.value}</strong></p>)}
-    </div>
-  );
+  return (<div style={{background:"#fff",border:"1px solid rgba(0,0,0,0.1)",borderRadius:8,padding:"8px 12px",fontSize:12}}>{label&&<p style={{margin:"0 0 4px",fontWeight:500}}>{label}</p>}{payload.map((p,i)=><p key={i} style={{margin:"2px 0",color:p.color}}>{p.name} : <strong>{p.value}</strong></p>)}</div>);
 };
 
 function ChartBlock({ chart }) {
   if (!chart) return null;
-  const h=200;
-  const card={marginTop:10,background:"#fff",borderRadius:10,border:"1px solid rgba(0,0,0,0.08)",padding:"12px 8px 6px",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"};
-  const title={margin:"0 0 8px",fontWeight:600,fontSize:12,color:NAVY,textAlign:"center"};
-  if (chart.type==="pie") {
-    const data=chart.labels.map((l,i)=>({name:l,value:chart.datasets[0].data[i]}));
-    return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><PieChart><Pie data={data} cx="50%" cy="50%" outerRadius={70} dataKey="value" label={({name,percent})=>`${name} ${(percent*100).toFixed(0)}%`} labelLine={false} fontSize={10}>{data.map((_,i)=><Cell key={i} fill={CHART_COLORS[i%CHART_COLORS.length]}/>)}</Pie><Tooltip content={<CustomTooltip/>}/></PieChart></ResponsiveContainer></div>;
-  }
+  const h=200; const card={marginTop:10,background:"#fff",borderRadius:10,border:"1px solid rgba(0,0,0,0.08)",padding:"12px 8px 6px",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}; const title={margin:"0 0 8px",fontWeight:600,fontSize:12,color:NAVY,textAlign:"center"};
+  if (chart.type==="pie") { const data=chart.labels.map((l,i)=>({name:l,value:chart.datasets[0].data[i]})); return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><PieChart><Pie data={data} cx="50%" cy="50%" outerRadius={70} dataKey="value" label={({name,percent})=>`${name} ${(percent*100).toFixed(0)}%`} labelLine={false} fontSize={10}>{data.map((_,i)=><Cell key={i} fill={CHART_COLORS[i%CHART_COLORS.length]}/>)}</Pie><Tooltip content={<CustomTooltip/>}/></PieChart></ResponsiveContainer></div>; }
   const data=chart.labels.map((l,i)=>{const pt={label:l};chart.datasets.forEach(ds=>{pt[ds.label]=ds.data[i];});return pt;});
   if (chart.type==="line") return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><LineChart data={data} margin={{top:4,right:8,left:-24,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:10,fill:"#666"}}/><YAxis tick={{fontSize:10,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:11}}/>}{chart.datasets.map((ds,i)=><Line key={i} type="monotone" dataKey={ds.label} stroke={ds.color||CHART_COLORS[i]} strokeWidth={2} dot={{r:2}}/>)}</LineChart></ResponsiveContainer></div>;
   return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><BarChart data={data} margin={{top:4,right:8,left:-24,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:10,fill:"#666"}}/><YAxis tick={{fontSize:10,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:11}}/>}{chart.datasets.map((ds,i)=><Bar key={i} dataKey={ds.label} fill={ds.color||CHART_COLORS[i]} radius={[3,3,0,0]}/>)}</BarChart></ResponsiveContainer></div>;
@@ -293,21 +283,17 @@ function PPTXButton({ pptxData }) {
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = `${(pptxData.title||'presentation').replace(/[^a-zA-Z0-9\-_ ]/g,'_')}.pptx`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      a.href = url; a.download = `${(pptxData.title||'presentation').replace(/[^a-zA-Z0-9\-_ ]/g,'_')}.pptx`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     } catch(err) { alert('Erreur : ' + err.message); }
     finally { setLoading(false); }
   }
   return (
-    <div style={{marginTop:10,padding:"12px 16px",background:`linear-gradient(135deg, ${NAVY}, #1a3a47)`,borderRadius:10,border:`1px solid rgba(255,183,30,0.3)`}}>
+    <div style={{marginTop:10,padding:"12px 16px",background:`linear-gradient(135deg,${NAVY},#1a3a47)`,borderRadius:10,border:"1px solid rgba(255,183,30,0.3)"}}>
       <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📊 Présentation PowerPoint prête</p>
-      <p style={{margin:"0 0 10px",fontSize:11,color:"rgba(255,255,255,0.6)"}}>{pptxData.slides?.length || 0} slides — {pptxData.title}</p>
+      <p style={{margin:"0 0 10px",fontSize:11,color:"rgba(255,255,255,0.6)"}}>{pptxData.slides?.length||0} slides — {pptxData.title}</p>
       <button onClick={handleDownload} disabled={loading} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderRadius:7,border:"none",background:loading?"rgba(255,255,255,0.1)":YELLOW,cursor:loading?"default":"pointer",fontSize:12,fontWeight:700,color:loading?"rgba(255,255,255,0.4)":NAVY,transition:"all 0.15s"}}>
-        {loading ? "⏳ Génération en cours..." : "⬇️ Télécharger le PowerPoint"}
+        {loading?"⏳ Génération en cours...":"⬇️ Télécharger le PowerPoint"}
       </button>
     </div>
   );
@@ -353,26 +339,16 @@ function HistoryItem({ item, active, onClick, onDelete }) {
     onMouseLeave={e=>{ if(!active)e.currentTarget.style.background="transparent";}}>
       <span style={{fontSize:12}}>💬</span>
       <span style={{flex:1,fontSize:11,color:active?"#fff":"rgba(255,255,255,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.title}</span>
-      <button onClick={e=>{e.stopPropagation();onDelete();}} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,0.25)",fontSize:13,padding:"0 2px"}}
-      onMouseEnter={e=>e.currentTarget.style.color="#ff6b6b"}
-      onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.25)"}>✕</button>
+      <button onClick={e=>{e.stopPropagation();onDelete();}} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,0.25)",fontSize:13,padding:"0 2px"}} onMouseEnter={e=>e.currentTarget.style.color="#ff6b6b"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.25)"}>✕</button>
     </div>
   );
 }
 
 function exportPDF(messages, sector, profile, title) {
   const date=new Date().toLocaleDateString("fr-FR",{day:"2-digit",month:"long",year:"numeric"});
-  const content=messages.map(m=>{
-    const {text}=parseMessage(m.content);
-    if(m.role==="user"){const ft=m.fileName?`<div class="file-tag">📎 ${m.fileName}</div>`:"";return `<div class="message user">${ft}<div class="label">Question</div><div class="bubble user-bubble">${text}</div></div>`;}
-    return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;
-  }).join("");
+  const content=messages.map(m=>{ const {text}=parseMessage(m.content); if(m.role==="user"){const ft=m.fileName?`<div class="file-tag">📎 ${m.fileName}</div>`:"";return `<div class="message user">${ft}<div class="label">Question</div><div class="bubble user-bubble">${text}</div></div>`;} return `<div class="message agent"><div class="label">Somfy Agent</div><div class="bubble agent-bubble">${text.replace(/\n/g,"<br/>")}</div></div>`;}).join("");
   const sectorLabel=SECTORS[sector].label;
-  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:0;color:#1a1a1a;background:#fff}.header{background:#FFB71E;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.ht{font-size:20px;font-weight:900;color:#25485A}.meta{text-align:right;font-size:12px;color:rgba(37,72,90,0.7)}.body{padding:0 32px 32px}.message{margin-bottom:18px}.label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;color:#999}.bubble{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f9f9f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:11px;color:#25485A;margin-bottom:5px}.footer{margin-top:32px;padding:12px 32px;border-top:3px solid #FFB71E;font-size:11px;color:#999;display:flex;justify-content:space-between}</style></head><body>
-  <div class="header"><div><div class="ht">SOMFY Agent IA</div></div><div class="meta"><strong>${sectorLabel} — ${profile}</strong><br/>${date}</div></div>
-  <div class="body">${content}</div>
-  <div class="footer"><span>Somfy Agent — ${sectorLabel}</span><span>${date}</span></div>
-  <script>window.onload=()=>window.print();</script></body></html>`;
+  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><title>Somfy Agent — ${title}</title><style>body{font-family:'Helvetica Neue',Arial,sans-serif;margin:0;padding:0;color:#1a1a1a;background:#fff}.header{background:#FFB71E;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.ht{font-size:20px;font-weight:900;color:#25485A}.meta{text-align:right;font-size:12px;color:rgba(37,72,90,0.7)}.body{padding:0 32px 32px}.message{margin-bottom:18px}.label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;color:#999}.bubble{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7}.user-bubble{background:#25485A;color:#fff}.agent-bubble{background:#f9f9f9;color:#1a1a1a;border:1px solid rgba(0,0,0,0.08)}.file-tag{font-size:11px;color:#25485A;margin-bottom:5px}.footer{margin-top:32px;padding:12px 32px;border-top:3px solid #FFB71E;font-size:11px;color:#999;display:flex;justify-content:space-between}</style></head><body><div class="header"><div><div class="ht">SOMFY Agent IA</div></div><div class="meta"><strong>${sectorLabel} — ${profile}</strong><br/>${date}</div></div><div class="body">${content}</div><div class="footer"><span>Somfy Agent — ${sectorLabel}</span><span>${date}</span></div><script>window.onload=()=>window.print();</script></body></html>`;
   const win=window.open("","_blank");win.document.write(html);win.document.close();
 }
 
@@ -557,7 +533,6 @@ export default function App() {
   const currentCat=currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
   const messages=currentMessages();
   const isStreaming=streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
-
   const sidebarProps={sector,setSector,profile,setProfile,openCat,setOpenCat,sendMessage,newConversation,profileHistory:history,activeId,setActiveId:(id)=>setAllActiveIds(prev=>({...prev,[hKey]:id})),deleteConv,isMobile,closeSidebar:()=>setSidebarOpen(false)};
 
   return (
@@ -626,13 +601,11 @@ export default function App() {
 
         <div style={{padding:isMobile?"8px 12px 12px":"10px 16px 14px",borderTop:"1px solid rgba(0,0,0,0.06)",background:"#fff"}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f5f5",borderRadius:10,border:`2px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.1)"}`,padding:"8px 8px 8px 12px",transition:"border-color 0.15s"}}>
-            <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}}
-            onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY}
-            onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️</button>
-            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message...":"Posez votre question ou demandez une présentation PowerPoint..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
+            <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}} onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️</button>
+            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?"Ajoutez un message...":"Posez votre question..."} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
             <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>↑</button>
           </div>
-          {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier · Demande une présentation PowerPoint</p>}
+          {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>Entrée pour envoyer · ☁️ pour joindre un fichier</p>}
         </div>
       </div>
     </div>
