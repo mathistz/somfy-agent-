@@ -440,40 +440,7 @@ function Sidebar({ sector, setSector, profile, setProfile, openCat, setOpenCat, 
   );
 }
 
-function PinScreen({ onSuccess }) {
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  async function handleSubmit() {
-    if (pin.length !== 6 || loading) return;
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ pin }) });
-      const data = await res.json();
-      if (data.ok) { sessionStorage.setItem("somfy_auth","1"); onSuccess(); }
-      else { setError(true); setPin(""); setTimeout(()=>setError(false),1500); }
-    } catch { setError(true); setPin(""); setTimeout(()=>setError(false),1500); }
-    finally { setLoading(false); }
-  }
-  return (
-    <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100dvh",background:NAVY,fontFamily:"'Inter',system-ui,sans-serif"}}>
-      <div style={{textAlign:"center",padding:32,width:"100%",maxWidth:320}}>
-        <div style={{fontSize:28,fontWeight:900,color:YELLOW,letterSpacing:"-0.5px",marginBottom:4}}>SOMFY</div>
-        <div style={{fontSize:11,color:"rgba(255,255,255,0.35)",marginBottom:36,textTransform:"uppercase",letterSpacing:"0.1em"}}>Agent IA — Accès sécurisé</div>
-        <input value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,"").slice(0,6))} onKeyDown={e=>{if(e.key==="Enter")handleSubmit();}} type="password" inputMode="numeric" maxLength={6} placeholder="• • • • • •" autoFocus style={{display:"block",width:"100%",boxSizing:"border-box",padding:"14px 16px",borderRadius:10,border:`2px solid ${error?"#ff4444":pin.length===6?YELLOW:"rgba(255,255,255,0.15)"}`,background:"rgba(255,255,255,0.07)",color:"#fff",fontSize:28,textAlign:"center",letterSpacing:10,outline:"none",fontFamily:"inherit",transition:"border-color 0.2s",marginBottom:12}}/>
-        {error&&<p style={{color:"#ff4444",fontSize:12,margin:"0 0 12px"}}>Code incorrect, réessayez</p>}
-        {!error&&<div style={{height:24,marginBottom:12}}/>}
-        <button onClick={handleSubmit} disabled={pin.length!==6||loading} style={{width:"100%",padding:"12px",borderRadius:8,border:"none",background:pin.length===6&&!loading?YELLOW:"rgba(255,255,255,0.08)",color:pin.length===6&&!loading?NAVY:"rgba(255,255,255,0.25)",fontSize:13,fontWeight:700,cursor:pin.length===6&&!loading?"pointer":"default",transition:"all 0.2s"}}>
-          {loading?"Vérification...":"Accéder"}
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
-  const [auth, setAuth] = useState(!!sessionStorage.getItem("somfy_auth"));
-  if (!auth) return <PinScreen onSuccess={()=>setAuth(true)}/>;
   const [windowWidth,setWindowWidth]=useState(typeof window!=="undefined"?window.innerWidth:1024);
   const [sidebarOpen,setSidebarOpen]=useState(false);
   const [sector,setSector]=useState("tertiaire");
@@ -489,18 +456,25 @@ export default function App() {
   const bottomRef=useRef(null);
   const inputRef=useRef(null);
   const fileRef=useRef(null);
+
   const isMobile=windowWidth<768;
   const hKey=`${sector}_${profile}`;
   const history=allHistories[hKey]||[];
   const activeId=allActiveIds[hKey]||null;
+
   useEffect(()=>{const h=()=>setWindowWidth(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);
+
   const currentMessages=()=>{if(!activeId)return[];const conv=history.find(h=>h.id===activeId);return conv?conv.messages:[];};
   const currentTitle=()=>{if(!activeId)return"Conversation";const conv=history.find(h=>h.id===activeId);return conv?conv.title:"Conversation";};
+
   useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[allHistories,allActiveIds,sector,profile]);
+
   function newConversation(){setAllActiveIds(prev=>({...prev,[hKey]:null}));setPendingFile(null);}
+
   function updateLastMsg(convId,key,content){
     setAllHistories(prev=>({...prev,[key]:(prev[key]||[]).map(h=>h.id===convId?{...h,messages:h.messages.slice(0,-1).concat([{role:"assistant",content}])}:h)}));
   }
+
   async function handleFile(file){
     if(!file)return;
     if(file.size>5*1024*1024){alert("Max 5 Mo");return;}
@@ -508,6 +482,7 @@ export default function App() {
     if(!["pdf","jpg","jpeg","png","gif","webp","doc","docx","xls","xlsx","csv","txt"].includes(ext)){alert("Format non supporté");return;}
     setPendingFile(file);inputRef.current?.focus();
   }
+
   async function sendMessage(text){
     const userText=(text||input).trim();
     if((!userText&&!pendingFile)||loading)return;
@@ -547,20 +522,25 @@ export default function App() {
     }catch(err){setStreaming(false);updateLastMsg(convId,key,`Erreur : ${err.message}`);}
     finally{setLoading(false);setTimeout(()=>inputRef.current?.focus(),100);}
   }
+
   function deleteConv(id){
     setAllHistories(prev=>({...prev,[hKey]:(prev[hKey]||[]).filter(h=>h.id!==id)}));
     if(activeId===id)setAllActiveIds(prev=>({...prev,[hKey]:null}));
   }
+
   const currentSector=SECTORS[sector];
   const currentProfile=currentSector.profiles[profile];
   const currentCat=currentProfile.categories.find(c=>c.id===openCat)||currentProfile.categories[0];
   const messages=currentMessages();
   const isStreaming=streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
   const sidebarProps={sector,setSector,profile,setProfile,openCat,setOpenCat,sendMessage,newConversation,profileHistory:history,activeId,setActiveId:(id)=>setAllActiveIds(prev=>({...prev,[hKey]:id})),deleteConv,isMobile,closeSidebar:()=>setSidebarOpen(false)};
+
   return (
     <div style={{display:"flex",height:isMobile?"100dvh":"640px",background:"#fafafa",borderRadius:isMobile?0:16,overflow:"hidden",boxShadow:isMobile?"none":"0 4px 24px rgba(0,0,0,0.12)",border:isMobile?"none":"1px solid rgba(0,0,0,0.06)",position:"relative",fontFamily:"'Inter',system-ui,sans-serif"}}>
       <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
+
       {!isMobile&&<div style={{width:220,flexShrink:0,height:"100%"}}><Sidebar {...sidebarProps}/></div>}
+
       {isMobile&&sidebarOpen&&(
         <>
           <div onClick={()=>setSidebarOpen(false)} style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.5)",zIndex:40}}/>
@@ -570,6 +550,7 @@ export default function App() {
           </div>
         </>
       )}
+
       <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
         <div style={{background:"#fff",borderBottom:`3px solid ${YELLOW}`,padding:isMobile?"10px 14px":"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
           <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
@@ -586,6 +567,7 @@ export default function App() {
             {messages.length>0&&!isStreaming&&<button onClick={()=>exportPDF(messages,sector,currentProfile.label,currentTitle())} style={{display:"flex",alignItems:"center",gap:4,padding:"5px 10px",borderRadius:6,background:NAVY,border:"none",cursor:"pointer",fontSize:11,color:YELLOW,fontWeight:700}}>↓ PDF</button>}
           </div>
         </div>
+
         <div style={{flex:1,overflowY:"auto",padding:isMobile?"14px 14px 8px":"20px 22px 10px",background:dragOver?"#f0f8ff":"#fafafa",transition:"background 0.2s",position:"relative"}}>
           {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.05)",border:`2px dashed ${NAVY}`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><span style={{fontSize:32,display:"block",marginBottom:8}}>☁️</span><p style={{margin:0,fontWeight:700,color:NAVY,fontSize:14}}>Déposez ici</p></div></div>}
           {messages.length===0?(
@@ -605,6 +587,7 @@ export default function App() {
           ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming&&i===messages.length-1} isMobile={isMobile}/>)}
           <div ref={bottomRef}/>
         </div>
+
         {pendingFile&&(
           <div style={{padding:"7px 14px",background:"#fff8e6",borderTop:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",gap:8}}>
             <span style={{fontSize:18}}>{getFileIcon(pendingFile.name)}</span>
@@ -615,6 +598,7 @@ export default function App() {
             <button onClick={()=>setPendingFile(null)} style={{background:"none",border:"none",cursor:"pointer",color:"#999",fontSize:18}}>✕</button>
           </div>
         )}
+
         <div style={{padding:isMobile?"8px 12px 12px":"10px 16px 14px",borderTop:"1px solid rgba(0,0,0,0.06)",background:"#fff"}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f5f5",borderRadius:10,border:`2px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.1)"}`,padding:"8px 8px 8px 12px",transition:"border-color 0.15s"}}>
             <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}} onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️</button>
