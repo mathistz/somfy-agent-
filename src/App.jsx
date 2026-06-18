@@ -13,7 +13,7 @@ PPTX_END
 Types disponibles : "cover", "content", "two_col", "closing". Maximum 10 slides. Ne génère JAMAIS ce format sans demande explicite de l'utilisateur.`;
 
 const SYSTEM_PROMPTS = {
-  tertiaire: `Tu es un assistant IA expert en protection solaire tertiaire, travaillant avec les équipes de Somfy France.
+  tertiaire: `Tu es un assistant IA expert en protection solaire dynamique tertiaire, travaillant avec les équipes de Somfy France.
 
 Contexte Somfy Tertiaire : leader en résidentiel (75% de part de marché, ~430M€ de CA), challenger en tertiaire face à Schneider, Siemens, Varema, Nice. Produits clés : BSO, screens, volets roulants motorisés. Solution tertiaire : Animeo Suite (radio IO) et offres filaires. Compatibilité GTB/BMS prévue automne 2025. Concurrents notables : Yokis (bas coût), Bubendorf, Cherubini.
 
@@ -25,6 +25,7 @@ STYLE DE RÉPONSE :
 - Pas de texte en gras avec des étoiles comme ça
 - Des paragraphes courts et clairs
 - Un ton direct, professionnel mais accessible
+- Utilise toujours "protection solaire dynamique", jamais de terme anglais
 - Tu peux répondre à n'importe quelle question, pas seulement sur Somfy
 - Si un fichier est joint, analyse-le et réponds en te basant sur son contenu
 - Utilise la recherche web pour toute question d'actualité
@@ -41,19 +42,19 @@ ${PPTX_INSTRUCTIONS}`,
 
 Contexte Somfy Résidentiel : leader du marché avec ~75% de parts de marché en France sur la motorisation résidentielle. Somfy propose une gamme complète couvrant plusieurs univers :
 
-PROTECTION SOLAIRE : volets roulants motorisés, BSO résidentiels, stores intérieurs et extérieurs, pergolas bioclimatiques motorisées, screens résidentiels. Protocole io-homecontrol bidirectionnel. Concurrents : Bubendorf, Cherubini, Velux (fenêtres de toit), Fakro.
+PROTECTION SOLAIRE DYNAMIQUE : volets roulants motorisés, BSO résidentiels, stores intérieurs et extérieurs, pergolas bioclimatiques motorisées, screens résidentiels. Protocole io-homecontrol bidirectionnel. Concurrents : Bubendorf, Cherubini, Velux, Fakro.
 
-SÉCURITÉ : gamme Somfy Protect — alarmes connectées, caméras intérieures et extérieures, détecteurs de mouvement, sirènes, IntelliTAG (détecteur d'ouverture/vibration), One+ (alarme tout-en-un). Concurrents : Ajax Systems, Philips Hue Secure, Arlo, Ring (Amazon), Risco.
+SÉCURITÉ : gamme Somfy Protect — alarmes connectées, caméras, détecteurs de mouvement, sirènes, IntelliTAG, One+. Concurrents : Ajax Systems, Philips Hue Secure, Arlo, Ring, Risco.
 
-DOMOTIQUE & CONNECTIVITÉ : TaHoma switch (box centrale compatible 300+ marques), Connexoon (entrée de gamme), io-homecontrol (protocole propriétaire bidirectionnel), compatibilité Google Home / Alexa / Apple HomeKit / Matter. Concurrents : Nice (Home Evolution), Delta Dore (Tydom), Legrand (Netatmo).
+DOMOTIQUE & CONNECTIVITÉ (Smart Home) : TaHoma switch (compatible 300+ marques), Connexoon, io-homecontrol, standard Matter, compatibilité Google Home / Alexa / Apple HomeKit. Concurrents : Nice, Delta Dore, Legrand Netatmo.
 
 MOTORISATION PORTAILS & GARAGES : motorisations de portails coulissants et battants, portes de garage sectionnelles et basculantes, barrières levantes, interphones connectés. Concurrents : Came, BFT, Nice, Faac.
 
 ÉNERGIE & CONFORT : pilotage intelligent du chauffage via TaHoma, volets comme isolation thermique, gestion automatique selon météo et luminosité.
 
-Réglementation et aides : RE2020, MaPrimeRénov', CEE, BBC Rénovation, label RGE, TVA réduite 5,5% sur rénovation énergétique.
+Réglementation et aides : RE2020, MaPrimeRénov', CEE, BBC Rénovation, label RGE, TVA réduite 5,5%.
 
-Cibles principales : installateurs (électriciens, stores, serruristes), particuliers, promoteurs immobiliers, constructeurs de maisons individuelles.
+Cibles : installateurs, particuliers, promoteurs immobiliers, constructeurs.
 
 STYLE DE RÉPONSE :
 - Écris de façon naturelle et fluide, comme un consultant qui parle à un collègue
@@ -61,6 +62,7 @@ STYLE DE RÉPONSE :
 - Pas de texte en gras avec des étoiles comme ça
 - Des paragraphes courts et clairs
 - Un ton direct, professionnel mais accessible
+- Utilise toujours "protection solaire dynamique", jamais de terme anglais
 - Tu peux répondre à n'importe quelle question, pas seulement sur Somfy
 - Si un fichier est joint, analyse-le et réponds en te basant sur son contenu
 - Utilise la recherche web pour toute question d'actualité
@@ -82,28 +84,28 @@ const SECTORS = {
         categories: [
           { id:"prospection", label:"Prospection", icon:"🎯", desc:"Appels d'offres et projets",
             prompts:[
-              { label:"AO rénovation écoles", text:"Recherche les appels d'offres publics sur le BOAMP pour la rénovation d'écoles avec volets roulants ou protection solaire en France ce mois-ci." },
-              { label:"Projets tertiaires en cours", text:"Quels sont les grands projets de rénovation tertiaire en France avec besoin potentiel en protection solaire ?" },
+              { label:"AO rénovation écoles", text:"Recherche les appels d'offres publics sur le BOAMP pour la rénovation d'écoles avec volets roulants ou protection solaire dynamique en France ce mois-ci." },
+              { label:"Projets tertiaires en cours", text:"Quels sont les grands projets de rénovation tertiaire en France avec besoin potentiel en protection solaire dynamique ?" },
               { label:"Hôpitaux en rénovation", text:"Recherche les appels d'offres sur le BOAMP pour la rénovation d'hôpitaux ou bâtiments de santé en France." },
               { label:"Collectivités actives", text:"Quelles collectivités françaises ont annoncé des plans de rénovation thermique de leur patrimoine immobilier ?" },
             ]},
           { id:"pitch", label:"Arguments de vente", icon:"💬", desc:"Pitch par interlocuteur",
             prompts:[
               { label:"Pitch bureau d'études", text:"Rédige-moi un pitch fluide pour convaincre un bureau d'études thermique de prescrire les solutions Somfy." },
-              { label:"Pitch mairie / école", text:"Comment convaincre un élu de mairie d'investir dans des protections solaires automatisées pour ses écoles ?" },
-              { label:"Pitch facility manager", text:"Quels arguments pour un facility manager sur les bénéfices concrets des protections solaires automatisées ?" },
+              { label:"Pitch mairie / école", text:"Comment convaincre un élu de mairie d'investir dans des protections solaires dynamiques pour ses écoles ?" },
+              { label:"Pitch facility manager", text:"Quels arguments pour un facility manager sur les bénéfices concrets de la protection solaire dynamique ?" },
               { label:"Pitch promoteur tertiaire", text:"Comment convaincre un promoteur immobilier tertiaire d'intégrer Somfy dès la conception ?" },
             ]},
           { id:"concurrence", label:"Analyse concurrents", icon:"📊", desc:"Benchmark et veille",
             prompts:[
-              { label:"Yokis vs Somfy", text:"Compare l'offre Yokis face à Somfy sur la protection solaire tertiaire." },
+              { label:"Yokis vs Somfy", text:"Compare l'offre Yokis face à Somfy sur la protection solaire dynamique tertiaire." },
               { label:"Benchmark concurrents", text:"Compare Somfy, Schneider, Varema, Nice et Yokis sur l'automatisme de protection solaire tertiaire." },
               { label:"Parts de marché tertiaire", text:"Quelles sont les parts de marché estimées des acteurs sur l'automatisme de protection solaire tertiaire en France ?" },
               { label:"Nouveaux entrants", text:"Y a-t-il de nouveaux acteurs sur le marché de l'automatisation des protections solaires en tertiaire ?" },
             ]},
           { id:"installateurs", label:"Réseau installateurs", icon:"🔧", desc:"Formation et animation",
             prompts:[
-              { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire tertiaire ?" },
+              { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire dynamique tertiaire ?" },
               { label:"Arguments pour installateurs", text:"Comment convaincre un installateur résidentiel de se lancer sur le marché tertiaire avec Somfy ?" },
             ]},
         ]
@@ -113,8 +115,8 @@ const SECTORS = {
         categories: [
           { id:"veille", label:"Veille marché", icon:"📡", desc:"Tendances et actualités",
             prompts:[
-              { label:"Tendances 2025", text:"Quelles sont les grandes tendances du marché de la protection solaire tertiaire en France en 2025 ?" },
-              { label:"Chiffres marché France", text:"Quels sont les chiffres clés du marché de la protection solaire tertiaire en France ?" },
+              { label:"Tendances 2025", text:"Quelles sont les grandes tendances du marché de la protection solaire dynamique tertiaire en France en 2025 ?" },
+              { label:"Chiffres marché France", text:"Quels sont les chiffres clés du marché de la protection solaire dynamique tertiaire en France ?" },
               { label:"Protocoles GTB émergents", text:"Quels protocoles GTB gagnent du terrain en France en 2025 ?" },
               { label:"Actualités bâtiment", text:"Quelles sont les dernières actualités du secteur bâtiment tertiaire sur l'efficacité énergétique ?" },
             ]},
@@ -122,18 +124,18 @@ const SECTORS = {
             prompts:[
               { label:"Décret BACS complet", text:"Explique-moi le décret BACS, ses obligations, ses seuils et son impact pour Somfy." },
               { label:"Décret tertiaire 2025", text:"Où en est l'application du décret tertiaire en 2025 et quelles sont les obligations actuelles ?" },
-              { label:"Normes NF protection solaire", text:"Quelles normes NF et européennes s'appliquent aux protections solaires ?" },
+              { label:"Normes NF protection solaire", text:"Quelles normes NF et européennes s'appliquent à la protection solaire dynamique ?" },
             ]},
           { id:"confort_ete", label:"Confort d'été", icon:"☀️", desc:"Arguments thermiques",
             prompts:[
               { label:"Gains thermiques BSO", text:"Quels sont les gains thermiques concrets avec des BSO ou screens automatisés ?" },
-              { label:"Protection solaire vs clim", text:"Compare les bénéfices d'une protection solaire automatisée face à la climatisation." },
+              { label:"Protection solaire vs clim", text:"Compare les bénéfices d'une protection solaire dynamique face à la climatisation." },
               { label:"Projections chaleur 2050", text:"Quelles sont les projections de chaleur pour les villes françaises d'ici 2050 ?" },
             ]},
           { id:"communication", label:"Communication", icon:"📣", desc:"Contenu et messages",
             prompts:[
               { label:"Messages clés par segment", text:"Définis les messages clés Somfy pour les écoles, bureaux, bâtiments de santé et hôtels." },
-              { label:"Arguments RSE", text:"Quels arguments RSE peut-on développer autour des protections solaires automatisées ?" },
+              { label:"Arguments RSE", text:"Quels arguments RSE peut-on développer autour de la protection solaire dynamique ?" },
               { label:"Cas clients à documenter", text:"Quels cas clients Somfy devrait documenter en priorité pour crédibiliser son offre tertiaire ?" },
             ]},
         ]
@@ -151,7 +153,7 @@ const SECTORS = {
               { label:"Gamme volets roulants", text:"Présente la gamme complète de volets roulants motorisés Somfy pour le résidentiel : moteurs, protocoles, compatibilités." },
               { label:"Stores et pergolas", text:"Quelle est l'offre Somfy sur les stores extérieurs et pergolas bioclimatiques pour le résidentiel ?" },
               { label:"Pitch installateur stores", text:"Comment convaincre un installateur de stores de rejoindre le réseau Somfy résidentiel ?" },
-              { label:"Somfy vs Bubendorf", text:"Compare Somfy et Bubendorf sur le marché de la motorisation résidentielle en France." },
+              { label:"Somfy vs Bubendorf", text:"Compare Somfy et Bubendorf sur le marché de la protection solaire dynamique résidentielle." },
             ]},
           { id:"securite_resi", label:"Sécurité", icon:"🔒", desc:"Somfy Protect & alarmes",
             prompts:[
@@ -172,13 +174,13 @@ const SECTORS = {
               { label:"Gamme portails Somfy", text:"Présente la gamme Somfy pour la motorisation des portails coulissants et battants." },
               { label:"Portes de garage Somfy", text:"Quelle est l'offre Somfy sur les portes de garage sectionnelles et basculantes ?" },
               { label:"Somfy vs Nice portails", text:"Compare Somfy et Nice sur le marché de la motorisation de portails résidentiels." },
-              { label:"Pitch installateur portails", text:"Comment convaincre un installateur de portails de proposer les solutions Somfy ?" },
+              { label:"Pitch installateur portails", text:"Comment convaincre un installateur de portails et garages de proposer les solutions Somfy ?" },
             ]},
           { id:"aides_resi", label:"Aides & Réglementation", icon:"🌿", desc:"RE2020, MaPrimeRénov', CEE",
             prompts:[
               { label:"MaPrimeRénov' et Somfy", text:"Comment les produits Somfy s'inscrivent-ils dans le dispositif MaPrimeRénov' ?" },
-              { label:"RE2020 et protection solaire", text:"Quelles sont les exigences de la RE2020 concernant la protection solaire en résidentiel ?" },
-              { label:"CEE et volets motorisés", text:"Existe-t-il des CEE applicables aux volets et protections solaires résidentielles ?" },
+              { label:"RE2020 et protection solaire", text:"Quelles sont les exigences de la RE2020 concernant la protection solaire dynamique en résidentiel ?" },
+              { label:"CEE et volets motorisés", text:"Existe-t-il des CEE applicables aux volets et protections solaires dynamiques résidentielles ?" },
               { label:"TVA réduite rénovation", text:"Comment les installateurs Somfy peuvent-ils faire bénéficier leurs clients de la TVA à 5,5% ?" },
             ]},
         ]
@@ -186,19 +188,20 @@ const SECTORS = {
       marketing: {
         label: "Marketing", icon: "📈",
         categories: [
-          { id:"tendances_resi", label:"Tendances marché", icon:"📡", desc:"Smart home & connectivité",
+          { id:"tendances_resi", label:"Tendances marché", icon:"📡", desc:"Solaire, smart home & connectivité",
             prompts:[
+              { label:"Marché protection solaire dynamique", text:"Quels sont les chiffres et tendances du marché du volet roulant et de la protection solaire dynamique résidentielle en France ?" },
               { label:"Marché smart home France", text:"Quelles sont les tendances du marché de la maison connectée en France en 2025 ?" },
               { label:"Marché alarme résidentielle", text:"Quels sont les chiffres et tendances du marché de l'alarme résidentielle en France ?" },
-              { label:"Marché motorisation portails", text:"Quels sont les chiffres du marché de la motorisation de portails et garages en France ?" },
-              { label:"Innovations Matter et IoT", text:"Comment le protocole Matter change-t-il le marché de la domotique résidentielle ?" },
+              { label:"Marché motorisation portails et garages", text:"Quels sont les chiffres du marché de la motorisation de portails et portes de garage en France ?" },
+              { label:"Innovations connectivité (Matter, IoT)", text:"Comment le protocole Matter et l'IoT s'intègrent-ils dans l'écosystème smart home Somfy ?" },
             ]},
           { id:"confort_resi", label:"Arguments clients", icon:"☀️", desc:"Confort, sécurité, économies",
             prompts:[
               { label:"Économies énergie volets", text:"Quelles économies d'énergie concrètes un particulier peut-il espérer avec des volets automatisés Somfy ?" },
               { label:"Arguments sécurité maison", text:"Quels sont les arguments pour convaincre un particulier d'investir dans la sécurité connectée Somfy ?" },
               { label:"Valeur immobilière domotique", text:"La domotique et les équipements connectés Somfy augmentent-ils la valeur d'un bien immobilier ?" },
-              { label:"Confort thermique été", text:"Comment la protection solaire automatisée améliore-t-elle le confort thermique d'une maison en été ?" },
+              { label:"Confort thermique été", text:"Comment la protection solaire dynamique améliore-t-elle le confort thermique d'une maison en été ?" },
             ]},
           { id:"communication_resi", label:"Communication B2C", icon:"📣", desc:"Messages grand public",
             prompts:[
@@ -505,7 +508,8 @@ export default function App() {
     try{
       const msgContent=await buildMessageContent(userText,file);
       const apiMessages=[...msgs.map(m=>({role:m.role,content:m.content})),{role:"user",content:msgContent}];
-      const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-opus-4-5",max_tokens:1500,system:SYSTEM_PROMPTS[sector],tools:[{type:"web_search_20250305",name:"web_search"}],messages:apiMessages})});
+      const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:1500,system:SYSTEM_PROMPTS[sector],messages:apiMessages})});
+      if(!res.ok){const errText=await res.text();throw new Error(errText||"Erreur serveur");}
       const reader=res.body.getReader();const decoder=new TextDecoder();
       let fullText="";let started=false;
       while(true){
