@@ -1,18 +1,16 @@
-export default function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Méthode non autorisée' });
-  }
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).end();
 
   const { pin } = req.body;
   const correctPin = process.env.PIN_CODE;
 
   if (!correctPin) {
-    return res.status(500).json({ message: 'PIN non configuré sur le serveur.' });
+    return res.status(500).json({ error: 'PIN non configuré sur le serveur' });
   }
 
   if (pin === correctPin) {
     return res.status(200).json({ success: true });
-  } else {
-    return res.status(401).json({ success: false, message: 'Code PIN incorrect.' });
   }
+
+  return res.status(401).json({ success: false, error: 'Code incorrect' });
 }
