@@ -453,7 +453,11 @@ function PinGate({ onSuccess }) {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch('/api/auth', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ pin }) });
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin })
+      });
       const data = await res.json();
       if (data.success) {
         sessionStorage.setItem('somfy_auth', 'true');
@@ -470,11 +474,11 @@ function PinGate({ onSuccess }) {
   }
 
   return (
-    <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"640px",background:NAVY,borderRadius:16,fontFamily:"'Inter',system-ui,sans-serif"}}>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100dvh",background:NAVY,fontFamily:"'Inter',system-ui,sans-serif"}}>
       <div style={{background:"#fff",borderRadius:14,padding:"36px 32px",width:300,boxShadow:"0 8px 32px rgba(0,0,0,0.3)"}}>
-        <div style={{textAlign:"center",marginBottom:20}}>
-          <span style={{fontSize:24,fontWeight:900,color:NAVY,letterSpacing:"-0.5px"}}>SOMFY</span>
-          <p style={{margin:"4px 0 0",fontSize:11,color:"#888",textTransform:"uppercase",letterSpacing:"0.08em"}}>Agent IA — Accès protégé</p>
+        <div style={{textAlign:"center",marginBottom:24}}>
+          <div style={{fontSize:26,fontWeight:900,color:NAVY,letterSpacing:"-0.5px",marginBottom:4}}>SOMFY</div>
+          <div style={{fontSize:11,color:"#888",textTransform:"uppercase",letterSpacing:"0.08em"}}>Agent IA — Accès protégé</div>
         </div>
         <input
           type="password"
@@ -484,15 +488,15 @@ function PinGate({ onSuccess }) {
           onKeyDown={e=>{if(e.key==="Enter")handleSubmit();}}
           placeholder="Code PIN"
           autoFocus
-          style={{width:"100%",padding:"12px 14px",borderRadius:8,border:`2px solid ${error?"#e74c3c":"#e0e0e0"}`,fontSize:18,textAlign:"center",letterSpacing:"4px",outline:"none",boxSizing:"border-box",marginBottom:12}}
+          style={{width:"100%",padding:"12px 14px",borderRadius:8,border:`2px solid ${error?"#e74c3c":pin?"#25485A":"#e0e0e0"}`,fontSize:20,textAlign:"center",letterSpacing:"6px",outline:"none",boxSizing:"border-box",marginBottom:error?8:14,transition:"border-color 0.15s"}}
         />
-        {error && <p style={{margin:"0 0 12px",fontSize:12,color:"#e74c3c",textAlign:"center"}}>{error}</p>}
+        {error&&<p style={{margin:"0 0 12px",fontSize:12,color:"#e74c3c",textAlign:"center"}}>{error}</p>}
         <button
           onClick={handleSubmit}
           disabled={!pin.trim()||loading}
-          style={{width:"100%",padding:"12px",borderRadius:8,border:"none",background:pin.trim()&&!loading?YELLOW:"#eee",color:pin.trim()&&!loading?NAVY:"#aaa",fontWeight:700,fontSize:14,cursor:pin.trim()&&!loading?"pointer":"default"}}
+          style={{width:"100%",padding:"13px",borderRadius:8,border:"none",background:pin.trim()&&!loading?YELLOW:"#eee",color:pin.trim()&&!loading?NAVY:"#aaa",fontWeight:700,fontSize:14,cursor:pin.trim()&&!loading?"pointer":"default",transition:"all 0.15s"}}
         >
-          {loading ? "Vérification..." : "Accéder à l'agent"}
+          {loading?"Vérification...":"Accéder à l'agent"}
         </button>
       </div>
     </div>
@@ -500,7 +504,9 @@ function PinGate({ onSuccess }) {
 }
 
 export default function AppWrapper() {
-  const [authed, setAuthed] = useState(typeof window !== "undefined" && sessionStorage.getItem('somfy_auth') === 'true');
+  const [authed, setAuthed] = useState(
+    typeof window !== "undefined" && sessionStorage.getItem('somfy_auth') === 'true'
+  );
   if (!authed) return <PinGate onSuccess={()=>setAuthed(true)}/>;
   return <App/>;
 }
