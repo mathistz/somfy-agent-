@@ -8,14 +8,32 @@ const CHART_COLORS = ["#25485A","#FFB71E","#1a6b4a","#e07b00","#5a8fa3","#f0c040
 const PPTX_INSTRUCTIONS = {
   fr: `PRÉSENTATIONS POWERPOINT : uniquement si l'utilisateur demande explicitement une présentation, des slides ou un PowerPoint, génère le contenu dans ce format JSON exact :
 PPTX_START
-{"title":"Titre de la présentation","slides":[{"type":"cover","title":"Titre","subtitle":"Sous-titre"},{"type":"content","title":"Titre slide","bullets":["Point 1","Point 2","Point 3"]},{"type":"closing","title":"Merci","subtitle":"Message final"}]}
+{"title":"Titre de la présentation","slides":[{"type":"cover","title":"Titre","subtitle":"Sous-titre"},{"type":"content","title":"Titre slide","bullets":["Point 1","Point 2","Point 3"]},{"type":"two_col","title":"Comparaison","left":{"title":"Colonne gauche","bullets":["A","B"]},"right":{"title":"Colonne droite","bullets":["C","D"]}},{"type":"closing","title":"Merci","subtitle":"Message final"}]}
 PPTX_END
-Ne génère JAMAIS ce format sans demande explicite.`,
+Types disponibles : "cover", "content", "two_col", "closing". Maximum 10 slides.
+
+DOSSIER DE RÉPONSE CCTP : si l'utilisateur demande de générer un dossier ou une présentation de réponse à partir d'un CCTP, génère AUTOMATIQUEMENT un PowerPoint structuré avec ces slides :
+1. cover : "Réponse à l'appel d'offres — [Nom du projet]" / "Somfy Pro France"
+2. content : "Compréhension du projet" — synthèse du CCTP (bâtiment, besoins, contraintes)
+3. content : "Notre solution recommandée" — produits Somfy adaptés avec justification technique
+4. content : "Arguments réglementaires" — Décret BACS, RE2020, confort d'été, DH
+5. two_col : "Pourquoi Somfy ?" — avantages techniques à gauche, avantages commerciaux à droite
+6. content : "Notre expérience sur ce type de projet" — références et cas clients similaires
+7. closing : "Merci pour votre confiance" / "Somfy Pro France — Protection Solaire Dynamique"`,
   en: `POWERPOINT PRESENTATIONS: only if the user explicitly asks for a presentation, slides or PowerPoint, generate content in this exact JSON format:
 PPTX_START
-{"title":"Presentation title","slides":[{"type":"cover","title":"Title","subtitle":"Subtitle"},{"type":"content","title":"Slide title","bullets":["Point 1","Point 2","Point 3"]},{"type":"closing","title":"Thank you","subtitle":"Final message"}]}
+{"title":"Presentation title","slides":[{"type":"cover","title":"Title","subtitle":"Subtitle"},{"type":"content","title":"Slide title","bullets":["Point 1","Point 2","Point 3"]},{"type":"two_col","title":"Comparison","left":{"title":"Left column","bullets":["A","B"]},"right":{"title":"Right column","bullets":["C","D"]}},{"type":"closing","title":"Thank you","subtitle":"Final message"}]}
 PPTX_END
-NEVER generate this format without explicit user request.`
+Available types: "cover", "content", "two_col", "closing". Maximum 10 slides.
+
+CCTP RESPONSE DOSSIER: if the user asks to generate a response dossier or presentation from a CCTP, AUTOMATICALLY generate a structured PowerPoint with these slides:
+1. cover: "Tender Response — [Project Name]" / "Somfy Pro France"
+2. content: "Project Understanding" — CCTP summary (building, needs, constraints)
+3. content: "Our Recommended Solution" — adapted Somfy products with technical justification
+4. content: "Regulatory Arguments" — BACS Decree, RE2020, summer comfort, DH
+5. two_col: "Why Somfy?" — technical advantages on left, commercial advantages on right
+6. content: "Our Experience on Similar Projects" — references and similar client cases
+7. closing: "Thank you for your trust" / "Somfy Pro France — Dynamic Solar Shading"`
 };
 
 const SYSTEM_PROMPTS = {
@@ -26,9 +44,9 @@ Contexte Somfy Tertiaire : leader en résidentiel (75% de part de marché, ~430M
 
 Réglementation clé : Décret BACS (automatisation obligatoire >290kW), Décret Tertiaire (-40% conso 2030), argument confort d'été et réduction des degrés-heures.
 
-LECTURE DE CCTP : quand un CCTP (cahier des clauses techniques particulières) est joint, analyse-le en profondeur : type de bâtiment, nombre d'ouvertures et façades, produits demandés, contraintes techniques, délais, budget estimé. Propose ensuite une stratégie de réponse pour Somfy avec les arguments clés et les produits les mieux adaptés.
+LECTURE DE CCTP : quand un CCTP est joint, analyse-le en profondeur : type de bâtiment, nombre d'ouvertures et façades, produits demandés, contraintes techniques, délais, budget estimé. Propose une stratégie de réponse pour Somfy avec les arguments clés et les produits les mieux adaptés.
 
-STYLE DE RÉPONSE : Écris de façon naturelle et fluide. Pas de bullet points sauf si nécessaire. Paragraphes courts. Ton direct et professionnel. Utilise toujours "protection solaire dynamique". Recherche web pour toute question d'actualité.
+STYLE DE RÉPONSE : Naturel et fluide. Pas de bullet points sauf si nécessaire. Paragraphes courts. Ton direct et professionnel. Utilise toujours "protection solaire dynamique". Recherche web pour toute question d'actualité.
 
 GRAPHIQUES :
 CHART_START
@@ -40,9 +58,9 @@ Somfy Tertiary Context: market leader in residential (75% market share, ~€430M
 
 Key regulations: BACS Decree (mandatory automation >290kW), Tertiary Decree (-40% energy consumption by 2030), summer comfort argument and degree-hours reduction.
 
-CCTP READING: when a CCTP (technical specification document) is attached, analyse it in depth: building type, number of openings and facades, requested products, technical constraints, deadlines, estimated budget. Then propose a response strategy for Somfy with key arguments and best-fit products.
+CCTP READING: when a CCTP is attached, analyse it in depth: building type, number of openings and facades, requested products, technical constraints, deadlines, estimated budget. Propose a response strategy for Somfy with key arguments and best-fit products.
 
-RESPONSE STYLE: Write naturally and fluently. No bullet points unless necessary. Short paragraphs. Direct, professional tone. Always use "dynamic solar shading". Use web search for current topics.
+RESPONSE STYLE: Natural and fluent. No bullet points unless necessary. Short paragraphs. Direct, professional tone. Always use "dynamic solar shading". Use web search for current topics.
 
 CHARTS:
 CHART_START
@@ -57,9 +75,7 @@ SÉCURITÉ : Somfy Protect — alarmes, caméras, détecteurs, IntelliTAG, One+.
 DOMOTIQUE : TaHoma switch (300+ marques), Connexoon, io-homecontrol, Matter, Google Home / Alexa / HomeKit. Concurrents : Nice, Delta Dore, Legrand.
 PORTAILS & GARAGES : portails coulissants, battants, portes de garage, barrières. Concurrents : Came, BFT, Nice.
 Réglementation : RE2020, MaPrimeRénov', CEE, label RGE, TVA 5,5%.
-
 STYLE : Naturel, fluide, professionnel. Toujours "protection solaire dynamique". Recherche web pour l'actualité.
-
 GRAPHIQUES :
 CHART_START
 {"type":"bar","title":"Titre","labels":["A","B"],"datasets":[{"label":"Série","data":[10,20],"color":"#25485A"}]}
@@ -71,9 +87,7 @@ SECURITY: Somfy Protect — alarms, cameras, detectors, IntelliTAG, One+. Compet
 SMART HOME: TaHoma switch (300+ brands), Connexoon, io-homecontrol, Matter, Google Home / Alexa / HomeKit. Competitors: Nice, Delta Dore, Legrand.
 GATES & GARAGES: sliding and swing gates, garage doors, barriers. Competitors: Came, BFT, Nice.
 Regulations: RE2020, MaPrimeRénov', CEE, RGE label, reduced VAT 5.5%.
-
 STYLE: Natural, fluent, professional. Use web search for current topics.
-
 CHARTS:
 CHART_START
 {"type":"bar","title":"Title","labels":["A","B"],"datasets":[{"label":"Series","data":[10,20],"color":"#25485A"}]}
@@ -100,6 +114,11 @@ const SECTORS = {
             { label:"Points clés pour Somfy", text:"Dans ce CCTP, quels sont les points les plus importants pour Somfy ? Quels produits de notre gamme correspondent le mieux aux exigences techniques ?" },
             { label:"Rédiger une synthèse de réponse", text:"Sur la base de ce CCTP, rédige une synthèse de réponse professionnelle que l'équipe commerciale pourrait utiliser comme base pour construire son offre." },
             { label:"Risques et points de vigilance", text:"Dans ce CCTP, quels sont les points de vigilance ou les clauses potentiellement problématiques pour Somfy ?" },
+          ]},
+          { id:"dossier_reponse", label:"Dossier de réponse", icon:"📁", desc:"Générer un dossier PowerPoint", prompts:[
+            { label:"Générer le dossier complet", text:"À partir de ce CCTP, génère-moi un dossier de réponse commercial complet en PowerPoint pour Somfy. Le dossier doit inclure : la compréhension du projet, la solution recommandée, les arguments réglementaires, les raisons de choisir Somfy, et une conclusion." },
+            { label:"Dossier synthétique (5 slides)", text:"Génère un PowerPoint synthétique de 5 slides maximum pour répondre à cet appel d'offres avec les éléments clés de notre offre Somfy." },
+            { label:"Dossier technique détaillé", text:"Génère un dossier PowerPoint technique et détaillé pour répondre à ce CCTP : spécifications produits, compatibilités GTB, argumentaire réglementaire BACS et RE2020, et plan d'installation." },
           ]},
           { id:"pitch", label:"Arguments de vente", icon:"💬", desc:"Pitch par interlocuteur", prompts:[
             { label:"Pitch bureau d'études", text:"Rédige un pitch pour convaincre un bureau d'études thermique de prescrire les solutions Somfy." },
@@ -129,6 +148,11 @@ const SECTORS = {
             { label:"Key points for Somfy", text:"In this CCTP, what are the most important points for Somfy? Which products from our range best match the technical requirements?" },
             { label:"Draft a response summary", text:"Based on this CCTP, write a professional response summary that the sales team could use as a basis for their offer." },
             { label:"Risks and watch points", text:"In this CCTP, what are the watch points or potentially problematic clauses for Somfy?" },
+          ]},
+          { id:"dossier_reponse", label:"Response dossier", icon:"📁", desc:"Generate a PowerPoint dossier", prompts:[
+            { label:"Generate full dossier", text:"Based on this CCTP, generate a complete commercial response dossier in PowerPoint for Somfy. The dossier should include: project understanding, recommended solution, regulatory arguments, reasons to choose Somfy, and a conclusion." },
+            { label:"Concise dossier (5 slides)", text:"Generate a concise PowerPoint of maximum 5 slides to respond to this tender with the key elements of our Somfy offer." },
+            { label:"Detailed technical dossier", text:"Generate a detailed technical PowerPoint dossier to respond to this CCTP: product specifications, GTB compatibility, BACS and RE2020 regulatory arguments, and installation plan." },
           ]},
           { id:"pitch", label:"Sales arguments", icon:"💬", desc:"Pitch by target profile", prompts:[
             { label:"Pitch engineering firm", text:"Write a pitch to convince a thermal engineering firm to specify Somfy solutions." },
@@ -339,6 +363,7 @@ const UI = {
     noAnswer:"Je n'ai pas pu obtenir de réponse. Réessaie.",
     dropHere:"Déposez ici", modeLabel:"Mode",
     cctpHint:"💡 Upload un PDF de CCTP via ☁️ puis clique sur une suggestion",
+    dossierHint:"💡 Upload ton CCTP via ☁️ — l'agent génère un PowerPoint complet à télécharger",
   },
   en: {
     sector:"Sector", profile:"Profile", nav:"Navigation", history:"History",
@@ -352,6 +377,7 @@ const UI = {
     noAnswer:"I couldn't get a response. Please try again.",
     dropHere:"Drop here", modeLabel:"Mode",
     cctpHint:"💡 Upload a CCTP PDF via ☁️ then click a suggestion",
+    dossierHint:"💡 Upload your CCTP via ☁️ — the agent generates a complete PowerPoint to download",
   }
 };
 
@@ -367,12 +393,12 @@ function PlaceSearchWidget({ onSearch, lang }) {
       const data = await res.json();
       const results = data.results || [];
       if (results.length === 0) {
-        onSearch(lang==="fr" ? `J'ai recherché "${keywords}" sur le BOAMP mais aucun résultat. Suggère d'autres mots clés.` : `I searched "${keywords}" on BOAMP but found no results. Suggest other relevant keywords for Somfy.`);
+        onSearch(lang==="fr"?`J'ai recherché "${keywords}" sur le BOAMP mais aucun résultat. Suggère d'autres mots clés.`:`I searched "${keywords}" on BOAMP but found no results. Suggest other relevant keywords for Somfy.`);
       } else {
         const summary = results.slice(0,8).map((r,i)=>{ const title=r.titre||r.intitule||"Sans titre"; const org=r.donnees?.identite?.denomination||""; const date=r.dateparution||""; const dept=r.donnees?.lieu?.departement||""; return `${i+1}. ${title}${org?` — ${org}`:""}${dept?` (${dept})`:""}${date?` — ${date}`:""}`;}).join("\n");
-        onSearch(lang==="fr" ? `Voici ${results.length} AO trouvés sur le BOAMP pour "${keywords}" :\n\n${summary}\n\nAnalyse ces résultats pour Somfy.` : `Here are ${results.length} tenders found on BOAMP for "${keywords}":\n\n${summary}\n\nAnalyse these results for Somfy.`);
+        onSearch(lang==="fr"?`Voici ${results.length} AO trouvés sur le BOAMP pour "${keywords}" :\n\n${summary}\n\nAnalyse ces résultats pour Somfy.`:`Here are ${results.length} tenders found on BOAMP for "${keywords}":\n\n${summary}\n\nAnalyse these results for Somfy.`);
       }
-    } catch { onSearch(lang==="fr" ? `Recherche BOAMP pour "${keywords}".` : `BOAMP search for "${keywords}".`); }
+    } catch { onSearch(lang==="fr"?`Recherche BOAMP pour "${keywords}".`:`BOAMP search for "${keywords}".`); }
     finally { setLoadingAO(false); setKeywords(""); }
   }
   return (
@@ -416,21 +442,21 @@ function PPTXButton({ pptxData }) {
     setLoading(true);
     try {
       const res = await fetch('/api/pptx', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(pptxData) });
-      if (!res.ok) throw new Error('Error');
+      if (!res.ok) throw new Error('Erreur génération');
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = `${(pptxData.title||'presentation').replace(/[^a-zA-Z0-9\-_ ]/g,'_')}.pptx`;
       document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    } catch(err) { alert('Error: ' + err.message); }
+    } catch(err) { alert('Erreur : ' + err.message); }
     finally { setLoading(false); }
   }
   return (
     <div style={{marginTop:10,padding:"12px 16px",background:`linear-gradient(135deg,${NAVY},#1a3a47)`,borderRadius:10,border:"1px solid rgba(255,183,30,0.3)"}}>
-      <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📊 Présentation PowerPoint prête</p>
+      <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📊 Dossier PowerPoint prêt</p>
       <p style={{margin:"0 0 10px",fontSize:11,color:"rgba(255,255,255,0.6)"}}>{pptxData.slides?.length||0} slides — {pptxData.title}</p>
       <button onClick={handleDownload} disabled={loading} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderRadius:7,border:"none",background:loading?"rgba(255,255,255,0.1)":YELLOW,cursor:loading?"default":"pointer",fontSize:12,fontWeight:700,color:loading?"rgba(255,255,255,0.4)":NAVY}}>
-        {loading?"⏳ Génération...":"⬇️ Télécharger le PowerPoint"}
+        {loading?"⏳ Génération en cours...":"⬇️ Télécharger le dossier PowerPoint"}
       </button>
     </div>
   );
@@ -496,7 +522,7 @@ async function readXlsxAsText(file){return new Promise((resolve,reject)=>{const 
 async function buildMessageContent(userText,file){
   if(!file) return userText;
   const ext=file.name.split(".").pop().toLowerCase();
-  if(["jpg","jpeg","png","gif","webp"].includes(ext)){const b64=await readFileAsBase64(file);const mt=ext==="jpg"||ext==="jpeg"?"image/jpeg":ext==="png"?"image/png":"image/webp";return [{type:"image",source:{type:"base64",media_type:mt,data:b64}},{type:"text",text:userText||"Analyse this image."}];}
+  if(["jpg","jpeg","png","gif","webp"].includes(ext)){const b64=await readFileAsBase64(file);const mt=ext==="jpg"||ext==="jpeg"?"image/jpeg":ext==="png"?"image/png":"image/webp";return [{type:"image",source:{type:"base64",media_type:mt,data:b64}},{type:"text",text:userText||"Analyse cette image."}];}
   if(ext==="pdf"){const b64=await readFileAsBase64(file);return [{type:"document",source:{type:"base64",media_type:"application/pdf",data:b64}},{type:"text",text:userText||"Analyse ce document en détail."}];}
   if(ext==="docx"||ext==="doc"){const text=await readDocxAsText(file);return `[Word: ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse."}`;}
   if(ext==="xlsx"||ext==="xls"){const text=await readXlsxAsText(file);return `[Excel: ${file.name}]\n\n${text}\n\n---\n${userText||"Analyse."}`;}
@@ -508,10 +534,8 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
   const t = UI[lang];
   const currentSector = SECTORS[sector];
   const currentProfileData = currentSector.profiles[profile][lang];
-
   function switchSector(s){ setSector(s); setProfile("commercial"); setOpenCat(SECTORS[s].profiles.commercial[lang].categories[0].id); if(isMobile)closeSidebar(); }
   function switchProfile(p){ setProfile(p); setOpenCat(currentSector.profiles[p][lang].categories[0].id); if(isMobile)closeSidebar(); }
-
   return (
     <div style={{width:isMobile?"100%":"220px",background:NAVY,display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
       <div style={{background:`linear-gradient(90deg,${YELLOW},#f0a800)`,padding:"12px 16px",borderBottom:"2px solid rgba(37,72,90,0.2)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -524,7 +548,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
         </div>
         {isMobile&&<button onClick={closeSidebar} style={{background:"rgba(37,72,90,0.15)",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",fontSize:18,color:NAVY,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>}
       </div>
-
       <div style={{padding:"8px 10px 4px"}}>
         <div style={{display:"flex",gap:4}}>
           {["fr","en"].map(l=>(
@@ -534,7 +557,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
           ))}
         </div>
       </div>
-
       <div style={{padding:"4px 10px 6px"}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>{t.sector}</p>
         <div style={{display:"flex",gap:4}}>
@@ -545,7 +567,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
           ))}
         </div>
       </div>
-
       <div style={{padding:"2px 10px 8px",borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>{t.profile}</p>
         <div style={{display:"flex",gap:4}}>
@@ -557,7 +578,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
           ))}
         </div>
       </div>
-
       <div style={{padding:"6px 10px 6px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>{t.nav}</p>
         {currentProfileData.categories.map(cat=>(
@@ -571,6 +591,7 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
             {openCat===cat.id&&(
               <div style={{marginLeft:12,paddingLeft:10,borderLeft:"2px solid rgba(255,183,30,0.3)",marginBottom:4}}>
                 {cat.id==="cctp"&&<p style={{margin:"4px 0 8px",fontSize:10,color:"rgba(255,183,30,0.7)",lineHeight:1.4}}>{t.cctpHint}</p>}
+                {cat.id==="dossier_reponse"&&<p style={{margin:"4px 0 8px",fontSize:10,color:"rgba(255,183,30,0.7)",lineHeight:1.4}}>{t.dossierHint}</p>}
                 {cat.prompts.map((p,i)=><button key={i} onClick={()=>{sendMessage(p.text);if(isMobile)closeSidebar();}} style={{width:"100%",padding:"5px 6px",borderRadius:5,cursor:"pointer",textAlign:"left",background:"transparent",border:"none",color:"rgba(255,255,255,0.45)",fontSize:11,lineHeight:1.4,display:"block",marginBottom:1}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.45)"}>{p.label}</button>)}
                 {cat.id==="prospection"&&sector==="tertiaire"&&profile==="commercial"&&<PlaceSearchWidget lang={lang} onSearch={(txt)=>{sendMessage(txt);if(isMobile)closeSidebar();}}/>}
               </div>
@@ -578,7 +599,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
           </div>
         ))}
       </div>
-
       <div style={{flex:1,overflowY:"auto",padding:"6px 10px 4px"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
           <p style={{margin:0,fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>{t.history}</p>
@@ -586,7 +606,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
         </div>
         {profileHistory.length===0?<p style={{fontSize:11,color:"rgba(255,255,255,0.2)",fontStyle:"italic",margin:"4px 2px"}}>{t.noConv}</p>:profileHistory.map(h=><HistoryItem key={h.id} item={h} active={activeId===h.id} onClick={()=>{setActiveId(h.id);if(isMobile)closeSidebar();}} onDelete={()=>deleteConv(h.id)}/>)}
       </div>
-
       <div style={{padding:"8px 10px 10px",borderTop:"1px solid rgba(255,255,255,0.07)"}}>
         <div style={{background:"rgba(255,183,30,0.08)",border:"1px solid rgba(255,183,30,0.2)",borderRadius:6,padding:"6px 8px",marginBottom:6}}>
           <p style={{margin:"0 0 2px",fontSize:10,color:YELLOW,fontWeight:700}}>{currentSector.icon} {t.modeLabel} {currentSector[lang].label}</p>
@@ -707,7 +726,7 @@ function App() {
       const msgContent=await buildMessageContent(userText,file);
       const apiMessages=[...msgs.map(m=>({role:m.role,content:m.content})),{role:"user",content:msgContent}];
       const systemPrompt = SYSTEM_PROMPTS[sector][lang] + "\n\n" + PPTX_INSTRUCTIONS[lang];
-      const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:1500,system:systemPrompt,messages:apiMessages})});
+      const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:2000,system:systemPrompt,messages:apiMessages})});
       if(!res.ok){const errText=await res.text();throw new Error(errText||"Erreur serveur");}
       const reader=res.body.getReader();const decoder=new TextDecoder();
       let fullText="";let started=false;
@@ -777,10 +796,14 @@ function App() {
             <div>
               <p style={{margin:"0 0 4px",fontSize:isMobile?15:16,fontWeight:700,color:NAVY}}>{t.hello}</p>
               <p style={{margin:"0 0 16px",fontSize:13,color:"#888"}}>{t.helloSub}</p>
-              {openCat==="cctp"&&(
+              {(openCat==="cctp"||openCat==="dossier_reponse")&&(
                 <div style={{marginBottom:16,padding:"12px 14px",background:"#fff8e6",borderRadius:8,border:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",gap:10}}>
-                  <span style={{fontSize:22}}>📄</span>
-                  <p style={{margin:0,fontSize:13,color:NAVY,lineHeight:1.5}}>{lang==="fr"?"Upload ton PDF de CCTP via le bouton ☁️ en bas, puis clique sur une suggestion ci-dessous.":"Upload your CCTP PDF using the ☁️ button below, then click a suggestion."}</p>
+                  <span style={{fontSize:22}}>{openCat==="dossier_reponse"?"📁":"📄"}</span>
+                  <p style={{margin:0,fontSize:13,color:NAVY,lineHeight:1.5}}>
+                    {openCat==="dossier_reponse"
+                      ? (lang==="fr"?"Upload ton CCTP via ☁️ — l'agent génère automatiquement un dossier PowerPoint complet à télécharger.":"Upload your CCTP via ☁️ — the agent automatically generates a complete downloadable PowerPoint dossier.")
+                      : (lang==="fr"?"Upload ton PDF de CCTP via le bouton ☁️ en bas, puis clique sur une suggestion.":"Upload your CCTP PDF using the ☁️ button below, then click a suggestion.")}
+                  </p>
                 </div>
               )}
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
