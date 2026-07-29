@@ -850,7 +850,7 @@ function App({ user, onLogout }) {
   const sidebarProps={lang,setLang,sector,setSector,profile,setProfile,openCat,setOpenCat,sendMessage,newConversation,profileHistory:history,activeId,setActiveId:(id)=>setAllActiveIds(prev=>({...prev,[hKey]:id})),deleteConv,isMobile,closeSidebar:()=>setSidebarOpen(false),displayName:user.displayName,onLogout};
 
   return (
-    <div style={{display:"flex",height:isMobile?"100dvh":"640px",background:"#fafafa",borderRadius:isMobile?0:16,overflow:"hidden",boxShadow:isMobile?"none":"0 4px 24px rgba(0,0,0,0.12)",border:isMobile?"none":"1px solid rgba(0,0,0,0.06)",position:"relative",fontFamily:"'Inter',system-ui,sans-serif"}}>
+    <div style={{display:"flex",height:isMobile?"100dvh":"100dvh",background:"#fafafa",borderRadius:isMobile?0:16,overflow:"hidden",boxShadow:isMobile?"none":"0 4px 24px rgba(0,0,0,0.12)",border:isMobile?"none":"1px solid rgba(0,0,0,0.06)",position:"relative",fontFamily:"'Inter',system-ui,sans-serif"}}>
       <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
 
       {!isMobile&&<div style={{width:220,flexShrink:0,height:"100%"}}><Sidebar {...sidebarProps}/></div>}
