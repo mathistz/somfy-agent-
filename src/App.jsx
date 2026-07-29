@@ -440,6 +440,12 @@ function ChartBlock({ chart }) {
 
 function PPTXButton({ pptxData }) {
   const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [emailTo, setEmailTo] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
   async function handleDownload() {
     setLoading(true);
     try {
@@ -453,13 +459,99 @@ function PPTXButton({ pptxData }) {
     } catch(err) { alert('Erreur : ' + err.message); }
     finally { setLoading(false); }
   }
+
+  async function handleSendEmail() {
+    if (!emailTo.trim()) return;
+    setSending(true); setEmailError("");
+    try {
+      const pptxRes = await fetch('/api/pptx', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(pptxData) });
+      if (!pptxRes.ok) throw new Error('Erreur génération PowerPoint');
+      const blob = await pptxRes.blob();
+      const base64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.readAsDataURL(blob);
+      });
+
+      const fileName = `${(pptxData.title||'Dossier_Somfy').replace(/[^a-zA-Z0-9\-_ ]/g,'_')}.pptx`;
+
+      const emailRes = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          to: emailTo.trim(),
+          subject: `Dossier de réponse Somfy — ${pptxData.title || 'Appel d\'offres'}`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+            <div style="background:#FFB71E;padding:20px 30px">
+              <h1 style="margin:0;color:#25485A;font-size:24px">SOMFY</h1>
+              <p style="margin:4px 0 0;color:#25485A;font-size:12px">Agent IA — Protection Solaire Dynamique</p>
+            </div>
+            <div style="padding:30px;background:#f9f9f9">
+              <p>Bonjour,</p>
+              <p>Veuillez trouver ci-joint notre dossier de réponse à votre appel d'offres, généré par l'Agent IA Somfy.</p>
+              <p><strong>Document joint :</strong> ${fileName}</p>
+              <p>N'hésitez pas à nous contacter pour toute question.</p>
+              <p>Cordialement,<br/><strong>Équipe Somfy Pro France</strong></p>
+            </div>
+            <div style="padding:12px 30px;background:#25485A;text-align:center">
+              <p style="margin:0;color:rgba(255,255,255,0.5);font-size:11px">Somfy Pro France — somfy-agent.vercel.app</p>
+            </div>
+          </div>`,
+          attachmentName: fileName,
+          attachmentBase64: base64,
+        })
+      });
+
+      const emailData = await emailRes.json();
+      if (emailData.success) {
+        setEmailSent(true);
+        setShowEmailForm(false);
+        setEmailTo("");
+      } else {
+        setEmailError(emailData.error || "Erreur d'envoi");
+      }
+    } catch(err) { setEmailError(err.message); }
+    finally { setSending(false); }
+  }
+
   return (
     <div style={{marginTop:10,padding:"12px 16px",background:`linear-gradient(135deg,${NAVY},#1a3a47)`,borderRadius:10,border:"1px solid rgba(255,183,30,0.3)"}}>
       <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📊 Dossier PowerPoint prêt</p>
       <p style={{margin:"0 0 10px",fontSize:11,color:"rgba(255,255,255,0.6)"}}>{pptxData.slides?.length||0} slides — {pptxData.title}</p>
-      <button onClick={handleDownload} disabled={loading} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderRadius:7,border:"none",background:loading?"rgba(255,255,255,0.1)":YELLOW,cursor:loading?"default":"pointer",fontSize:12,fontWeight:700,color:loading?"rgba(255,255,255,0.4)":NAVY}}>
-        {loading?"⏳ Génération en cours...":"⬇️ Télécharger le dossier PowerPoint"}
-      </button>
+
+      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+        <button onClick={handleDownload} disabled={loading} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",borderRadius:7,border:"none",background:loading?"rgba(255,255,255,0.1)":YELLOW,cursor:loading?"default":"pointer",fontSize:12,fontWeight:700,color:loading?"rgba(255,255,255,0.4)":NAVY}}>
+          {loading?"⏳ Génération...":"⬇️ Télécharger"}
+        </button>
+        <button onClick={()=>{setShowEmailForm(!showEmailForm);setEmailSent(false);setEmailError("");}} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",borderRadius:7,border:"1px solid rgba(255,183,30,0.4)",background:"transparent",cursor:"pointer",fontSize:12,fontWeight:700,color:YELLOW}}>
+          📧 Envoyer par email
+        </button>
+      </div>
+
+      {emailSent&&(
+        <div style={{marginTop:10,padding:"8px 12px",background:"rgba(29,158,117,0.2)",borderRadius:6,border:"1px solid rgba(29,158,117,0.4)"}}>
+          <p style={{margin:0,fontSize:12,color:"#3dba6e",fontWeight:600}}>✅ Email envoyé avec succès !</p>
+        </div>
+      )}
+
+      {showEmailForm&&(
+        <div style={{marginTop:10,padding:"12px",background:"rgba(255,255,255,0.06)",borderRadius:8,border:"1px solid rgba(255,255,255,0.1)"}}>
+          <p style={{margin:"0 0 8px",fontSize:11,color:"rgba(255,255,255,0.7)"}}>Adresse email du destinataire :</p>
+          <div style={{display:"flex",gap:8}}>
+            <input
+              value={emailTo}
+              onChange={e=>setEmailTo(e.target.value)}
+              onKeyDown={e=>{if(e.key==="Enter")handleSendEmail();}}
+              placeholder="ex: loris.andre@somfy.com"
+              style={{flex:1,padding:"8px 10px",borderRadius:6,border:"1px solid rgba(255,255,255,0.2)",background:"rgba(255,255,255,0.08)",color:"#fff",fontSize:12,outline:"none",fontFamily:"inherit"}}
+            />
+            <button onClick={handleSendEmail} disabled={!emailTo.trim()||sending} style={{padding:"8px 14px",borderRadius:6,border:"none",background:emailTo.trim()&&!sending?YELLOW:"rgba(255,255,255,0.1)",color:emailTo.trim()&&!sending?NAVY:"rgba(255,255,255,0.3)",fontSize:12,fontWeight:700,cursor:emailTo.trim()&&!sending?"pointer":"default"}}>
+              {sending?"⏳":"Envoyer"}
+            </button>
+          </div>
+          {emailError&&<p style={{margin:"8px 0 0",fontSize:11,color:"#ff6b6b"}}>{emailError}</p>}
+        </div>
+      )}
     </div>
   );
 }
