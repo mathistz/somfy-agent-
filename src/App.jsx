@@ -900,18 +900,24 @@ function App({ user, onLogout }) {
       const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:2000,system:systemPrompt,messages:apiMessages})});
       if(!res.ok){const errText=await res.text();throw new Error(errText||"Erreur serveur");}
       const reader=res.body.getReader();const decoder=new TextDecoder();
-      let fullText="";let started=false;
+      let fullText="";let started=false;let streamError="";
       while(true){
         const {done,value}=await reader.read();if(done)break;
         const chunk=decoder.decode(value);const lines=chunk.split("\n");
         for(const line of lines){
           if(line.startsWith("data: ")){const data=line.slice(6);if(data==="[DONE]")continue;
-            try{const parsed=JSON.parse(data);if(parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta"){if(!started){started=true;setStreaming(true);updateLastMsg(convId,key,"");}fullText+=parsed.delta.text;updateLastMsg(convId,key,fullText);}}catch{}
+            try{const parsed=JSON.parse(data);
+              if(parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta"){if(!started){started=true;setStreaming(true);updateLastMsg(convId,key,"");}fullText+=parsed.delta.text;updateLastMsg(convId,key,fullText);}
+              else if(parsed.type==="error"){streamError=parsed.error?.message||"Erreur inconnue de l'API";}
+            }catch{}
           }
         }
       }
       setStreaming(false);
-      if(!started)updateLastMsg(convId,key,t.noAnswer);
+      if(!started){
+        if(streamError)updateLastMsg(convId,key,`⚠️ ${streamError}`);
+        else updateLastMsg(convId,key,t.noAnswer+" (le serveur a interrompu la connexion — document probablement trop lourd ou analyse trop longue).");
+      }
     }catch(err){setStreaming(false);updateLastMsg(convId,key,`Erreur : ${err.message}`);}
     finally{setLoading(false);setTimeout(()=>inputRef.current?.focus(),100);}
   }
