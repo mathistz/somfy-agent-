@@ -8,18 +8,30 @@ const CHART_COLORS = ["#25485A","#FFB71E","#1a6b4a","#e07b00","#5a8fa3","#f0c040
 const PPTX_INSTRUCTIONS = {
   fr: `PRÉSENTATIONS POWERPOINT : uniquement si l'utilisateur demande explicitement une présentation, des slides ou un PowerPoint, génère le contenu dans ce format JSON exact :
 PPTX_START
-{"title":"Titre de la présentation","slides":[{"type":"cover","title":"Titre","subtitle":"Sous-titre"},{"type":"content","title":"Titre slide","bullets":["Point 1","Point 2","Point 3"]},{"type":"two_col","title":"Comparaison","left":{"title":"Colonne gauche","bullets":["A","B"]},"right":{"title":"Colonne droite","bullets":["C","D"]}},{"type":"closing","title":"Merci","subtitle":"Message final"}]}
+{"title":"Titre","slides":[...]}
 PPTX_END
-Types disponibles : "cover", "content", "two_col", "closing". Maximum 10 slides.
 
-DOSSIER DE RÉPONSE CCTP : si l'utilisateur demande de générer un dossier ou une présentation de réponse à partir d'un CCTP, génère AUTOMATIQUEMENT un PowerPoint structuré avec ces slides :
+TYPES DE SLIDES DISPONIBLES (utilise-les intelligemment selon le contenu) :
+- "cover" : {"type":"cover","title":"Titre principal","subtitle":"Sous-titre"}
+- "content" : {"type":"content","title":"Titre","bullets":["Point 1","Point 2"]}
+- "two_col" : {"type":"two_col","title":"Titre","left":{"title":"Col gauche","bullets":["A"]},"right":{"title":"Col droite","bullets":["B"]}}
+- "chart" : {"type":"chart","title":"Titre","chartType":"bar","labels":["A","B","C"],"series":[{"name":"Série","values":[10,20,30]}],"note":"Source : ..."} — graphique (bar ou pie, une série pour pie)
+- "table" : {"type":"table","title":"Titre","rows":[["En-tête 1","En-tête 2","En-tête 3"],["Val A","Val B","Val C"]],"colWidths":[4,2.5,2.5],"note":"..."} — 1ère ligne = en-tête
+- "kpi" : {"type":"kpi","title":"Titre","kpis":[{"value":"75%","label":"Part de marché résidentiel","sub":"France 2024"},{"value":"430M€","label":"CA France","sub":""},{"value":"-40%","label":"Objectif décret tertiaire","sub":"2030"}]}
+- "timeline" : {"type":"timeline","title":"Titre","steps":[{"label":"Étape 1","date":"Jan 2025","desc":"...","active":true},{"label":"Étape 2","date":"Mar 2025","desc":"...","active":false}]} — max 5 étapes
+- "closing" : {"type":"closing","title":"Merci","subtitle":"Message final"}
+
+Maximum 10 slides. Utilise chart, table et kpi dès que des données chiffrées sont pertinentes. Pour toute présentation CCTP, inclus TOUJOURS un graphique et un tableau.
+
+DOSSIER DE RÉPONSE CCTP : si l'utilisateur demande de générer un dossier ou une présentation de réponse à partir d'un CCTP, génère AUTOMATIQUEMENT un PowerPoint structuré :
 1. cover : "Réponse à l'appel d'offres — [Nom du projet]" / "Somfy Pro France"
 2. content : "Compréhension du projet" — synthèse du CCTP
-3. content : "Notre solution recommandée" — produits Somfy adaptés
-4. content : "Arguments réglementaires" — Décret BACS, RE2020, confort d'été
-5. two_col : "Pourquoi Somfy ?" — avantages techniques / commerciaux
-6. content : "Notre expérience sur ce type de projet"
-7. closing : "Merci pour votre confiance" / "Somfy Pro France"
+3. kpi : 3 chiffres clés du projet (nb ouvertures, surface estimée, délai)
+4. two_col : "Deux offres Somfy" — Centralisation (gauche) vs Premium Animeo Suite (droite)
+5. table : "Chiffrage estimatif" — colonnes Produit / Offre / Qté / Prix indicatif
+6. chart : "Part de marché Somfy" ou économies d'énergie estimées — graphique pertinent
+7. content : "Arguments réglementaires" — Décret BACS, RE2020, confort d'été
+8. closing : "Merci pour votre confiance" / "Somfy Pro France"
 
 DOCUMENTS PDF : si l'utilisateur demande un PDF, un document ou un rapport, génère-le dans ce format EXACT (surtout PAS de JSON) :
 PDF_START
@@ -33,18 +45,30 @@ PDF_END
 Chaque section commence par "SECTION:" suivi de son titre, puis son contenu sur les lignes suivantes. Ne génère JAMAIS ce bloc sans demande explicite.`,
   en: `POWERPOINT PRESENTATIONS: only if the user explicitly asks for a presentation, slides or PowerPoint, generate content in this exact JSON format:
 PPTX_START
-{"title":"Presentation title","slides":[{"type":"cover","title":"Title","subtitle":"Subtitle"},{"type":"content","title":"Slide title","bullets":["Point 1","Point 2","Point 3"]},{"type":"two_col","title":"Comparison","left":{"title":"Left","bullets":["A","B"]},"right":{"title":"Right","bullets":["C","D"]}},{"type":"closing","title":"Thank you","subtitle":"Final message"}]}
+{"title":"Title","slides":[...]}
 PPTX_END
-Available types: "cover", "content", "two_col", "closing". Maximum 10 slides.
+
+AVAILABLE SLIDE TYPES (use them intelligently based on content):
+- "cover" : {"type":"cover","title":"Main title","subtitle":"Subtitle"}
+- "content" : {"type":"content","title":"Title","bullets":["Point 1","Point 2"]}
+- "two_col" : {"type":"two_col","title":"Title","left":{"title":"Left col","bullets":["A"]},"right":{"title":"Right col","bullets":["B"]}}
+- "chart" : {"type":"chart","title":"Title","chartType":"bar","labels":["A","B","C"],"series":[{"name":"Series","values":[10,20,30]}],"note":"Source: ..."} — bar or pie chart (one series for pie)
+- "table" : {"type":"table","title":"Title","rows":[["Header 1","Header 2","Header 3"],["Val A","Val B","Val C"]],"colWidths":[4,2.5,2.5],"note":"..."} — first row = header
+- "kpi" : {"type":"kpi","title":"Title","kpis":[{"value":"75%","label":"Residential market share","sub":"France 2024"},{"value":"430M€","label":"Revenue France","sub":""},{"value":"-40%","label":"Tertiary Decree target","sub":"2030"}]}
+- "timeline" : {"type":"timeline","title":"Title","steps":[{"label":"Step 1","date":"Jan 2025","desc":"...","active":true},{"label":"Step 2","date":"Mar 2025","desc":"...","active":false}]} — max 5 steps
+- "closing" : {"type":"closing","title":"Thank you","subtitle":"Final message"}
+
+Maximum 10 slides. Use chart, table and kpi whenever quantitative data is relevant. For any CCTP presentation, ALWAYS include at least one chart and one table.
 
 CCTP RESPONSE DOSSIER: if the user asks to generate a response dossier from a CCTP, AUTOMATICALLY generate a structured PowerPoint:
 1. cover: "Tender Response — [Project Name]" / "Somfy Pro France"
-2. content: "Project Understanding"
-3. content: "Our Recommended Solution"
-4. content: "Regulatory Arguments"
-5. two_col: "Why Somfy?"
-6. content: "Our Experience on Similar Projects"
-7. closing: "Thank you for your trust" / "Somfy Pro France"
+2. content: "Project Understanding" — CCTP summary
+3. kpi: 3 key figures (number of openings, estimated surface, deadline)
+4. two_col: "Two Somfy Offers" — Centralisation (left) vs Premium Animeo Suite (right)
+5. table: "Estimated Pricing" — columns Product / Offer / Est. Qty / Indicative Price
+6. chart: "Somfy Market Position" or estimated energy savings — relevant chart
+7. content: "Regulatory Arguments" — BACS Decree, RE2020, summer comfort
+8. closing: "Thank you for your trust" / "Somfy Pro France"
 
 PDF DOCUMENTS: if the user asks for a PDF, document or report, generate it in this EXACT format (definitely NOT JSON):
 PDF_START
