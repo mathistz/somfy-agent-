@@ -757,7 +757,7 @@ function Message({ msg, streaming, isMobile }) {
         <div style={{background:"#fff",border:"1px solid rgba(37,72,90,0.1)",borderRadius:"2px 14px 14px 14px",padding:"10px 14px",fontSize:isMobile?13:14,lineHeight:1.75,color:"#1a1a1a",whiteSpace:"pre-wrap",wordBreak:"break-word",boxShadow:"0 2px 8px rgba(0,0,0,0.05)"}}>
           {isLoading?<TypingDots/>:text}
           {streaming&&<span style={{display:"inline-block",width:2,height:14,background:NAVY,marginLeft:2,animation:"blink 1s infinite"}}/>}
-          <style>{`@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}`}</style>
+          <style>{`@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}`}</style>
         </div>
         {!streaming&&chart&&<ChartBlock chart={chart}/>}
         {!streaming&&pptx&&<PPTXButton pptxData={pptx}/>}
@@ -1034,7 +1034,7 @@ function App({ user, onLogout }) {
       setAllActiveIds(prev=>({...prev,[key]:convId}));
     }
     setAllHistories(prev=>({...prev,[key]:(prev[key]||[]).map(h=>h.id===convId?{...h,messages:[...newMsgs,{role:"assistant",content:"..."}]}:h)}));
-    setLoading(true);setStreaming(false);
+    setLoading(true);
     try{
       const msgContent=await buildMessageContent(userText,file);
       const apiMessages=[...msgs.map(m=>({role:m.role,content:m.content})),{role:"user",content:msgContent}];
@@ -1042,25 +1042,23 @@ function App({ user, onLogout }) {
       const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:2000,system:systemPrompt,messages:apiMessages})});
       if(!res.ok){const errText=await res.text();throw new Error(errText||"Erreur serveur");}
       const reader=res.body.getReader();const decoder=new TextDecoder();
-      let fullText="";let started=false;let streamError="";
+      let fullText="";let streamError="";
       while(true){
         const {done,value}=await reader.read();if(done)break;
         const chunk=decoder.decode(value);const lines=chunk.split("\n");
         for(const line of lines){
           if(line.startsWith("data: ")){const data=line.slice(6);if(data==="[DONE]")continue;
             try{const parsed=JSON.parse(data);
-              if(parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta"){if(!started){started=true;setStreaming(true);updateLastMsg(convId,key,"");}fullText+=parsed.delta.text;updateLastMsg(convId,key,fullText);}
+              if(parsed.type==="content_block_delta"&&parsed.delta?.type==="text_delta"){fullText+=parsed.delta.text;}
               else if(parsed.type==="error"){streamError=parsed.error?.message||"Erreur inconnue de l'API";}
             }catch{}
           }
         }
       }
-      setStreaming(false);
-      if(!started){
-        if(streamError)updateLastMsg(convId,key,`⚠️ ${streamError}`);
-        else updateLastMsg(convId,key,t.noAnswer+" (le serveur a interrompu la connexion — document probablement trop lourd ou analyse trop longue).");
-      }
-    }catch(err){setStreaming(false);updateLastMsg(convId,key,`Erreur : ${err.message}`);}
+      if(streamError)updateLastMsg(convId,key,`⚠️ ${streamError}`);
+      else if(fullText)updateLastMsg(convId,key,fullText);
+      else updateLastMsg(convId,key,t.noAnswer+" (le serveur a interrompu la connexion — document probablement trop lourd ou analyse trop longue).");
+    }catch(err){updateLastMsg(convId,key,`Erreur : ${err.message}`);}
     finally{setLoading(false);setTimeout(()=>inputRef.current?.focus(),100);}
   }
 
@@ -1073,7 +1071,7 @@ function App({ user, onLogout }) {
   const currentProfileData=currentSectorData.profiles[profile][lang];
   const currentCat=currentProfileData.categories.find(c=>c.id===openCat)||currentProfileData.categories[0];
   const messages=currentMessages();
-  const isStreaming=streaming&&messages.length>0&&messages[messages.length-1]?.role==="assistant";
+  
   const sidebarProps={lang,setLang,sector,setSector,profile,setProfile,openCat,setOpenCat,sendMessage,newConversation,profileHistory:history,activeId,setActiveId:(id)=>setAllActiveIds(prev=>({...prev,[hKey]:id})),deleteConv,isMobile,closeSidebar:()=>setSidebarOpen(false),displayName:user.displayName,onLogout};
 
   return (
@@ -1103,9 +1101,9 @@ function App({ user, onLogout }) {
             </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
-            {isStreaming&&<span style={{fontSize:10,background:"#fff8e6",color:NAVY,padding:"3px 8px",borderRadius:20,border:`1px solid ${YELLOW}`,fontWeight:500}}>✍️</span>}
+            {loading&&<span style={{fontSize:10,background:"#fff8e6",color:NAVY,padding:"3px 8px",borderRadius:20,border:`1px solid ${YELLOW}`,fontWeight:500}}>⏳ Analyse en cours...</span>}
             {!isMobile&&<span style={{fontSize:10,background:"rgba(37,72,90,0.08)",color:NAVY,padding:"3px 10px",borderRadius:20,fontWeight:600}}>{currentSectorData.icon} {currentSectorData[lang].label}</span>}
-            {messages.length>0&&!isStreaming&&<button onClick={()=>exportPDF(messages,sector,profile,lang,currentTitle(),user.displayName)} style={{display:"flex",alignItems:"center",gap:4,padding:"5px 10px",borderRadius:6,background:NAVY,border:"none",cursor:"pointer",fontSize:11,color:YELLOW,fontWeight:700}}>{t.pdfBtn}</button>}
+            {messages.length>0&&!loading&&<button onClick={()=>exportPDF(messages,sector,profile,lang,currentTitle(),user.displayName)} style={{display:"flex",alignItems:"center",gap:4,padding:"5px 10px",borderRadius:6,background:NAVY,border:"none",cursor:"pointer",fontSize:11,color:YELLOW,fontWeight:700}}>{t.pdfBtn}</button>}
           </div>
         </div>
 
@@ -1135,7 +1133,18 @@ function App({ user, onLogout }) {
                 ))}
               </div>
             </div>
-          ):messages.map((msg,i)=><Message key={i} msg={msg} streaming={isStreaming&&i===messages.length-1} isMobile={isMobile}/>)}
+          ):(<>{messages.map((msg,i)=><Message key={i} msg={msg} streaming={false} isMobile={isMobile}/>)}
+            {loading&&<div style={{display:"flex",alignItems:"center",gap:10,padding:"14px 16px"}}>
+              <div style={{width:32,height:32,borderRadius:"50%",background:NAVY,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <span style={{fontSize:14}}>🤖</span>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:5,background:"#F0F4F7",borderRadius:12,padding:"10px 16px"}}>
+                <span style={{width:7,height:7,borderRadius:"50%",background:NAVY,display:"inline-block",animation:"bounce 1.2s infinite",animationDelay:"0s"}}/>
+                <span style={{width:7,height:7,borderRadius:"50%",background:NAVY,display:"inline-block",animation:"bounce 1.2s infinite",animationDelay:"0.2s"}}/>
+                <span style={{width:7,height:7,borderRadius:"50%",background:NAVY,display:"inline-block",animation:"bounce 1.2s infinite",animationDelay:"0.4s"}}/>
+              </div>
+            </div>}
+          </>)}
           <div ref={bottomRef}/>
         </div>
 
