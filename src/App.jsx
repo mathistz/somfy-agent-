@@ -975,3 +975,13 @@ function App({ user, onLogout }) {
         <div style={{padding:isMobile?"8px 12px 12px":"10px 16px 14px",borderTop:"1px solid rgba(0,0,0,0.06)",background:"#fff",flexShrink:0}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f5f5",borderRadius:10,border:`2px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.1)"}`,padding:"8px 8px 8px 12px",transition:"border-color 0.15s"}}>
             <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}} onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️
+</button>
+            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?t.inputPlaceholderFile:t.inputPlaceholder} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
+            <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>{t.sendBtn}</button>
+          </div>
+          {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>{t.inputHint}</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
