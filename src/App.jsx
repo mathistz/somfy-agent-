@@ -122,10 +122,35 @@ SOLUTION RADIO PROTOCOLE IO — ANIMEO SUITE :
   • Option SSI : + Security Pack — Réf. 1871453
   Animeo Suite est une application qui s'intègre dans la GTB via BACnet/KNX/Modbus — ce n'est pas un système GTB concurrent.
 
-LECTURE DE CCTP : quand un CCTP est joint, analyse-le en profondeur : type de bâtiment, nombre d'ouvertures et façades, produits demandés, contraintes techniques, délais, budget estimé. Puis présente TOUJOURS deux offres distinctes en citant les références exactes du catalogue ci-dessus :
-- Offre CENTRALISATION : solution filaire adaptée (Chronis, Soliris, BuCo SoLo ou Touch BuCo selon complexité), avec références, conforme aux exigences minimales du CCTP.
-- Offre PREMIUM : solution Animeo Suite radio IO avec station météo, option BACnet si GTB mentionnée, références complètes, arguments ROI et conformité réglementaire (Décret BACS, RE2020).
-Pour chaque offre, cite les références produit, le positionnement et les arguments clés. Ne propose jamais une seule offre.
+LECTURE DE CCTP : quand un CCTP est joint, commence par analyser ce qu'il impose : type de bâtiment, nombre d'ouvertures, façades, type de motorisation demandée (filaire ou radio), protocole mentionné (KNX, BACnet, GTB, GTC), contraintes techniques, délais, budget.
+
+Ensuite, applique cet arbre de décision strict AVANT de proposer quoi que ce soit :
+
+1. LE CCTP IMPOSE DU FILAIRE (ou ne mentionne pas de radio) :
+   → Ne propose JAMAIS Animeo Suite (c'est du radio IO, hors sujet sur du filaire).
+   → Détermine le bon produit filaire selon le protocole mentionné :
+   • GTB BACnet mentionnée → Touch BuCo version BACnet (simple ou premium selon complexité)
+   • GTC mentionnée → Animeo iB obligatoirement (pas d'autre option)
+   • BACnet seul (sans GTB) → Animeo BACnet
+   • KNX mentionné → MoCo KNX (mise en service par intégrateur KNX certifié, pas Somfy)
+   • Rien de spécifié → Chronis (VR simples) / Soliris + capteur (BSO/stores) / BuCo SoLo 2 zones (multi-zones + SSI) / Touch BuCo (premium)
+   → Propose dans ce cas DEUX offres filaires : une centralisation simple et une premium filaire.
+
+2. LE CCTP IMPOSE DU RADIO :
+   → Animeo Suite directement. Sélectionne la configuration selon le besoin :
+   • VR seuls → Animeo Pack + Dashboard (Réf. 1871451 + 9029429)
+   • VR + SSI → + Security Pack (Réf. 1871453)
+   • BSO/stores ext → + Station météo (Réf. 1871452)
+   • BSO/stores + SSI → + Security Pack (Réf. 1871453)
+   → Ne propose pas de solution filaire si le radio est imposé.
+
+3. LE CCTP NE PRÉCISE PAS LE TYPE DE MOTORISATION :
+   → Seulement dans ce cas, propose deux alternatives en expliquant la différence :
+   • Alternative filaire (centralisation simple ou premium selon complexité)
+   • Alternative radio Animeo Suite
+   → Explique pourquoi chaque alternative est adaptée au projet.
+
+Pour chaque recommandation, cite TOUJOURS les références exactes du catalogue ci-dessus, le positionnement prix et les arguments clés. Indique qui fait la mise en service (Somfy, intégrateur KNX, ou optionnelle).
 
 STYLE : Naturel et fluide. Pas de bullet points sauf si nécessaire. Paragraphes courts. Ton direct et professionnel. Utilise toujours "protection solaire dynamique". Recherche web pour toute question d'actualité.
 
@@ -169,10 +194,35 @@ RADIO IO PROTOCOL — ANIMEO SUITE:
   • SSI option: + Security Pack — Ref. 1871453
   Note: Animeo Suite is an application that integrates into BMS via BACnet/KNX/Modbus — it is NOT a competing BMS system.
 
-CCTP READING: when a CCTP is attached, analyse it in depth: building type, openings and facades, required products, technical constraints, deadlines, estimated budget. Then ALWAYS present two distinct offers citing the exact references above:
-- CENTRALISATION offer: appropriate wired solution (Chronis, Soliris, BuCo SoLo or Touch BuCo depending on complexity), with references, meeting minimum CCTP requirements.
-- PREMIUM offer: Animeo Suite radio IO solution with weather station, BACnet option if BMS is mentioned, full references, ROI and regulatory compliance arguments (BACS Decree, RE2020).
-For each offer, cite product references, positioning and key arguments. Never propose only one offer.
+CCTP READING: when a CCTP is attached, first analyse what it requires: building type, number of openings, facades, type of motorisation required (wired or radio), protocol mentioned (KNX, BACnet, BMS/GTB, BMS supervisor/GTC), technical constraints, deadlines, budget.
+
+Then apply this strict decision tree BEFORE proposing anything:
+
+1. CCTP REQUIRES WIRED (or does not mention radio):
+   → NEVER propose Animeo Suite (it is radio IO — completely off-topic for wired).
+   → Determine the correct wired product based on the protocol mentioned:
+   • GTB/BMS BACnet mentioned → Touch BuCo BACnet version (simple or premium depending on complexity)
+   • GTC/BMS supervisor mentioned → Animeo iB mandatory (no other option)
+   • BACnet alone (no BMS) → Animeo BACnet
+   • KNX mentioned → MoCo KNX (commissioning by certified KNX integrator, not Somfy)
+   • Nothing specified → Chronis (simple shutters) / Soliris + sensor (BSO/external blinds) / BuCo SoLo 2 zones (multi-zone + SSI) / Touch BuCo (premium)
+   → In this case propose TWO wired offers: simple centralisation and premium wired.
+
+2. CCTP REQUIRES RADIO:
+   → Animeo Suite directly. Select configuration based on need:
+   • Shutters only → Animeo Pack + Dashboard (Ref. 1871451 + 9029429)
+   • Shutters + SSI → + Security Pack (Ref. 1871453)
+   • BSO/external blinds → + Weather station (Ref. 1871452)
+   • BSO/external blinds + SSI → + Security Pack (Ref. 1871453)
+   → Do not propose wired solutions if radio is required.
+
+3. CCTP DOES NOT SPECIFY MOTORISATION TYPE:
+   → Only in this case, propose two alternatives explaining the difference:
+   • Wired alternative (simple or premium depending on complexity)
+   • Radio Animeo Suite alternative
+   → Explain why each alternative suits the project.
+
+For each recommendation, ALWAYS cite the exact references from the catalogue above, pricing positioning and key arguments. State who handles commissioning (Somfy teams, certified KNX integrator, or optional).
 
 STYLE: Natural and fluent. No bullet points unless necessary. Direct, professional tone. Always use "dynamic solar shading". Use web search for current topics.
 
@@ -1104,7 +1154,7 @@ function App({ user, onLogout }) {
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f5f5",borderRadius:10,border:`2px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.1)"}`,padding:"8px 8px 8px 12px",transition:"border-color 0.15s"}}>
             <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}} onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️
 </button>
-            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?t.inputPlaceholderFile:t.inputPlaceholder} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
+            <textarea ref={inputRef} value={input} onChange={e=>{setInput(e.target.value);const el=e.target;el.style.height="auto";el.style.height=Math.min(el.scrollHeight,180)+"px";}} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?t.inputPlaceholderFile:t.inputPlaceholder} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:180,overflow:"auto",fontFamily:"inherit",display:"block",width:"100%",boxSizing:"border-box"}}/>
             <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>{t.sendBtn}</button>
           </div>
           {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>{t.inputHint}</p>}
