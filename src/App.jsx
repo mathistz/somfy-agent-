@@ -42,7 +42,7 @@ SECTION: Titre de la deuxième section
 Contenu de la deuxième section.
 FOOTER: Somfy Pro France
 PDF_END
-Chaque section commence par "SECTION:" suivi de son titre, puis son contenu sur les lignes suivantes. Ne génère JAMAIS ce bloc sans demande explicite.`,
+Chaque section commence par "SECTION:" suivi de son titre, puis son contenu sur les lignes suivantes. Tu DOIS toujours terminer par PDF_END — ne l'oublie jamais. Génère le PDF directement sans demander de fichier supplémentaire, exactement comme tu génères un PowerPoint.`,
   en: `POWERPOINT PRESENTATIONS: only if the user explicitly asks for a presentation, slides or PowerPoint, generate content in this exact JSON format:
 PPTX_START
 {"title":"Title","slides":[...]}
@@ -79,7 +79,7 @@ SECTION: Second section title
 Second section content.
 FOOTER: Somfy Pro France
 PDF_END
-Each section starts with "SECTION:" followed by its title, then its content on the following lines. NEVER generate this block without an explicit user request.`
+Each section starts with "SECTION:" followed by its title, then its content on the following lines. You MUST always end with PDF_END — never forget it. Generate the PDF directly without asking for additional files, exactly like you generate a PowerPoint.`
 };
 
 const SYSTEM_PROMPTS = {
@@ -585,8 +585,8 @@ function parseMessage(content) {
   if (chartMatch) { text = text.replace(/CHART_START\s*([\s\S]*?)\s*CHART_END/, "").trim(); try { chart = JSON.parse(chartMatch[1].trim()); } catch {} }
   const pptxMatch = text.match(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/);
   if (pptxMatch) { text = text.replace(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/, "").trim(); try { pptx = JSON.parse(pptxMatch[1].trim()); } catch {} }
-  const pdfMatch = text.match(/PDF_START\s*([\s\S]*?)\s*PDF_END/);
-  if (pdfMatch) { text = text.replace(/PDF_START\s*([\s\S]*?)\s*PDF_END/, "").trim(); pdf = parsePdfBlock(pdfMatch[1]); }
+  const pdfMatch = text.match(/PDF_START\s*([\s\S]*?)(?:\s*PDF_END|$)/);
+  if (pdfMatch) { text = text.replace(/PDF_START\s*[\s\S]*?(?:PDF_END|$)/, "").trim(); pdf = parsePdfBlock(pdfMatch[1]); }
   return { text, chart, pptx, pdf };
 }
 
