@@ -21,11 +21,16 @@ DOSSIER DE RÉPONSE CCTP : si l'utilisateur demande de générer un dossier ou u
 6. content : "Notre expérience sur ce type de projet"
 7. closing : "Merci pour votre confiance" / "Somfy Pro France"
 
-DOCUMENTS PDF : si l'utilisateur demande explicitement un PDF, un document ou un rapport PDF, génère le contenu dans ce format JSON exact :
+DOCUMENTS PDF : si l'utilisateur demande un PDF, un document ou un rapport, génère-le dans ce format EXACT (surtout PAS de JSON) :
 PDF_START
-{"title":"Titre du document","sections":[{"title":"Section 1","content":"Contenu de la section 1"},{"title":"Section 2","content":"Contenu de la section 2"}],"footer":"Somfy Pro France"}
+TITRE: Titre du document
+SECTION: Titre de la première section
+Contenu de la première section, sur autant de lignes que nécessaire (retours à la ligne, listes avec des tirets et guillemets autorisés).
+SECTION: Titre de la deuxième section
+Contenu de la deuxième section.
+FOOTER: Somfy Pro France
 PDF_END
-Ne génère JAMAIS ce format sans demande explicite.`,
+Chaque section commence par "SECTION:" suivi de son titre, puis son contenu sur les lignes suivantes. Ne génère JAMAIS ce bloc sans demande explicite.`,
   en: `POWERPOINT PRESENTATIONS: only if the user explicitly asks for a presentation, slides or PowerPoint, generate content in this exact JSON format:
 PPTX_START
 {"title":"Presentation title","slides":[{"type":"cover","title":"Title","subtitle":"Subtitle"},{"type":"content","title":"Slide title","bullets":["Point 1","Point 2","Point 3"]},{"type":"two_col","title":"Comparison","left":{"title":"Left","bullets":["A","B"]},"right":{"title":"Right","bullets":["C","D"]}},{"type":"closing","title":"Thank you","subtitle":"Final message"}]}
@@ -41,11 +46,16 @@ CCTP RESPONSE DOSSIER: if the user asks to generate a response dossier from a CC
 6. content: "Our Experience on Similar Projects"
 7. closing: "Thank you for your trust" / "Somfy Pro France"
 
-PDF DOCUMENTS: if the user explicitly asks for a PDF, document or PDF report, generate content in this exact JSON format:
+PDF DOCUMENTS: if the user asks for a PDF, document or report, generate it in this EXACT format (definitely NOT JSON):
 PDF_START
-{"title":"Document title","sections":[{"title":"Section 1","content":"Section 1 content"},{"title":"Section 2","content":"Section 2 content"}],"footer":"Somfy Pro France"}
+TITLE: Document title
+SECTION: First section title
+First section content, on as many lines as needed (line breaks, bullet lists with dashes and quotes are allowed).
+SECTION: Second section title
+Second section content.
+FOOTER: Somfy Pro France
 PDF_END
-NEVER generate this format without explicit user request.`
+Each section starts with "SECTION:" followed by its title, then its content on the following lines. NEVER generate this block without an explicit user request.`
 };
 
 const SYSTEM_PROMPTS = {
@@ -434,8 +444,28 @@ function parseMessage(content) {
   const pptxMatch = text.match(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/);
   if (pptxMatch) { text = text.replace(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/, "").trim(); try { pptx = JSON.parse(pptxMatch[1].trim()); } catch {} }
   const pdfMatch = text.match(/PDF_START\s*([\s\S]*?)\s*PDF_END/);
-  if (pdfMatch) { text = text.replace(/PDF_START\s*([\s\S]*?)\s*PDF_END/, "").trim(); try { pdf = JSON.parse(pdfMatch[1].trim()); } catch {} }
+  if (pdfMatch) { text = text.replace(/PDF_START\s*([\s\S]*?)\s*PDF_END/, "").trim(); pdf = parsePdfBlock(pdfMatch[1]); }
   return { text, chart, pptx, pdf };
+}
+
+function parsePdfBlock(raw) {
+  if (!raw) return null;
+  const cleaned = raw.replace(/^\s*```[a-z]*\s*/i, "").replace(/```\s*$/, "").trim();
+  // Compatibilité : si l'ancien format JSON est encore émis, on tente de le lire.
+  if (cleaned.startsWith("{")) { try { return JSON.parse(cleaned); } catch {} }
+  const lines = cleaned.split(/\r?\n/);
+  let title = "Document", footer = "Somfy Pro France";
+  const sections = []; let cur = null;
+  for (const line of lines) {
+    const t = line.trim();
+    if (/^(TITRE|TITLE)\s*:/i.test(t)) { title = t.replace(/^(TITRE|TITLE)\s*:/i, "").trim(); }
+    else if (/^SECTION\s*:/i.test(t)) { if (cur) sections.push(cur); cur = { title: t.replace(/^SECTION\s*:/i, "").trim(), content: "" }; }
+    else if (/^(FOOTER|PIED)\s*:/i.test(t)) { if (cur) { sections.push(cur); cur = null; } footer = t.replace(/^(FOOTER|PIED)\s*:/i, "").trim(); }
+    else if (cur) { cur.content += (cur.content ? "\n" : "") + line; }
+  }
+  if (cur) sections.push(cur);
+  if (!sections.length) return null;
+  return { title, sections, footer };
 }
 
 const CustomTooltip = ({ active, payload, label }) => {
