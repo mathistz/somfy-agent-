@@ -19,7 +19,13 @@ DOSSIER DE RÉPONSE CCTP : si l'utilisateur demande de générer un dossier ou u
 4. content : "Arguments réglementaires" — Décret BACS, RE2020, confort d'été
 5. two_col : "Pourquoi Somfy ?" — avantages techniques / commerciaux
 6. content : "Notre expérience sur ce type de projet"
-7. closing : "Merci pour votre confiance" / "Somfy Pro France"`,
+7. closing : "Merci pour votre confiance" / "Somfy Pro France"
+
+DOCUMENTS PDF : si l'utilisateur demande explicitement un PDF, un document ou un rapport PDF, génère le contenu dans ce format JSON exact :
+PDF_START
+{"title":"Titre du document","sections":[{"title":"Section 1","content":"Contenu de la section 1"},{"title":"Section 2","content":"Contenu de la section 2"}],"footer":"Somfy Pro France"}
+PDF_END
+Ne génère JAMAIS ce format sans demande explicite.`,
   en: `POWERPOINT PRESENTATIONS: only if the user explicitly asks for a presentation, slides or PowerPoint, generate content in this exact JSON format:
 PPTX_START
 {"title":"Presentation title","slides":[{"type":"cover","title":"Title","subtitle":"Subtitle"},{"type":"content","title":"Slide title","bullets":["Point 1","Point 2","Point 3"]},{"type":"two_col","title":"Comparison","left":{"title":"Left","bullets":["A","B"]},"right":{"title":"Right","bullets":["C","D"]}},{"type":"closing","title":"Thank you","subtitle":"Final message"}]}
@@ -33,7 +39,13 @@ CCTP RESPONSE DOSSIER: if the user asks to generate a response dossier from a CC
 4. content: "Regulatory Arguments"
 5. two_col: "Why Somfy?"
 6. content: "Our Experience on Similar Projects"
-7. closing: "Thank you for your trust" / "Somfy Pro France"`
+7. closing: "Thank you for your trust" / "Somfy Pro France"
+
+PDF DOCUMENTS: if the user explicitly asks for a PDF, document or PDF report, generate content in this exact JSON format:
+PDF_START
+{"title":"Document title","sections":[{"title":"Section 1","content":"Section 1 content"},{"title":"Section 2","content":"Section 2 content"}],"footer":"Somfy Pro France"}
+PDF_END
+NEVER generate this format without explicit user request.`
 };
 
 const SYSTEM_PROMPTS = {
@@ -416,12 +428,14 @@ function PlaceSearchWidget({ onSearch, lang }) {
 }
 
 function parseMessage(content) {
-  let text = content; let chart = null; let pptx = null;
+  let text = content; let chart = null; let pptx = null; let pdf = null;
   const chartMatch = text.match(/CHART_START\s*([\s\S]*?)\s*CHART_END/);
   if (chartMatch) { text = text.replace(/CHART_START\s*([\s\S]*?)\s*CHART_END/, "").trim(); try { chart = JSON.parse(chartMatch[1].trim()); } catch {} }
   const pptxMatch = text.match(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/);
   if (pptxMatch) { text = text.replace(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/, "").trim(); try { pptx = JSON.parse(pptxMatch[1].trim()); } catch {} }
-  return { text, chart, pptx };
+  const pdfMatch = text.match(/PDF_START\s*([\s\S]*?)\s*PDF_END/);
+  if (pdfMatch) { text = text.replace(/PDF_START\s*([\s\S]*?)\s*PDF_END/, "").trim(); try { pdf = JSON.parse(pdfMatch[1].trim()); } catch {} }
+  return { text, chart, pptx, pdf };
 }
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -436,6 +450,32 @@ function ChartBlock({ chart }) {
   const data=chart.labels.map((l,i)=>{const pt={label:l};chart.datasets.forEach(ds=>{pt[ds.label]=ds.data[i];});return pt;});
   if (chart.type==="line") return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><LineChart data={data} margin={{top:4,right:8,left:-24,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:10,fill:"#666"}}/><YAxis tick={{fontSize:10,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:11}}/>}{chart.datasets.map((ds,i)=><Line key={i} type="monotone" dataKey={ds.label} stroke={ds.color||CHART_COLORS[i]} strokeWidth={2} dot={{r:2}}/>)}</LineChart></ResponsiveContainer></div>;
   return <div style={card}>{chart.title&&<p style={title}>{chart.title}</p>}<ResponsiveContainer width="100%" height={h}><BarChart data={data} margin={{top:4,right:8,left:-24,bottom:0}}><CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)"/><XAxis dataKey="label" tick={{fontSize:10,fill:"#666"}}/><YAxis tick={{fontSize:10,fill:"#666"}}/><Tooltip content={<CustomTooltip/>}/>{chart.datasets.length>1&&<Legend wrapperStyle={{fontSize:11}}/>}{chart.datasets.map((ds,i)=><Bar key={i} dataKey={ds.label} fill={ds.color||CHART_COLORS[i]} radius={[3,3,0,0]}/>)}</BarChart></ResponsiveContainer></div>;
+}
+
+function PDFButton({ pdfData }) {
+  const [loading, setLoading] = useState(false);
+  async function handleDownload() {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/pdf', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(pdfData) });
+      if (!res.ok) throw new Error('Erreur génération PDF');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `${(pdfData.title||'document').replace(/[^a-zA-Z0-9\-_ ]/g,'_')}.pdf`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    } catch(err) { alert('Erreur : ' + err.message); }
+    finally { setLoading(false); }
+  }
+  return (
+    <div style={{marginTop:10,padding:"12px 16px",background:"linear-gradient(135deg,#1a3a47,#25485A)",borderRadius:10,border:"1px solid rgba(255,183,30,0.3)"}}>
+      <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📄 Document PDF prêt</p>
+      <p style={{margin:"0 0 10px",fontSize:11,color:"rgba(255,255,255,0.6)"}}>{pdfData.sections?.length||0} sections — {pdfData.title}</p>
+      <button onClick={handleDownload} disabled={loading} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderRadius:7,border:"none",background:loading?"rgba(255,255,255,0.1)":YELLOW,cursor:loading?"default":"pointer",fontSize:12,fontWeight:700,color:loading?"rgba(255,255,255,0.4)":NAVY}}>
+        {loading?"⏳ Génération en cours...":"⬇️ Télécharger le PDF"}
+      </button>
+    </div>
+  );
 }
 
 function PPTXButton({ pptxData }) {
@@ -472,44 +512,21 @@ function PPTXButton({ pptxData }) {
         reader.onloadend = () => resolve(reader.result.split(',')[1]);
         reader.readAsDataURL(blob);
       });
-
       const fileName = `${(pptxData.title||'Dossier_Somfy').replace(/[^a-zA-Z0-9\-_ ]/g,'_')}.pptx`;
-
       const emailRes = await fetch('/api/send-email', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
           to: emailTo.trim(),
           subject: `Dossier de réponse Somfy — ${pptxData.title || 'Appel d\'offres'}`,
-          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
-            <div style="background:#FFB71E;padding:20px 30px">
-              <h1 style="margin:0;color:#25485A;font-size:24px">SOMFY</h1>
-              <p style="margin:4px 0 0;color:#25485A;font-size:12px">Agent IA — Protection Solaire Dynamique</p>
-            </div>
-            <div style="padding:30px;background:#f9f9f9">
-              <p>Bonjour,</p>
-              <p>Veuillez trouver ci-joint notre dossier de réponse à votre appel d'offres, généré par l'Agent IA Somfy.</p>
-              <p><strong>Document joint :</strong> ${fileName}</p>
-              <p>N'hésitez pas à nous contacter pour toute question.</p>
-              <p>Cordialement,<br/><strong>Équipe Somfy Pro France</strong></p>
-            </div>
-            <div style="padding:12px 30px;background:#25485A;text-align:center">
-              <p style="margin:0;color:rgba(255,255,255,0.5);font-size:11px">Somfy Pro France — somfy-agent.vercel.app</p>
-            </div>
-          </div>`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto"><div style="background:#FFB71E;padding:20px 30px"><h1 style="margin:0;color:#25485A;font-size:24px">SOMFY</h1><p style="margin:4px 0 0;color:#25485A;font-size:12px">Agent IA — Protection Solaire Dynamique</p></div><div style="padding:30px;background:#f9f9f9"><p>Bonjour,</p><p>Veuillez trouver ci-joint notre dossier de réponse à votre appel d'offres.</p><p><strong>Document joint :</strong> ${fileName}</p><p>Cordialement,<br/><strong>Équipe Somfy Pro France</strong></p></div></div>`,
           attachmentName: fileName,
           attachmentBase64: base64,
         })
       });
-
       const emailData = await emailRes.json();
-      if (emailData.success) {
-        setEmailSent(true);
-        setShowEmailForm(false);
-        setEmailTo("");
-      } else {
-        setEmailError(emailData.error || "Erreur d'envoi");
-      }
+      if (emailData.success) { setEmailSent(true); setShowEmailForm(false); setEmailTo(""); }
+      else { setEmailError(emailData.error || "Erreur d'envoi"); }
     } catch(err) { setEmailError(err.message); }
     finally { setSending(false); }
   }
@@ -518,7 +535,6 @@ function PPTXButton({ pptxData }) {
     <div style={{marginTop:10,padding:"12px 16px",background:`linear-gradient(135deg,${NAVY},#1a3a47)`,borderRadius:10,border:"1px solid rgba(255,183,30,0.3)"}}>
       <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📊 Dossier PowerPoint prêt</p>
       <p style={{margin:"0 0 10px",fontSize:11,color:"rgba(255,255,255,0.6)"}}>{pptxData.slides?.length||0} slides — {pptxData.title}</p>
-
       <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
         <button onClick={handleDownload} disabled={loading} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",borderRadius:7,border:"none",background:loading?"rgba(255,255,255,0.1)":YELLOW,cursor:loading?"default":"pointer",fontSize:12,fontWeight:700,color:loading?"rgba(255,255,255,0.4)":NAVY}}>
           {loading?"⏳ Génération...":"⬇️ Télécharger"}
@@ -527,24 +543,13 @@ function PPTXButton({ pptxData }) {
           📧 Envoyer par email
         </button>
       </div>
-
-      {emailSent&&(
-        <div style={{marginTop:10,padding:"8px 12px",background:"rgba(29,158,117,0.2)",borderRadius:6,border:"1px solid rgba(29,158,117,0.4)"}}>
-          <p style={{margin:0,fontSize:12,color:"#3dba6e",fontWeight:600}}>✅ Email envoyé avec succès !</p>
-        </div>
-      )}
-
+      {emailSent&&<div style={{marginTop:10,padding:"8px 12px",background:"rgba(29,158,117,0.2)",borderRadius:6,border:"1px solid rgba(29,158,117,0.4)"}}><p style={{margin:0,fontSize:12,color:"#3dba6e",fontWeight:600}}>✅ Email envoyé !</p></div>}
       {showEmailForm&&(
         <div style={{marginTop:10,padding:"12px",background:"rgba(255,255,255,0.06)",borderRadius:8,border:"1px solid rgba(255,255,255,0.1)"}}>
           <p style={{margin:"0 0 8px",fontSize:11,color:"rgba(255,255,255,0.7)"}}>Adresse email du destinataire :</p>
           <div style={{display:"flex",gap:8}}>
-            <input
-              value={emailTo}
-              onChange={e=>setEmailTo(e.target.value)}
-              onKeyDown={e=>{if(e.key==="Enter")handleSendEmail();}}
-              placeholder="ex: loris.andre@somfy.com"
-              style={{flex:1,padding:"8px 10px",borderRadius:6,border:"1px solid rgba(255,255,255,0.2)",background:"rgba(255,255,255,0.08)",color:"#fff",fontSize:12,outline:"none",fontFamily:"inherit"}}
-            />
+            <input value={emailTo} onChange={e=>setEmailTo(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")handleSendEmail();}} placeholder="ex: loris.andre@somfy.com"
+              style={{flex:1,padding:"8px 10px",borderRadius:6,border:"1px solid rgba(255,255,255,0.2)",background:"rgba(255,255,255,0.08)",color:"#fff",fontSize:12,outline:"none",fontFamily:"inherit"}}/>
             <button onClick={handleSendEmail} disabled={!emailTo.trim()||sending} style={{padding:"8px 14px",borderRadius:6,border:"none",background:emailTo.trim()&&!sending?YELLOW:"rgba(255,255,255,0.1)",color:emailTo.trim()&&!sending?NAVY:"rgba(255,255,255,0.3)",fontSize:12,fontWeight:700,cursor:emailTo.trim()&&!sending?"pointer":"default"}}>
               {sending?"⏳":"Envoyer"}
             </button>
@@ -572,7 +577,7 @@ function Message({ msg, streaming, isMobile }) {
     </div>
   );
   const isLoading = msg.content==="...";
-  const {text,chart,pptx} = isLoading?{text:"...",chart:null,pptx:null}:parseMessage(msg.content);
+  const {text,chart,pptx,pdf} = isLoading?{text:"...",chart:null,pptx:null,pdf:null}:parseMessage(msg.content);
   return (
     <div style={{display:"flex",justifyContent:"flex-start",marginBottom:14,gap:8,alignItems:"flex-start"}}>
       <div style={{width:30,height:30,borderRadius:7,background:YELLOW,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:2,fontWeight:900,fontSize:12,color:NAVY}}>S</div>
@@ -584,6 +589,7 @@ function Message({ msg, streaming, isMobile }) {
         </div>
         {!streaming&&chart&&<ChartBlock chart={chart}/>}
         {!streaming&&pptx&&<PPTXButton pptxData={pptx}/>}
+        {!streaming&&pdf&&<PDFButton pdfData={pdf}/>}
       </div>
     </div>
   );
@@ -637,23 +643,13 @@ function AuthScreen({ onSuccess }) {
     if (mode === "register" && !inviteCode.trim()) { setError("Le code d'invitation est requis."); return; }
     setLoading(true); setError("");
     try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ action: mode, username: username.trim(), password, inviteCode: inviteCode.trim() })
-      });
+      const res = await fetch('/api/auth', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ action:mode, username:username.trim(), password, inviteCode:inviteCode.trim() }) });
       const data = await res.json();
-      if (data.success) {
-        localStorage.setItem('somfy_user', JSON.stringify({ username: username.trim().toLowerCase(), displayName: data.displayName }));
-        onSuccess({ username: username.trim().toLowerCase(), displayName: data.displayName });
-      } else {
-        setError(data.error || "Erreur inconnue");
-      }
+      if (data.success) { localStorage.setItem('somfy_user', JSON.stringify({ username:username.trim().toLowerCase(), displayName:data.displayName })); onSuccess({ username:username.trim().toLowerCase(), displayName:data.displayName }); }
+      else { setError(data.error || "Erreur inconnue"); }
     } catch { setError("Erreur de connexion. Réessaie."); }
     finally { setLoading(false); }
   }
-
-  const isLogin = mode === "login";
 
   return (
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100dvh",background:NAVY,fontFamily:"'Inter',system-ui,sans-serif",padding:"20px"}}>
@@ -664,7 +660,7 @@ function AuthScreen({ onSuccess }) {
         </div>
         <div style={{display:"flex",gap:4,marginBottom:24,background:"#f5f5f5",padding:4,borderRadius:8}}>
           {["login","register"].map(m=>(
-            <button key={m} onClick={()=>{setMode(m);setError("");}} style={{flex:1,padding:"8px",borderRadius:6,border:"none",cursor:"pointer",background:mode===m?"#fff":"transparent",color:mode===m?NAVY:"#888",fontWeight:mode===m?700:400,fontSize:13,boxShadow:mode===m?"0 1px 4px rgba(0,0,0,0.1)":"none",transition:"all 0.15s"}}>
+            <button key={m} onClick={()=>{setMode(m);setError("");}} style={{flex:1,padding:"8px",borderRadius:6,border:"none",cursor:"pointer",background:mode===m?"#fff":"transparent",color:mode===m?NAVY:"#888",fontWeight:mode===m?700:400,fontSize:13,boxShadow:mode===m?"0 1px 4px rgba(0,0,0,0.1)":"none"}}>
               {m==="login"?"Se connecter":"Créer un compte"}
             </button>
           ))}
@@ -676,7 +672,7 @@ function AuthScreen({ onSuccess }) {
           <input type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")handleSubmit();}} placeholder="Mot de passe"
             style={{padding:"12px 14px",borderRadius:8,border:"1.5px solid #e0e0e0",fontSize:14,outline:"none",fontFamily:"inherit"}}
             onFocus={e=>e.target.style.borderColor=NAVY} onBlur={e=>e.target.style.borderColor="#e0e0e0"}/>
-          {!isLogin&&(
+          {mode==="register"&&(
             <div>
               <input value={inviteCode} onChange={e=>setInviteCode(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")handleSubmit();}} placeholder="Code d'invitation"
                 style={{width:"100%",padding:"12px 14px",borderRadius:8,border:"1.5px solid #e0e0e0",fontSize:14,outline:"none",fontFamily:"inherit",boxSizing:"border-box",letterSpacing:"4px",textAlign:"center"}}
@@ -688,10 +684,10 @@ function AuthScreen({ onSuccess }) {
         {error&&<p style={{margin:"12px 0 0",fontSize:12,color:"#e74c3c",textAlign:"center"}}>{error}</p>}
         <button onClick={handleSubmit} disabled={loading}
           style={{width:"100%",padding:"13px",borderRadius:8,border:"none",background:loading?"#eee":YELLOW,color:loading?"#aaa":NAVY,fontWeight:700,fontSize:14,cursor:loading?"default":"pointer",marginTop:16}}>
-          {loading?"..." : isLogin?"Accéder à l'agent":"Créer mon compte"}
+          {loading?"...":(mode==="login"?"Accéder à l'agent":"Créer mon compte")}
         </button>
         <div style={{marginTop:16,padding:"12px",background:"#f8f8f8",borderRadius:8,fontSize:11,color:"#888",textAlign:"center",lineHeight:1.6}}>
-          {isLogin?"Première connexion ? Crée ton compte ci-dessus.":"Ton espace est personnel — tes conversations sont sauvegardées."}
+          {mode==="login"?"Première connexion ? Crée ton compte ci-dessus.":"Ton espace est personnel — tes conversations sont sauvegardées."}
         </div>
       </div>
     </div>
@@ -706,8 +702,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
   function switchProfile(p){ setProfile(p); setOpenCat(currentSector.profiles[p][lang].categories[0].id); if(isMobile)closeSidebar(); }
   return (
     <div style={{width:isMobile?"100%":"240px",background:NAVY,display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
-
-      {/* Header */}
       <div style={{background:`linear-gradient(90deg,${YELLOW},#f0a800)`,padding:"12px 16px",borderBottom:"2px solid rgba(37,72,90,0.2)",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
         <div>
           <div style={{display:"flex",alignItems:"baseline",gap:8}}>
@@ -718,8 +712,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
         </div>
         {isMobile&&<button onClick={closeSidebar} style={{background:"rgba(37,72,90,0.15)",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",fontSize:18,color:NAVY,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>}
       </div>
-
-      {/* Lang */}
       <div style={{padding:"8px 10px 4px",flexShrink:0}}>
         <div style={{display:"flex",gap:4}}>
           {["fr","en"].map(l=>(
@@ -729,8 +721,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
           ))}
         </div>
       </div>
-
-      {/* Secteur */}
       <div style={{padding:"4px 10px 6px",flexShrink:0}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>{t.sector}</p>
         <div style={{display:"flex",gap:4}}>
@@ -741,8 +731,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
           ))}
         </div>
       </div>
-
-      {/* Profil */}
       <div style={{padding:"2px 10px 8px",borderBottom:"1px solid rgba(255,255,255,0.07)",flexShrink:0}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>{t.profile}</p>
         <div style={{display:"flex",gap:4}}>
@@ -754,8 +742,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
           ))}
         </div>
       </div>
-
-      {/* Navigation — SCROLLABLE */}
       <div style={{padding:"6px 10px 6px",borderBottom:"1px solid rgba(255,255,255,0.06)",overflowY:"auto",flex:"0 1 auto",minHeight:0}}>
         <p style={{margin:"0 0 5px 2px",fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700,flexShrink:0}}>{t.nav}</p>
         {currentProfileData.categories.map(cat=>(
@@ -777,8 +763,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
           </div>
         ))}
       </div>
-
-      {/* Historique — SCROLLABLE */}
       <div style={{flex:1,overflowY:"auto",padding:"6px 10px 4px",minHeight:0}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
           <p style={{margin:0,fontSize:9,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:700}}>{t.history}</p>
@@ -786,8 +770,6 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
         </div>
         {profileHistory.length===0?<p style={{fontSize:11,color:"rgba(255,255,255,0.2)",fontStyle:"italic",margin:"4px 2px"}}>{t.noConv}</p>:profileHistory.map(h=><HistoryItem key={h.id} item={h} active={activeId===h.id} onClick={()=>{setActiveId(h.id);if(isMobile)closeSidebar();}} onDelete={()=>deleteConv(h.id)}/>)}
       </div>
-
-      {/* Footer */}
       <div style={{padding:"8px 10px 10px",borderTop:"1px solid rgba(255,255,255,0.07)",flexShrink:0}}>
         <div style={{background:"rgba(255,183,30,0.08)",border:"1px solid rgba(255,183,30,0.2)",borderRadius:6,padding:"6px 8px",marginBottom:6}}>
           <p style={{margin:"0 0 2px",fontSize:10,color:YELLOW,fontWeight:700}}>{currentSector.icon} {t.modeLabel} {currentSector[lang].label}</p>
@@ -933,8 +915,6 @@ function App({ user, onLogout }) {
       )}
 
       <div style={{flex:1,display:"flex",flexDirection:"column",minWidth:0,overflow:"hidden"}} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} onDrop={e=>{e.preventDefault();setDragOver(false);handleFile(e.dataTransfer.files[0]);}}>
-
-        {/* Header */}
         <div style={{background:"#fff",borderBottom:`3px solid ${YELLOW}`,padding:isMobile?"10px 14px":"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexShrink:0}}>
           <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
             {isMobile&&<button onClick={()=>setSidebarOpen(true)} style={{width:38,height:38,borderRadius:8,background:NAVY,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:YELLOW,fontSize:18,fontWeight:700}}>☰</span></button>}
@@ -951,7 +931,6 @@ function App({ user, onLogout }) {
           </div>
         </div>
 
-        {/* Messages */}
         <div style={{flex:1,overflowY:"auto",padding:isMobile?"14px 14px 8px":"20px 22px 10px",background:dragOver?"#f0f8ff":"#fafafa",transition:"background 0.2s",position:"relative"}}>
           {dragOver&&<div style={{position:"absolute",inset:0,background:"rgba(37,72,90,0.05)",border:`2px dashed ${NAVY}`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,pointerEvents:"none"}}><div style={{textAlign:"center"}}><span style={{fontSize:32,display:"block",marginBottom:8}}>☁️</span><p style={{margin:0,fontWeight:700,color:NAVY,fontSize:14}}>{t.dropHere}</p></div></div>}
           {messages.length===0?(
@@ -982,7 +961,6 @@ function App({ user, onLogout }) {
           <div ref={bottomRef}/>
         </div>
 
-        {/* Pending file */}
         {pendingFile&&(
           <div style={{padding:"7px 14px",background:"#fff8e6",borderTop:`1px solid ${YELLOW}`,display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
             <span style={{fontSize:18}}>{getFileIcon(pendingFile.name)}</span>
@@ -994,16 +972,6 @@ function App({ user, onLogout }) {
           </div>
         )}
 
-        {/* Input */}
         <div style={{padding:isMobile?"8px 12px 12px":"10px 16px 14px",borderTop:"1px solid rgba(0,0,0,0.06)",background:"#fff",flexShrink:0}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-end",background:"#f5f5f5",borderRadius:10,border:`2px solid ${(input.trim()||pendingFile)?YELLOW:"rgba(0,0,0,0.1)"}`,padding:"8px 8px 8px 12px",transition:"border-color 0.15s"}}>
-            <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}} onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️</button>
-            <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}} placeholder={pendingFile?t.inputPlaceholderFile:t.inputPlaceholder} rows={1} disabled={loading} style={{flex:1,resize:"none",border:"none",background:"transparent",fontSize:14,color:"#1a1a1a",lineHeight:1.5,outline:"none",maxHeight:100,overflow:"auto",fontFamily:"inherit"}}/>
-            <button onClick={()=>sendMessage()} disabled={(!input.trim()&&!pendingFile)||loading} style={{width:36,height:36,borderRadius:7,border:"none",background:(input.trim()||pendingFile)&&!loading?NAVY:"#ddd",cursor:(input.trim()||pendingFile)&&!loading?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,color:(input.trim()||pendingFile)&&!loading?YELLOW:"#aaa",fontWeight:700}}>{t.sendBtn}</button>
-          </div>
-          {!isMobile&&<p style={{margin:"5px 0 0",fontSize:11,color:"#bbb",textAlign:"center"}}>{t.inputHint}</p>}
-        </div>
-      </div>
-    </div>
-  );
-}
+            <button onClick={()=>fileRef.current?.click()} style={{width:34,height:34,borderRadius:6,border:"1px solid rgba(0,0,0,0.1)",background:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}} onMouseEnter={e=>e.currentTarget.style.borderColor=NAVY} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(0,0,0,0.1)"}>☁️
