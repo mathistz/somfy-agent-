@@ -1,3 +1,17 @@
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Load catalogue once at startup
+const __dirname = dirname(fileURLToPath(import.meta.url));
+let catalogueMap = {};
+try {
+  const raw = readFileSync(join(__dirname, 'catalogue.json'), 'utf-8');
+  const { products } = JSON.parse(raw);
+  products.forEach(p => { catalogueMap[p.ref] = p; });
+  console.log(`Catalogue chargé: ${Object.keys(catalogueMap).length} produits`);
+} catch(e) { console.error('Catalogue load error:', e.message); }
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -21,7 +35,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-opus-4-6',
-        max_tokens: max_tokens || 1500,
+        max_tokens: max_tokens || 4000,
         system,
         messages,
         stream: true,
@@ -30,21 +44,67 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      res.status(response.status).end(errorText);
+      const err = await response.text();
+      res.write(`data: ${JSON.stringify({ type: 'error', error: { message: err } })}\n\n`);
+      res.end();
       return;
     }
 
+    // Collect full response
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
+    let fullText = '';
+    const allChunks = [];
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      res.write(decoder.decode(value));
+      const chunk = decoder.decode(value);
+      allChunks.push(chunk);
+      const lines = chunk.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const parsed = JSON.parse(line.slice(6));
+            if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+              fullText += parsed.delta.text;
+            }
+          } catch {}
+        }
+      }
     }
+
+    // Find all 7-digit refs mentioned and look them up in catalogue
+    const refs = [...new Set((fullText.match(/\b(\d{7})\b/g) || []))];
+    const found = refs.filter(r => catalogueMap[r]);
+
+    // Stream all original chunks
+    for (const chunk of allChunks) res.write(chunk);
+
+    // If refs found, inject price block as extra SSE delta
+    if (found.length > 0) {
+      const lines = found.map(r => {
+        const p = catalogueMap[r];
+        const price = p.price_ht
+          ? `${p.price_ht.toFixed(2).replace('.', ',')} € HT`
+          : 'prix à confirmer';
+        return `• Réf. ${r} — ${p.name || '—'} — **${price}**`;
+      });
+      const priceBlock =
+        '\n\n---\n**📋 Prix publics HT — Catalogue Somfy 2026**\n' +
+        lines.join('\n') +
+        '\n*Remises commerciales Somfy Pro applicables. Mise en service non incluse.*';
+
+      res.write(`data: ${JSON.stringify({
+        type: 'content_block_delta',
+        index: 0,
+        delta: { type: 'text_delta', text: priceBlock }
+      })}\n\n`);
+    }
+
     res.end();
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.write(`data: ${JSON.stringify({ type: 'error', error: { message: error.message } })}\n\n`);
+    res.end();
   }
 }
