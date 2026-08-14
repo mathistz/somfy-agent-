@@ -1,0 +1,2896 @@
+{
+  "source": "Guide Pro Somfy 2026",
+  "total": 563,
+  "products": [
+    {
+      "ref": "1181068",
+      "name": "CAPTEUR EOLIS® RTS AVEC LED",
+      "price_ht": 444.86
+    },
+    {
+      "ref": "1216601",
+      "name": "Elixo® Smart io - Pack confort",
+      "price_ht": 1064.98,
+      "code": "APG"
+    },
+    {
+      "ref": "1246048",
+      "name": "Multipro 3S+ io pack confort",
+      "price_ht": 1983.69,
+      "code": "APG"
+    },
+    {
+      "ref": "1246485",
+      "name": "Ixengo® 3S+ io pack confort",
+      "price_ht": 1727.19,
+      "code": "APG"
+    },
+    {
+      "ref": "1246489",
+      "name": "Elixo® 3S+ M io pack confort",
+      "price_ht": 1120.78,
+      "code": "APG"
+    },
+    {
+      "ref": "1246492",
+      "name": "Axovia® 3S+ io pack confort",
+      "price_ht": 1550.34,
+      "code": "APG"
+    },
+    {
+      "ref": "1780109",
+      "name": "VERROU DE SÉCURITÉ 2 MAILLONS - LAME 8 MM",
+      "price_ht": 11.41
+    },
+    {
+      "ref": "1780110",
+      "name": "VERROU DE SÉCURITÉ 2 MAILLONS - LAME 14 MM",
+      "price_ht": 11.41
+    },
+    {
+      "ref": "1780111",
+      "name": "VERROU DE SÉCURITÉ 3 MAILLONS - LAME 8 MM",
+      "price_ht": 13.45
+    },
+    {
+      "ref": "1780112",
+      "name": "VERROU DE SÉCURITÉ 3 MAILLONS - LAME 14 MM",
+      "price_ht": 13.45
+    },
+    {
+      "ref": "1780113",
+      "name": "VERROU DE SÉCURITÉ 4 MAILLONS - LAME 8 MM",
+      "price_ht": 18.44
+    },
+    {
+      "ref": "1780114",
+      "name": "VERROU DE SÉCURITÉ 4 MAILLONS - LAME 14 MM",
+      "price_ht": 18.44
+    },
+    {
+      "ref": "1780115",
+      "name": "BAGUE D’ADAPTATION POUR TUBE ZF 64",
+      "price_ht": 3.87
+    },
+    {
+      "ref": "1780116",
+      "name": "BAGUE D’ADAPTATION POUR TUBE ZF 80",
+      "price_ht": 7.07
+    },
+    {
+      "ref": "1780117",
+      "name": "BAGUE D’ADAPTATION POUR TUBE OCTO 60",
+      "price_ht": 4.82
+    },
+    {
+      "ref": "1780789",
+      "name": "DISPOSITIF ANTICHUTE 79 NM",
+      "price_ht": 131.36
+    },
+    {
+      "ref": "1781008",
+      "name": "AGRAFE UNITAIRE DEPRAT - TUBE OCTO40",
+      "price_ht": 1.96
+    },
+    {
+      "ref": "1781009",
+      "name": "AXE CARRÉ 13 TOURILLON DIAM.12",
+      "price_ht": 3.24
+    },
+    {
+      "ref": "1781015",
+      "name": "COUSSINET VAP",
+      "price_ht": 0.97
+    },
+    {
+      "ref": "1781016",
+      "name": "SUPPORT EMBOUT - COUSSINET",
+      "price_ht": 0.58
+    },
+    {
+      "ref": "1781030",
+      "name": "BRIDE ROTULE",
+      "price_ht": 1.87
+    },
+    {
+      "ref": "1781038",
+      "name": "AGRAFE POUR TUBE F-2000",
+      "price_ht": 0.66
+    },
+    {
+      "ref": "1781039",
+      "name": "AGRAFE POUR TUBE F-5039",
+      "price_ht": 1.27
+    },
+    {
+      "ref": "1781042",
+      "name": "AGRAFE POUR TUBE ZF",
+      "price_ht": 0.52
+    },
+    {
+      "ref": "1782097",
+      "name": "DISPOSITIF ANTICHUTE 95 NM (1M)",
+      "price_ht": 117.9
+    },
+    {
+      "ref": "1782098",
+      "name": "DISPOSITIF ANTICHUTE 95 NM (5M)",
+      "price_ht": 138.2
+    },
+    {
+      "ref": "1782099",
+      "name": "DISPOSITIF ANTICHUTE 147 NM (1M)",
+      "price_ht": 138.2
+    },
+    {
+      "ref": "1782100",
+      "name": "DISPOSITIF ANTICHUTE 147 NM (5M)",
+      "price_ht": 158.89
+    },
+    {
+      "ref": "1782774",
+      "name": "ÉMETTEUR XSE",
+      "price_ht": 138.7
+    },
+    {
+      "ref": "1782929",
+      "name": "Rail droit assemblé Movelite® (0-1] m",
+      "price_ht": 250.14,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782930",
+      "name": "Rail droit assemblé Movelite® (1-2] m",
+      "price_ht": 357.74,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782931",
+      "name": "Rail droit assemblé Movelite® (2-3] m",
+      "price_ht": 464.07,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782932",
+      "name": "Rail droit assemblé Movelite® (3-4] m",
+      "price_ht": 570.45,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782933",
+      "name": "Rail droit assemblé Movelite® (4-5] m",
+      "price_ht": 676.76,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782934",
+      "name": "Rail droit assemblé Movelite® (5-6] m",
+      "price_ht": 783.12,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782935",
+      "name": "Rail droit assemblé Movelite® (6-7] m",
+      "price_ht": 885.14,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782936",
+      "name": "Rail droit assemblé Movelite® (7-8] m",
+      "price_ht": 990.96,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782937",
+      "name": "Rail droit assemblé Movelite® (8-9] m",
+      "price_ht": 1096.77,
+      "code": "ACM"
+    },
+    {
+      "ref": "1782938",
+      "name": "Rail droit assemblé Movelite® (9-10] m",
+      "price_ht": 1202.59,
+      "code": "ACM"
+    },
+    {
+      "ref": "1800435",
+      "name": "INVERSEUR ÉTANCHE MONTAGE EN SAILLIE - PM / EXTÉRIEUR",
+      "price_ht": 47.26
+    },
+    {
+      "ref": "1800503",
+      "name": "Situo® RTS Variation Pure Soliris® RTS",
+      "price_ht": 119.09,
+      "code": "AUT"
+    },
+    {
+      "ref": "1800505",
+      "name": "SMOOVE® DUO WT 5P ORIENTATION DES LAMES",
+      "price_ht": 35.61
+    },
+    {
+      "ref": "1800506",
+      "name": "SMOOVE® DUO WT PF",
+      "price_ht": 32.3
+    },
+    {
+      "ref": "1800507",
+      "name": "SMOOVE® DUO WT PM",
+      "price_ht": 33.91
+    },
+    {
+      "ref": "1800508",
+      "name": "SMOOVE® UNO WT PF",
+      "price_ht": 23.84
+    },
+    {
+      "ref": "1800510",
+      "name": "SMOOVE® UNO WT 5P ORIENTATION DES LAMES",
+      "price_ht": 27.36
+    },
+    {
+      "ref": "1800511",
+      "name": "INIS® SAILLIE PF",
+      "price_ht": 12.55
+    },
+    {
+      "ref": "1800512",
+      "name": "INIS® SAILLIE PM",
+      "price_ht": 13.76
+    },
+    {
+      "ref": "1800513",
+      "name": "INIS® 80X80 PF",
+      "price_ht": 14.35
+    },
+    {
+      "ref": "1800514",
+      "name": "INIS® 80X80 PM",
+      "price_ht": 15.55
+    },
+    {
+      "ref": "1802999",
+      "name": "INVERSEUR ÉTANCHE MONTAGE EN SAILLIE - PF / EXTÉRIEUR",
+      "price_ht": 47.26
+    },
+    {
+      "ref": "1805209",
+      "name": "Télécommande d’horloge à 6 canaux           Finition : Pure ou Silver",
+      "price_ht": 258.24
+    },
+    {
+      "ref": "1805210",
+      "name": "facilement les groupes grâce à l’écran.",
+      "price_ht": 258.24
+    },
+    {
+      "ref": "1805227",
+      "name": "Chronis® io",
+      "price_ht": 196.29,
+      "code": "AUT"
+    },
+    {
+      "ref": "1805283",
+      "name": "CHRONIS® SMOOVE® UNO S",
+      "price_ht": 157.05
+    },
+    {
+      "ref": "1805285",
+      "name": "CHRONIS® SMOOVE® IB+",
+      "price_ht": 179.32
+    },
+    {
+      "ref": "1810222",
+      "name": "TÉLÉRUPTEUR 4 POSITIONS",
+      "price_ht": 23.76
+    },
+    {
+      "ref": "1810334",
+      "name": "ÉMETTEUR CONTACT SEC RTS",
+      "price_ht": 199.74
+    },
+    {
+      "ref": "1810392",
+      "name": "ANIMEO® SWITCH ZONE SPLITTER",
+      "price_ht": 80.36
+    },
+    {
+      "ref": "1810628",
+      "name": "RÉCEPTEUR D’ÉCLAIRAGE ÉTANCHE RTS",
+      "price_ht": 123.75
+    },
+    {
+      "ref": "1810855",
+      "name": "DOUBLE POUSSOIR STOP MOSAÏC LEGRAND",
+      "price_ht": 46.51
+    },
+    {
+      "ref": "1810856",
+      "name": "SIMPLE POUSSOIR STOP MOSAÏC LEGRAND",
+      "price_ht": 22.25
+    },
+    {
+      "ref": "1811020",
+      "name": "Télécommande de centralisation radio        Finition : Pure ou Silver",
+      "price_ht": 221.97
+    },
+    {
+      "ref": "1811021",
+      "name": "• Sécurité garantie : code tournant         Fournie avec support mural.",
+      "price_ht": 221.97
+    },
+    {
+      "ref": "1811131",
+      "name": "RÉCEPTEUR BSO IO VARIATION AVEC PRISE HIRSCHMANN (X1)",
+      "price_ht": 164.16
+    },
+    {
+      "ref": "1811132",
+      "name": "RÉCEPTEUR BSO IO VARIATION AVEC CÂBLE (X1)",
+      "price_ht": 204.43
+    },
+    {
+      "ref": "1811204",
+      "name": "•",
+      "price_ht": 93.61
+    },
+    {
+      "ref": "1811205",
+      "name": "•",
+      "price_ht": 94.55
+    },
+    {
+      "ref": "1811244",
+      "name": "MICRO RÉCEPTEUR RTS POUR VOLET ROULANT FILAIRE",
+      "price_ht": 88.31
+    },
+    {
+      "ref": "1811361",
+      "name": "MICRO ÉMETTEUR POUR VOLET ROULANT RTS",
+      "price_ht": 111.3
+    },
+    {
+      "ref": "1811404",
+      "name": "MODULE SMOOVE® UNO IO-COMPATIBLE",
+      "price_ht": 181.86
+    },
+    {
+      "ref": "1811405",
+      "name": "POINT DE COMMANDE SMOOVE® UNO IO-COMPATIBLE",
+      "price_ht": 186.11
+    },
+    {
+      "ref": "1811481",
+      "name": "DÉTECTEUR DE MOUVEMENT io",
+      "price_ht": 79.63
+    },
+    {
+      "ref": "1811482",
+      "name": "DÉTECTEUR D’OUVERTURE ET CHOC io",
+      "price_ht": 69.66
+    },
+    {
+      "ref": "1811483",
+      "name": "DÉTECTEUR DE FUMÉE io",
+      "price_ht": 79.63
+    },
+    {
+      "ref": "1811584",
+      "name": "mande io, Connexoon® et TaHoma®.",
+      "price_ht": 195.17
+    },
+    {
+      "ref": "1811634",
+      "name": "Situo® 1 io Variation Pure",
+      "price_ht": 92.38,
+      "code": "AUT"
+    },
+    {
+      "ref": "1811636",
+      "name": "Situo® 5 io Variation A/M Pure",
+      "price_ht": 118.08,
+      "code": "AUT"
+    },
+    {
+      "ref": "1811683",
+      "name": "• Retour d’information limité.",
+      "price_ht": 195.17
+    },
+    {
+      "ref": "1816084",
+      "name": "CAPTEUR VENT EOLIS® WIREFREE IO",
+      "price_ht": 195.55
+    },
+    {
+      "ref": "1816091",
+      "name": "CAPTEUR VENT EOLIS® 230V IO",
+      "price_ht": 204.15
+    },
+    {
+      "ref": "1818212",
+      "name": "CAPTEUR SOLIRIS® RTS AVEC LED",
+      "price_ht": 227.55
+    },
+    {
+      "ref": "1818314",
+      "name": "SOLIRIS® SMOOVE® UNO",
+      "price_ht": 298.37
+    },
+    {
+      "ref": "1818316",
+      "name": "SOLIRIS® SMOOVE® IB+",
+      "price_ht": 298.86
+    },
+    {
+      "ref": "1822215",
+      "name": "RÉCEPTEUR LUMIÈRE SLIM RTS",
+      "price_ht": 122.99
+    },
+    {
+      "ref": "1822256",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (2,4M) X10",
+      "price_ht": 107.29
+    },
+    {
+      "ref": "1822257",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (2,4M)",
+      "price_ht": 118.02
+    },
+    {
+      "ref": "1822258",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (2,5M)",
+      "price_ht": 120.8
+    },
+    {
+      "ref": "1822259",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (3,0M)",
+      "price_ht": 133.34
+    },
+    {
+      "ref": "1822260",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (3,5M)",
+      "price_ht": 145.7
+    },
+    {
+      "ref": "1822261",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT 4,0M)",
+      "price_ht": 158.32
+    },
+    {
+      "ref": "1822285",
+      "name": "SÉCURITÉ PORTILLON RADIO DEXXO®",
+      "price_ht": 296.24
+    },
+    {
+      "ref": "1822420",
+      "name": "RÉCEPTEUR LUMIÈRE À VARIATION LED io",
+      "price_ht": 181.68
+    },
+    {
+      "ref": "1822445",
+      "name": "ALIMENTATION 12V POUR MOTORISATIONS WIREFREE",
+      "price_ht": 42.46
+    },
+    {
+      "ref": "1822452",
+      "name": "INTERFACE DE CHAUFFAGE io",
+      "price_ht": 69.66
+    },
+    {
+      "ref": "1822603",
+      "name": "RÉCEPTEUR LUMIÈRE VARIATION LED BLANC io",
+      "price_ht": 171.53
+    },
+    {
+      "ref": "1822604",
+      "name": "RÉCEPTEUR LUMIÈRE VARIATION LED COULEUR io",
+      "price_ht": 184.23
+    },
+    {
+      "ref": "1822605",
+      "name": "RÉCEPTEUR LUMIÈRE VARIATION LED BLANC CHAUD/FROID io",
+      "price_ht": 184.23
+    },
+    {
+      "ref": "1822609",
+      "name": "MICRO-ÉMETTEUR io",
+      "price_ht": 67.51
+    },
+    {
+      "ref": "1822617",
+      "name": "PRISE TÉLÉCOMMANDÉE ON/OFF io",
+      "price_ht": 58.69
+    },
+    {
+      "ref": "1822649",
+      "name": "MICRO-RÉCEPTEUR ÉCLAIRAGE ON/OFF",
+      "price_ht": 84.67
+    },
+    {
+      "ref": "1822660",
+      "name": "MICRO RÉCEPTEUR IZYMO® POUR VOLET ROULANT IO-COMPATIBLE",
+      "price_ht": 121.45
+    },
+    {
+      "ref": "1822663",
+      "name": "IZYMO VARIATION LED",
+      "price_ht": 95.51
+    },
+    {
+      "ref": "1824033",
+      "name": "MODULE ENOCEAN®",
+      "price_ht": 87.51
+    },
+    {
+      "ref": "1841022",
+      "name": "RÉCEPTEUR ACCÈS RTS",
+      "price_ht": 163.87
+    },
+    {
+      "ref": "1841026",
+      "name": "KEYTIS® 2 RTS",
+      "price_ht": 48.63
+    },
+    {
+      "ref": "1841064",
+      "name": "KEYGO® RTS",
+      "price_ht": 69.8
+    },
+    {
+      "ref": "1841134",
+      "name": "KEYGO® io",
+      "price_ht": 63.05
+    },
+    {
+      "ref": "1841216",
+      "name": "CELLULES PHOTOÉLECTRIQUES ORIENTABLES MASTER PRO 180",
+      "price_ht": 109.29
+    },
+    {
+      "ref": "1841229",
+      "name": "RÉCEPTEUR ACCÈS COMPATIBLE IO",
+      "price_ht": 305.36
+    },
+    {
+      "ref": "1841233",
+      "name": "CELLULES PHOTO-ÉLECTRIQUES",
+      "price_ht": 88.81
+    },
+    {
+      "ref": "1850050",
+      "name": "INVERSEUR À CLÉ EXTÉRIEUR MONTAGE ENCASTRÉ - PF",
+      "price_ht": 56.49
+    },
+    {
+      "ref": "1860049",
+      "name": "MOTOR CONTROLLER 4AC IB+ WM Montage mural",
+      "price_ht": 294.51
+    },
+    {
+      "ref": "1860081",
+      "name": "MOTOR CONTROLLER 4AC IB+ DRM rail Din",
+      "price_ht": 294.63
+    },
+    {
+      "ref": "1860093",
+      "name": "ALIMENTATION ANIMEO® 4,5 A",
+      "price_ht": 223.91
+    },
+    {
+      "ref": "1860105",
+      "name": "CARTE RADIO RTS POUR MOTOR CONTROLLER",
+      "price_ht": 131.39
+    },
+    {
+      "ref": "1860114",
+      "name": "MOTOR CONTROLLER 4AC KNX WM Montage mural 230 VAC",
+      "price_ht": 365.09
+    },
+    {
+      "ref": "1860116",
+      "name": "MOTOR CONTROLLER 4AC KNX DRM Rail DIN 230 VAC",
+      "price_ht": 352.68
+    },
+    {
+      "ref": "1860125",
+      "name": "MOTOR CONTROLLER 1 IB+ WM Montage mural CONVERTISSEUR",
+      "price_ht": 217.67
+    },
+    {
+      "ref": "1860144",
+      "name": "Animeo® IB 2 Zones Building Controller (BuCo SoLo)",
+      "price_ht": 527.67,
+      "code": "TER"
+    },
+    {
+      "ref": "1860209",
+      "name": "MOTOR CONTROLLER 2 AC IB+ WM Montage mural",
+      "price_ht": 187.62
+    },
+    {
+      "ref": "1860254",
+      "name": "",
+      "price_ht": 1585.79
+    },
+    {
+      "ref": "1860255",
+      "name": "Touch Building Controller IB+ 8 zones",
+      "price_ht": 1732.26,
+      "code": "TER"
+    },
+    {
+      "ref": "1860292",
+      "name": "ANIMEO® KNX RÉCEPTEUR RTS",
+      "price_ht": 227.14
+    },
+    {
+      "ref": "1860320",
+      "name": "ÉQUERRE MURALE DE STATION MÉTÉO",
+      "price_ht": 95.41
+    },
+    {
+      "ref": "1860321",
+      "name": "ADAPTATEUR DE MÂT POUR CENTRALE MÉTÉO",
+      "price_ht": 143.73
+    },
+    {
+      "ref": "1860335",
+      "name": "MÂT MÉTALLIQUE",
+      "price_ht": 119.57
+    },
+    {
+      "ref": "1860336",
+      "name": "ÉQUERRE POUR CENTRALE MÉTÉO",
+      "price_ht": 119.57
+    },
+    {
+      "ref": "1870149",
+      "name": "ALIMENTATION 1.5 230/24 V",
+      "price_ht": 75.96
+    },
+    {
+      "ref": "1870195",
+      "name": "ALIMENTATION 1.0 24 V",
+      "price_ht": 65.43
+    },
+    {
+      "ref": "1870289",
+      "name": "DÉTECTEUR DE FUMÉE CONNECTÉ",
+      "price_ht": 59.92
+    },
+    {
+      "ref": "1870306",
+      "name": "Rollixo® Smart io sans cable",
+      "price_ht": 214.5,
+      "code": "APG"
+    },
+    {
+      "ref": "1870345",
+      "name": "Somfy Indoor Camera",
+      "price_ht": 127.0,
+      "code": "CNC"
+    },
+    {
+      "ref": "1870398",
+      "name": "MOTOR CONTROLLER 6AC KNX DRM",
+      "price_ht": 476.59
+    },
+    {
+      "ref": "1870399",
+      "name": "MOTOR CONTROLLER 6 AC IB+ DRM",
+      "price_ht": 414.26
+    },
+    {
+      "ref": "1870402",
+      "name": "Situo® 1 RTS Pure",
+      "price_ht": 76.69,
+      "code": "AUT"
+    },
+    {
+      "ref": "1870418",
+      "name": "Situo® 5 RTS Pure",
+      "price_ht": 103.0,
+      "code": "AUT"
+    },
+    {
+      "ref": "1870434",
+      "name": "Situo® 1 Pure Soliris® RTS",
+      "price_ht": 108.26,
+      "code": "AUT"
+    },
+    {
+      "ref": "1870437",
+      "name": "Situo® 5 Pure Soliris® RTS",
+      "price_ht": 134.76,
+      "code": "AUT"
+    },
+    {
+      "ref": "1870451",
+      "name": "MOTOR CONTROLLER 4 DC IB+ WM",
+      "price_ht": 325.09
+    },
+    {
+      "ref": "1870452",
+      "name": "MOTOR CONTROLLER 4 DC KNX",
+      "price_ht": 468.83
+    },
+    {
+      "ref": "1870467",
+      "name": "SMOOVE® ORIGIN IB + CADRE",
+      "price_ht": 40.82
+    },
+    {
+      "ref": "1870474",
+      "name": "",
+      "price_ht": 3140.14
+    },
+    {
+      "ref": "1870475",
+      "name": "Touch Building Controller BACnet 8 zones",
+      "price_ht": 3744.02,
+      "code": "TER"
+    },
+    {
+      "ref": "1870506",
+      "name": "Rollixo® Smart io avec cable",
+      "price_ht": 237.92,
+      "code": "APG"
+    },
+    {
+      "ref": "1870531",
+      "name": "CAPTEUR VENT-SOLEIL SOLIRIS® 230V IO",
+      "price_ht": 244.19
+    },
+    {
+      "ref": "1870560",
+      "name": "WALL SWITCH io",
+      "price_ht": 69.45
+    },
+    {
+      "ref": "1870594",
+      "name": "TaHoma switch",
+      "price_ht": 124.17,
+      "code": "CNC"
+    },
+    {
+      "ref": "1870651",
+      "name": "V®500 PRO io + alimentation rail DIN",
+      "price_ht": 640.35,
+      "code": "APG"
+    },
+    {
+      "ref": "1870652",
+      "name": "V®500 PRO io + alimentation bloc secteur",
+      "price_ht": 640.35,
+      "code": "APG"
+    },
+    {
+      "ref": "1870655",
+      "name": "Moniteur V®500 PRO io",
+      "price_ht": 347.62,
+      "code": "APG"
+    },
+    {
+      "ref": "1870656",
+      "name": "Rollixo® Smart io avec cable + 2 Keygo",
+      "price_ht": 339.9,
+      "code": "APG"
+    },
+    {
+      "ref": "1870782",
+      "name": "WALL SWITCH RTS",
+      "price_ht": 76.11
+    },
+    {
+      "ref": "1870895",
+      "name": "IntelliTAG® air io + double face x1            (hors menuiseries bois)",
+      "price_ht": 46.6,
+      "code": "SAV"
+    },
+    {
+      "ref": "1870919",
+      "name": "CLAVIER A CODE PREMIUM 2 io",
+      "price_ht": 182.31
+    },
+    {
+      "ref": "1870932",
+      "name": "STATION METEO KNX 21",
+      "price_ht": 1851.89
+    },
+    {
+      "ref": "1870988",
+      "name": "TaHoma switch avec mise en service",
+      "price_ht": 165.77,
+      "code": "CNC"
+    },
+    {
+      "ref": "1871064",
+      "name": "• Indicateur de pile faible par baisse de",
+      "price_ht": 67.71
+    },
+    {
+      "ref": "1871067",
+      "name": "• Capteur de température intégrée fonc-",
+      "price_ht": 67.71
+    },
+    {
+      "ref": "1871081",
+      "name": "des automatismes liés au moteur            Fixation au mur par 2 vis (non fournies)",
+      "price_ht": 79.17
+    },
+    {
+      "ref": "1871082",
+      "name": "Capteur de température intégré               Alimentation : Pile 3V CR2032",
+      "price_ht": 79.17
+    },
+    {
+      "ref": "1871091",
+      "name": "un pilotage adapter au produit porteur     Fixation au mur par 2 vis (non fournies)",
+      "price_ht": 79.07
+    },
+    {
+      "ref": "1871092",
+      "name": "Point de commande 2 canaux.                  Alimentation : Pile 3V CR2032",
+      "price_ht": 79.07
+    },
+    {
+      "ref": "1871097",
+      "name": "S&SO RS100 io (Mode silencieux).           Fixation au mur par 2 vis (non fournies)",
+      "price_ht": 72.27
+    },
+    {
+      "ref": "1871101",
+      "name": "Capteur de température intégré               Alimentation : Pile 3V CR2032",
+      "price_ht": 72.27
+    },
+    {
+      "ref": "1871110",
+      "name": "un pilotage adapter au produit porteur     Fixation au mur par 2 vis (non fournies)",
+      "price_ht": 94.28
+    },
+    {
+      "ref": "1871111",
+      "name": "Point de commande 4 canaux.                  Alimentation : Pile 3V CR2032",
+      "price_ht": 94.28
+    },
+    {
+      "ref": "1871149",
+      "name": "CONTACT À CLÉ UNIVERSEL ENCASTRÉ",
+      "price_ht": 68.76
+    },
+    {
+      "ref": "1871150",
+      "name": "CONTACT À CLÉ UNIVERSEL SAILLIE",
+      "price_ht": 58.17
+    },
+    {
+      "ref": "1871215",
+      "name": "PRISE CONNECTÉE ZIGBEE",
+      "price_ht": 38.22
+    },
+    {
+      "ref": "1871273",
+      "name": "V®500 Pro io Connect saillie + rail DIN",
+      "price_ht": 680.45,
+      "code": "APG"
+    },
+    {
+      "ref": "1871274",
+      "name": "V®500 Pro io Connect saillie + secteur",
+      "price_ht": 680.45,
+      "code": "APG"
+    },
+    {
+      "ref": "1871289",
+      "name": "Ysia® Patio io Pure",
+      "price_ht": 153.23,
+      "code": "AUT"
+    },
+    {
+      "ref": "1871290",
+      "name": "Ysia® Patio io Anthracite",
+      "price_ht": 153.23,
+      "code": "AUT"
+    },
+    {
+      "ref": "1871306",
+      "name": "SUNTEIS® IO",
+      "price_ht": 118.32
+    },
+    {
+      "ref": "1871336",
+      "name": "récepteur et des connecteurs rapides",
+      "price_ht": 626.48
+    },
+    {
+      "ref": "1871346",
+      "name": "Module Smoove® RTS II sans cadre",
+      "price_ht": 64.78,
+      "code": "AUT"
+    },
+    {
+      "ref": "1871347",
+      "name": "Commande Smoove® RTS II avec cadre",
+      "price_ht": 71.43,
+      "code": "AUT"
+    },
+    {
+      "ref": "1871412",
+      "name": "Module RS485 Glydea® Ultra",
+      "price_ht": 100.69,
+      "code": "ACM"
+    },
+    {
+      "ref": "1871441",
+      "name": "Amy® sun protect io rond",
+      "price_ht": 75.81,
+      "code": "AUT"
+    },
+    {
+      "ref": "1871444",
+      "name": "Amy® sun protect io cadre",
+      "price_ht": 75.81,
+      "code": "AUT"
+    },
+    {
+      "ref": "1871451",
+      "name": "PACK ANIMEO® SUITE",
+      "price_ht": 1197.62
+    },
+    {
+      "ref": "1871452",
+      "name": "PACK MÉTÉO ANIMEO® SUITE",
+      "price_ht": 2733.39
+    },
+    {
+      "ref": "1871453",
+      "name": "PACK SÉCURITÉ DU BÂTIMENT ANIMEO® SUITE",
+      "price_ht": 1364.94
+    },
+    {
+      "ref": "1871485",
+      "name": "Rollixo® Premium io",
+      "price_ht": 419.69,
+      "code": "APG"
+    },
+    {
+      "ref": "1871516",
+      "name": "V®500 Pro io Connect encastré + rail DIN",
+      "price_ht": 749.0,
+      "code": "APG"
+    },
+    {
+      "ref": "1871517",
+      "name": "V®500 Pro io Connect encastré + secteur",
+      "price_ht": 749.0,
+      "code": "APG"
+    },
+    {
+      "ref": "1871649",
+      "name": "Détecteur IntelliTAG® air io + piles           (hors menuiseries bois)",
+      "price_ht": 46.6,
+      "code": "CNC"
+    },
+    {
+      "ref": "1875257",
+      "name": "CLAVIER INTÉRIEUR",
+      "price_ht": 103.36
+    },
+    {
+      "ref": "1875258",
+      "name": "LINK HOME ALARM ADVANCED",
+      "price_ht": 303.1
+    },
+    {
+      "ref": "1875306",
+      "name": "Alarme Connectée - Pack pro vidéo",
+      "price_ht": 1817.25,
+      "code": "SEC"
+    },
+    {
+      "ref": "1875355",
+      "name": "Alarme Connectée - Pack professionnel",
+      "price_ht": 1480.15,
+      "code": "SEC"
+    },
+    {
+      "ref": "2300058",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (2,5M) X10",
+      "price_ht": 110.06
+    },
+    {
+      "ref": "2300059",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT 3,0M) X10",
+      "price_ht": 122.58
+    },
+    {
+      "ref": "2300060",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (3,5M) X10",
+      "price_ht": 135.1
+    },
+    {
+      "ref": "2300061",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (4,0M) X10",
+      "price_ht": 147.48
+    },
+    {
+      "ref": "2300062",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (4,5M) X10",
+      "price_ht": 160.86
+    },
+    {
+      "ref": "2300063",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (5,0M) X10",
+      "price_ht": 173.5
+    },
+    {
+      "ref": "2300064",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (5,5M) X5",
+      "price_ht": 186.06
+    },
+    {
+      "ref": "2300065",
+      "name": "PROFIL CAOUTCHOUC + BANDE DE CONTACT (6M) X5",
+      "price_ht": 198.53
+    },
+    {
+      "ref": "2300072",
+      "name": "KIT DE MISE A LONGUEUR",
+      "price_ht": 35.26
+    },
+    {
+      "ref": "2400458",
+      "name": "ADAPTATEUR POUR PORTE SEMI-DÉBORDANTE",
+      "price_ht": 159.66
+    },
+    {
+      "ref": "2400459",
+      "name": "ADAPTATEUR POUR PORTE BATTANTE DEXXO®",
+      "price_ht": 308.36
+    },
+    {
+      "ref": "2400472",
+      "name": "ANTENNE RTS",
+      "price_ht": 50.49
+    },
+    {
+      "ref": "2400484",
+      "name": "PASSE-CÂBLES",
+      "price_ht": 142.6
+    },
+    {
+      "ref": "2400485",
+      "name": "KIT DE 2 PLATINES DE FIXATION POUR AXOVIA® 3S+",
+      "price_ht": 90.04
+    },
+    {
+      "ref": "2400487",
+      "name": "DÉVERROUILLAGE EXTÉRIEUR À CLÉ POUR AXOVIA® 3S+",
+      "price_ht": 149.71
+    },
+    {
+      "ref": "2400657",
+      "name": "SÉCURITÉ PORTILLON FILAIRE DEXXO®",
+      "price_ht": 79.81
+    },
+    {
+      "ref": "2400873",
+      "name": "ADAPTATEUR PORTE SECTIONNELLE",
+      "price_ht": 58.03
+    },
+    {
+      "ref": "2401487",
+      "name": "INTELLITAG®",
+      "price_ht": 51.25
+    },
+    {
+      "ref": "2401488",
+      "name": "LOT DE 5 INTELLITAG®",
+      "price_ht": 207.57
+    },
+    {
+      "ref": "2401489",
+      "name": "BADGE TÉLÉCOMMANDE",
+      "price_ht": 30.31
+    },
+    {
+      "ref": "2401490",
+      "name": "DÉTECTEUR DE MOUVEMENT",
+      "price_ht": 68.6
+    },
+    {
+      "ref": "2401491",
+      "name": "SIRÈNE EXTÉRIEURE",
+      "price_ht": 155.46
+    },
+    {
+      "ref": "2401494",
+      "name": "SIRÈNE INTÉRIEURE",
+      "price_ht": 129.41
+    },
+    {
+      "ref": "2401495",
+      "name": "RELAIS RADIO",
+      "price_ht": 98.69
+    },
+    {
+      "ref": "2401496",
+      "name": "SUPPORT MURAL POUR SOMFY® INDOOR CAMERA",
+      "price_ht": 29.59
+    },
+    {
+      "ref": "9000990",
+      "name": "CLIP CAISSON EXTERNE J4 & J4® S 57X51 MM",
+      "price_ht": 0.86
+    },
+    {
+      "ref": "9000997",
+      "name": "BOÎTIER MONTAGE EN SAILLIE CENTRALIS® IB",
+      "price_ht": 7.73
+    },
+    {
+      "ref": "9001001",
+      "name": "BATTERIE DE SECOURS POUR ELIXO® SMART, ROLY® SMART ET DEXXO® SMART",
+      "price_ht": 48.6
+    },
+    {
+      "ref": "9001219",
+      "name": "CLIP POUR FLASQUE LT",
+      "price_ht": 0.97
+    },
+    {
+      "ref": "9001255",
+      "name": "CÂBLE ÉLECTRIQUE VVF BLANC POUR MOTEUR CSI",
+      "price_ht": 12.17
+    },
+    {
+      "ref": "9001608",
+      "name": "ANÉMOMÈTRE GRAND CHANTIER",
+      "price_ht": 612.23
+    },
+    {
+      "ref": "9001611",
+      "name": "CAPTEUR DE TEMPÉRATURE EXTÉRIEURE",
+      "price_ht": 293.59
+    },
+    {
+      "ref": "9001614",
+      "name": "BOÎTIER DE CAPTEUR INTÉRIEUR",
+      "price_ht": 738.49
+    },
+    {
+      "ref": "9001653",
+      "name": "CÂBLE ÉLECTRIQUE RRF NOIR POUR MOTEUR RADIO HORS CSI",
+      "price_ht": 9.28
+    },
+    {
+      "ref": "9001659",
+      "name": "• Section 0,75 mm²",
+      "price_ht": 16.19
+    },
+    {
+      "ref": "9002515",
+      "name": "ÉQUERRE POUR DÉPORTER LE CAPTEUR",
+      "price_ht": 7.26
+    },
+    {
+      "ref": "9002516",
+      "name": "SUPPORT UNIVERSEL DIAM. 50 ET 60 LAQUE IVOIRE",
+      "price_ht": 5.78
+    },
+    {
+      "ref": "9002534",
+      "name": "ANNEAU D’ARRÊT DÉPORTÉ",
+      "price_ht": 1.27
+    },
+    {
+      "ref": "9008044",
+      "name": "SONDE DE TEMPÉRATURE INTÉRIEURE",
+      "price_ht": 23.29
+    },
+    {
+      "ref": "9009390",
+      "name": "CHAPE DEXXO® POUR PORTE A PANNEAUX SPÉCIFIQUES",
+      "price_ht": 23.1
+    },
+    {
+      "ref": "9011069",
+      "name": "CRÉMAILLÈRE ACIER HAUTE RÉSISTANCE MÉCANIQUE (1X1 MÈTRE)",
+      "price_ht": 24.49
+    },
+    {
+      "ref": "9011073",
+      "name": "SERRURE ÉLECTRIQUE AVEC CANON 24V",
+      "price_ht": 215.87
+    },
+    {
+      "ref": "9011074",
+      "name": "GÂCHE AU SOL POUR SERRURE ÉLECTRIQUE 24V",
+      "price_ht": 61.2
+    },
+    {
+      "ref": "9011089",
+      "name": "CRÉMAILLÈRE NYLON RENFORCÉE ACIER FIXATION BASSE (1X1 MÈTRE)",
+      "price_ht": 25.26
+    },
+    {
+      "ref": "9011090",
+      "name": "CRÉMAILLÈRE NYLON RENFORCÉE ACIER FIXATION HAUTE (1X1 MÈTRE)",
+      "price_ht": 25.26
+    },
+    {
+      "ref": "9011809",
+      "name": "ANIMEO® IB/IB+ RÉPÉTEUR WM",
+      "price_ht": 267.68
+    },
+    {
+      "ref": "9012484",
+      "name": "ATTACHE RIGIDE CLICKSUR 1 MAILLON LAME 8 MM",
+      "price_ht": 6.01
+    },
+    {
+      "ref": "9012485",
+      "name": "ATTACHE RIGIDE CLICKSUR 2 MAILLONS LAME 8 MM",
+      "price_ht": 7.44
+    },
+    {
+      "ref": "9012486",
+      "name": "ATTACHE RIGIDE CLICKSUR 3 MAILLONS LAME 8 MM",
+      "price_ht": 9.22
+    },
+    {
+      "ref": "9012487",
+      "name": "ATTACHE RIGIDE CLICKSUR 1 MAILLON LAME 14 MM",
+      "price_ht": 6.8
+    },
+    {
+      "ref": "9012488",
+      "name": "ATTACHE RIGIDE CLICKSUR 2 MAILLONS LAME 14 MM",
+      "price_ht": 7.81
+    },
+    {
+      "ref": "9012961",
+      "name": "SERRURE DE DÉVERROUILLAGE EXTÉRIEUR",
+      "price_ht": 49.77
+    },
+    {
+      "ref": "9012962",
+      "name": "KIT DÉVERROUILLAGE EXTÉRIEUR",
+      "price_ht": 50.77
+    },
+    {
+      "ref": "9013075",
+      "name": "SUNIS® EXTÉRIEUR WIREFREE RTS (CAPTEUR AUTONOME)",
+      "price_ht": 253.28
+    },
+    {
+      "ref": "9013086",
+      "name": "KIT ACCESSOIRES TRADITIONNEL MENUISÉ",
+      "price_ht": 15.01
+    },
+    {
+      "ref": "9013087",
+      "name": "KIT ACCESSOIRES TRADITIONNEL TUNNEL",
+      "price_ht": 15.01
+    },
+    {
+      "ref": "9013088",
+      "name": "KIT ACCESSOIRES COFFRE RÉNOVATION",
+      "price_ht": 19.16
+    },
+    {
+      "ref": "9013089",
+      "name": "KIT ACCESSOIRES BLOC-BAIE",
+      "price_ht": 27.69
+    },
+    {
+      "ref": "9013452",
+      "name": "BANDE DE CONTACT 50M",
+      "price_ht": 1470.97
+    },
+    {
+      "ref": "9013453",
+      "name": "10 RAILS ALUMINIUM 3 M",
+      "price_ht": 290.32
+    },
+    {
+      "ref": "9013454",
+      "name": "KIT CONNECTIQUE",
+      "price_ht": 60.87
+    },
+    {
+      "ref": "9013456",
+      "name": "KIT CONNECTIQUE RÉSISTIF",
+      "price_ht": 66.44
+    },
+    {
+      "ref": "9013647",
+      "name": "CELLULE PHOTOÉLECTRIQUE REFLEX",
+      "price_ht": 162.26
+    },
+    {
+      "ref": "9013713",
+      "name": "CONNECTEUR INDUS. STAS4 GRIS + ÉTRIER",
+      "price_ht": 14.23
+    },
+    {
+      "ref": "9013727",
+      "name": "Mat étendu (station météo)",
+      "price_ht": null,
+      "code": "TER"
+    },
+    {
+      "ref": "9013763",
+      "name": "ADAPTATION INTERFACE LS40/LT50",
+      "price_ht": 4.45
+    },
+    {
+      "ref": "9013807",
+      "name": "CAPTEUR DIRECTION VENT",
+      "price_ht": 1416.45
+    },
+    {
+      "ref": "9013847",
+      "name": "• Résistant à l’eau.                           Dimensions : 153 x 38 x 25 mm",
+      "price_ht": 167.24
+    },
+    {
+      "ref": "9013878",
+      "name": "EMBOUT COURT Ø 50",
+      "price_ht": 2.37
+    },
+    {
+      "ref": "9013903",
+      "name": "BUTÉES ESCAMOTABLES + TULIPES / LAME 14MM",
+      "price_ht": 11.52
+    },
+    {
+      "ref": "9013953",
+      "name": "ANTENNE IO",
+      "price_ht": 52.61
+    },
+    {
+      "ref": "9014159",
+      "name": "EXTENSION CHAMPIGNON",
+      "price_ht": 0.64
+    },
+    {
+      "ref": "9014160",
+      "name": "CAPUCHON NOIR POUR BOUTON STOP",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014163",
+      "name": "ADAPTATEUR AXE J4®-6MM HEXA",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014164",
+      "name": "ADAPTATEUR AXE J4®-7MM HEXA",
+      "price_ht": 2.12
+    },
+    {
+      "ref": "9014165",
+      "name": "ADAPTATEUR AXE J4®-8MM HEXA",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014167",
+      "name": "ADAPTATEUR AXE J4®-10MM HEXA",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014169",
+      "name": "ADAPTATEUR AXE J4®-12MM HEXA",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014170",
+      "name": "ADAPTATEUR AXE J4®-13MM HEXA",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014171",
+      "name": "ADAPTATEUR AXE J4® GOUTTE 14X60°X4MM",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014172",
+      "name": "ADAPTATEUR AXE J4® GOUTTE 14X3,4MM",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014173",
+      "name": "ADAPTATEUR AXE J4® GOUTTE 14X60°",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014178",
+      "name": "ADAPTATEUR AXE J4®-10MM CARRÉ",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014179",
+      "name": "ADAPTATEUR AXE J4®-11MM CARRÉ",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014180",
+      "name": "ADAPTATEUR AXE J4®-12MM CARRÉ",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014181",
+      "name": "CÂBLE MOTEUR STAS3 POUR J4® (0,5M)",
+      "price_ht": 14.63
+    },
+    {
+      "ref": "9014182",
+      "name": "CÂBLE MOTEUR STAS3 POUR J4® (0,9M)",
+      "price_ht": 16.3
+    },
+    {
+      "ref": "9014184",
+      "name": "CÂBLE MOTEUR SANS CONNEXION (0,9M)",
+      "price_ht": 9.97
+    },
+    {
+      "ref": "9014185",
+      "name": "CONNECTEUR INDUS. STAS3N",
+      "price_ht": 7.63
+    },
+    {
+      "ref": "9014186",
+      "name": "CONNECTEUR INDUS. STAS GRIS 3N",
+      "price_ht": 9.19
+    },
+    {
+      "ref": "9014187",
+      "name": "CONNECTEUR INDUS. STAK4 GRIS (3M)",
+      "price_ht": 9.7
+    },
+    {
+      "ref": "9014215",
+      "name": "CLIP CAISSON EXTERNE J4 & J4® S 57X51 MM",
+      "price_ht": 1.27
+    },
+    {
+      "ref": "9014216",
+      "name": "CLIP CAISSON INTERNE J4 & J4® S 57X51 MM",
+      "price_ht": 1.15
+    },
+    {
+      "ref": "9014217",
+      "name": "CLIP CAISSON EXTERNE J4 & J4® S 58X56 MM",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014218",
+      "name": "CLIP CAISSON J4® 78X67 MM",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014229",
+      "name": "PIPE POUR 3 CHAMPIGNON D’EXTENSIONS",
+      "price_ht": 2.13
+    },
+    {
+      "ref": "9014233",
+      "name": "CHAMPIGNON COURT STANDARD",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9014321",
+      "name": "ADAPTATEUR D’AXE J4® GOUTTE 14X3.7MM AVEC VIS M5",
+      "price_ht": 2.12
+    },
+    {
+      "ref": "9014331",
+      "name": "ADAPTATEUR AXE J4®-CARRÉ COURT 12MM",
+      "price_ht": 0.98
+    },
+    {
+      "ref": "9014351",
+      "name": "CAVALIERS DE FIXATION POUR EOLIS® 3D WIREFREE",
+      "price_ht": 7.01
+    },
+    {
+      "ref": "9014360",
+      "name": "KIT DE 2 CHAPES PILIER ÉTROIT POUR MULTIPRO 3S+",
+      "price_ht": 125.46
+    },
+    {
+      "ref": "9014400",
+      "name": "En cas de risques météorologiques de ce",
+      "price_ht": 167.24
+    },
+    {
+      "ref": "9014462",
+      "name": "KIT DE FIXATION PLAFOND",
+      "price_ht": 51.14
+    },
+    {
+      "ref": "9014468",
+      "name": "ROUE COURTE",
+      "price_ht": 2.39
+    },
+    {
+      "ref": "9014469",
+      "name": "EMBOUT COURT OCTO 60",
+      "price_ht": 7.76
+    },
+    {
+      "ref": "9014470",
+      "name": "EMBOUT COURT ZF54",
+      "price_ht": 6.21
+    },
+    {
+      "ref": "9014481",
+      "name": "BRAS COUDE AJUSTABLE POUR PORTE LATÉRALE",
+      "price_ht": 46.93
+    },
+    {
+      "ref": "9014482",
+      "name": "BRAS ARTICULÉ POUR PORTE LATÉRALE",
+      "price_ht": 235.03
+    },
+    {
+      "ref": "9014580",
+      "name": "CÂBLE 0,5M STAS4 POUR J4®",
+      "price_ht": 15.16
+    },
+    {
+      "ref": "9014585",
+      "name": "SUPPORT POUR JOUE 125 À 165 MM",
+      "price_ht": 3.8
+    },
+    {
+      "ref": "9014586",
+      "name": "SUPPORT POUR JOUE 180 À 205 MM",
+      "price_ht": 4.0
+    },
+    {
+      "ref": "9014599",
+      "name": "Outil de réglage DCT",
+      "price_ht": 41.68,
+      "code": "ACM"
+    },
+    {
+      "ref": "9014686",
+      "name": "ADAPTATEUR CAISSON J4® 78X67 MM",
+      "price_ht": 1.15
+    },
+    {
+      "ref": "9014773",
+      "name": "ÉTRIER POUR STAS3",
+      "price_ht": 1.53
+    },
+    {
+      "ref": "9014816",
+      "name": "KIT D’ADAPTATION TANDEM ZF",
+      "price_ht": 7.01
+    },
+    {
+      "ref": "9014834",
+      "name": "PACK DE 8 PILES AA LITHIUM",
+      "price_ht": 31.42
+    },
+    {
+      "ref": "9014835",
+      "name": "EMBOUT TÉLESCOPIQUE ZF54",
+      "price_ht": 7.63
+    },
+    {
+      "ref": "9014897",
+      "name": "PRISE PARAFOUDRE",
+      "price_ht": 84.13
+    },
+    {
+      "ref": "9014949",
+      "name": "ADAPTATEUR CAISSON GRIESSER 68X64 MM",
+      "price_ht": 2.03
+    },
+    {
+      "ref": "9014991",
+      "name": "SUPPORT KEYGO® IO OU RTS PAR 10",
+      "price_ht": 67.46
+    },
+    {
+      "ref": "9015025",
+      "name": "• Fixation du module par clippage.",
+      "price_ht": 3.58
+    },
+    {
+      "ref": "9015034",
+      "name": "FEU ORANGE MASTER PRO 230V AUTO CLIGNOTANT",
+      "price_ht": 92.81
+    },
+    {
+      "ref": "9015047",
+      "name": "MULTICAPTEUR COMPACT IB/IB+",
+      "price_ht": 873.79
+    },
+    {
+      "ref": "9015132",
+      "name": "CAPOTS MÉTALLIQUES POUR CELLULES PHOTOÉLECTRIQUES",
+      "price_ht": 41.05
+    },
+    {
+      "ref": "9015219",
+      "name": "ATTACHE PORTE À REFOULEMENT (X10)",
+      "price_ht": 20.2
+    },
+    {
+      "ref": "9015220",
+      "name": "PROFIL CAOUTCHOUC OPTIQUE (50M) POUR GORGE 9.6MM",
+      "price_ht": 663.55
+    },
+    {
+      "ref": "9015221",
+      "name": "PROFIL CAOUTCHOUC OPTIQUE (40M) POUR GORGE 15.3MM",
+      "price_ht": 769.77
+    },
+    {
+      "ref": "9015222",
+      "name": "CELLULES OPTIQUES (6.5M)",
+      "price_ht": 79.25
+    },
+    {
+      "ref": "9015238",
+      "name": "DOUBLE-CADRE SMOOVE® BLANC LAQUÉ",
+      "price_ht": 5.28
+    },
+    {
+      "ref": "9015290",
+      "name": "KIT CONNECTIQUE OPTIQUE",
+      "price_ht": 69.48
+    },
+    {
+      "ref": "9015452",
+      "name": "ADAPTATEUR AXE CARRÉ 12MM + VIS M5X5 PRÉ-MONTÉE",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9015457",
+      "name": "KIT DE PERÇAGE",
+      "price_ht": 188.47
+    },
+    {
+      "ref": "9015463",
+      "name": "CÂBLE J4® 10M SANS CONNEXION",
+      "price_ht": 35.74
+    },
+    {
+      "ref": "9015607",
+      "name": "SYSTÈME DE VERROUILLAGE MÉCANIQUE DEXXO®",
+      "price_ht": 81.61
+    },
+    {
+      "ref": "9015801",
+      "name": "SUPPORT DIAM. 50 SUNEA® CSI RTS",
+      "price_ht": 8.04
+    },
+    {
+      "ref": "9015911",
+      "name": "CHAMPIGNON J4® WT/IO",
+      "price_ht": 3.58
+    },
+    {
+      "ref": "9015965",
+      "name": "ALIMENTATION SOLAIRE POUR MOTORISATIONS RTS ET IO",
+      "price_ht": 757.64
+    },
+    {
+      "ref": "9015971",
+      "name": "CÂBLE DE RÉGLAGE UNIVERSEL",
+      "price_ht": 118.81
+    },
+    {
+      "ref": "9015982",
+      "name": "SPIRAL CÂBLE OPTIQUE 3 CONDUCTEURS",
+      "price_ht": 30.3
+    },
+    {
+      "ref": "9016344",
+      "name": "CAPTEUR PLUIE ONDEIS® 24 V DC",
+      "price_ht": 260.23
+    },
+    {
+      "ref": "9016345",
+      "name": "CAPTEUR PLUIE ONDEIS® 230 V AC",
+      "price_ht": 256.01
+    },
+    {
+      "ref": "9016353",
+      "name": "•",
+      "price_ht": 167.65
+    },
+    {
+      "ref": "9016354",
+      "name": "•",
+      "price_ht": 167.65
+    },
+    {
+      "ref": "9016355",
+      "name": "sur le capteur.                                   Poids : 0,9 kg (avec piles).",
+      "price_ht": 167.65
+    },
+    {
+      "ref": "9016618",
+      "name": "BRAS COUDÉ COURT (X10)",
+      "price_ht": 5.9
+    },
+    {
+      "ref": "9016662",
+      "name": "PROFIL CAOUTCHOUC OPTIQUE (50M) POUR GORGE 7.4MM",
+      "price_ht": 663.55
+    },
+    {
+      "ref": "9016736",
+      "name": "CÂBLE D’EXTENSION 120 CM",
+      "price_ht": 1.99
+    },
+    {
+      "ref": "9016762",
+      "name": "BUTÉES DE LAME FINALE",
+      "price_ht": 15.93
+    },
+    {
+      "ref": "9016875",
+      "name": "RAIL ALUMINIUM 3 M",
+      "price_ht": 34.0
+    },
+    {
+      "ref": "9016964",
+      "name": "PATTE MÉTALLIQUE POUR MODULE PLATINE (X50)",
+      "price_ht": 9.84
+    },
+    {
+      "ref": "9017231",
+      "name": "ANNEAU DE SORTIE POUR HEXAGONE DE 7MM + CLIP LONGUEUR TIGE 165MM",
+      "price_ht": 12.3
+    },
+    {
+      "ref": "9017232",
+      "name": "ANNEAU DE SORTIE POUR HEXAGONE DE 7MM + CLIP LONGUEUR TIGE 175MM",
+      "price_ht": 14.23
+    },
+    {
+      "ref": "9017234",
+      "name": "ANNEAU DE SORTIE POUR HEXAGONE DE 7MM + CLIP LONG. TIGE 63MM",
+      "price_ht": 7.9
+    },
+    {
+      "ref": "9017832",
+      "name": "BUZZER ALARME ROLLIXO®",
+      "price_ht": 27.03
+    },
+    {
+      "ref": "9018147",
+      "name": "ANIMEO® HUB POUR SENSOR BUS RS 485",
+      "price_ht": 537.65
+    },
+    {
+      "ref": "9018572",
+      "name": "KIT SUPPORT CELLULE",
+      "price_ht": 31.08
+    },
+    {
+      "ref": "9018623",
+      "name": "CÂBLE D’EXTENSION 25 CM",
+      "price_ht": 1.54
+    },
+    {
+      "ref": "9018624",
+      "name": "CÂBLE D’EXTENSION 240 CM",
+      "price_ht": 2.39
+    },
+    {
+      "ref": "9018685",
+      "name": "TUBE POUR 8 PILES (LITHIUM AA) + CLIPS",
+      "price_ht": 15.9
+    },
+    {
+      "ref": "9018883",
+      "name": "SUPPORT MURAL SITUO® IO",
+      "price_ht": 1.87
+    },
+    {
+      "ref": "9018902",
+      "name": "CELLULES OPTIQUES (3.5M)",
+      "price_ht": 75.61
+    },
+    {
+      "ref": "9018944",
+      "name": "Kit retrofit optique 3m",
+      "price_ht": 144.08,
+      "code": "APG"
+    },
+    {
+      "ref": "9018945",
+      "name": "Kit retrofit optique 7m",
+      "price_ht": 201.45,
+      "code": "APG"
+    },
+    {
+      "ref": "9018946",
+      "name": "Kit retrofit optique 3m",
+      "price_ht": 144.11,
+      "code": "APG"
+    },
+    {
+      "ref": "9019237",
+      "name": "Réf",
+      "price_ht": 15.9
+    },
+    {
+      "ref": "9019503",
+      "name": "JEU DE PATTES DE FIXATION RÉGLABLES POUR IXENGO® L 3S+",
+      "price_ht": 120.41
+    },
+    {
+      "ref": "9019568",
+      "name": "PROFIL CAOUTCHOUC OPTIQUE 3 CHAMBRES (50 M) POUR GORGE 9.6MM",
+      "price_ht": 522.88
+    },
+    {
+      "ref": "9019569",
+      "name": "PROFIL CAOUTCHOUC OPTIQUE 3 CHAMBRES (50 M) POUR GORGE 7.4MM",
+      "price_ht": 517.83
+    },
+    {
+      "ref": "9019589",
+      "name": "KIT BARRE PALPEUSE RADIO H58",
+      "price_ht": 512.82
+    },
+    {
+      "ref": "9019596",
+      "name": "OUTIL DE RÉGLAGE QUICKCOPY®",
+      "price_ht": 48.81
+    },
+    {
+      "ref": "9019611",
+      "name": "KIT BARRE PALPEUSE RADIO H90",
+      "price_ht": 512.97
+    },
+    {
+      "ref": "9019612",
+      "name": "PROFIL CAOUTCHOUC H58",
+      "price_ht": 131.74
+    },
+    {
+      "ref": "9019613",
+      "name": "PROFIL CAOUTCHOUC H90",
+      "price_ht": 131.74
+    },
+    {
+      "ref": "9019837",
+      "name": "BOÎTIER D’ENCASTREMENT POUR TOUCH BUILDING CONTROLLER IB+",
+      "price_ht": 123.84
+    },
+    {
+      "ref": "9019838",
+      "name": "BOÎTIER EN SAILLIE POUR TOUCH BUILDING CONTROLLER IB+",
+      "price_ht": 118.92
+    },
+    {
+      "ref": "9019971",
+      "name": "BOÎTIER MONTAGE EN SAILLIE SMOOVE® 45MM",
+      "price_ht": 5.76
+    },
+    {
+      "ref": "9019972",
+      "name": "Prix HT 5,76",
+      "price_ht": 5.68
+    },
+    {
+      "ref": "9020341",
+      "name": "Bloc alimentation secteur -SAV",
+      "price_ht": 17.3,
+      "code": "SAV"
+    },
+    {
+      "ref": "9020579",
+      "name": "CÂBLE DE RÉGLAGE HYBRID (SANS PRISE HIRSCHMANN)",
+      "price_ht": 118.81
+    },
+    {
+      "ref": "9021028",
+      "name": "CHARGEUR LITHIUM ION",
+      "price_ht": 25.12
+    },
+    {
+      "ref": "9021131",
+      "name": "CÂBLE D’EXTENSION 20 CM",
+      "price_ht": 7.41
+    },
+    {
+      "ref": "9021217",
+      "name": "BATTERIE EXTERNE LITHIUM ION",
+      "price_ht": 59.12
+    },
+    {
+      "ref": "9021222",
+      "name": "KIT PRISES HIRSCHMANN MÂLE + FEMELLE",
+      "price_ht": 16.85
+    },
+    {
+      "ref": "9025053",
+      "name": "BOÎTIER MONTAGE EN SAILLIE SMOOVE® 15 MM",
+      "price_ht": 5.68
+    },
+    {
+      "ref": "9025293",
+      "name": "PANNEAU SOLAIRE - WIREFREE LITHIUM ION",
+      "price_ht": 48.54
+    },
+    {
+      "ref": "9025303",
+      "name": "SUPPORT MURAL SITUO®",
+      "price_ht": 5.75
+    },
+    {
+      "ref": "9025304",
+      "name": "SUPPORT MURAL SITUO® POUR VARIATION",
+      "price_ht": 5.75
+    },
+    {
+      "ref": "9025706",
+      "name": "MODULE PARAFOUDRE BUS",
+      "price_ht": 331.13
+    },
+    {
+      "ref": "9025707",
+      "name": "MODULE PARAFOUDRE 24V",
+      "price_ht": 325.66
+    },
+    {
+      "ref": "9026384",
+      "name": "FEU ORANGE LED MASTER PRO 24V AVEC ANTENNE RTS",
+      "price_ht": 96.91
+    },
+    {
+      "ref": "9026426",
+      "name": "CAPUCHON GRIS POUR BOUTON STOP",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9026469",
+      "name": "Module rail DIN V500 Pro io",
+      "price_ht": 43.91,
+      "code": "APG"
+    },
+    {
+      "ref": "9026470",
+      "name": "Platine de rue en saillie V500 Pro - SAV",
+      "price_ht": 298.84,
+      "code": "SAV"
+    },
+    {
+      "ref": "9026708",
+      "name": "KIT FIXATION PILIER IXENGO® L 3S+",
+      "price_ht": 47.33
+    },
+    {
+      "ref": "9026830",
+      "name": "FEU ORANGE LED MASTER PRO 24V AVEC ANTENNE IO​",
+      "price_ht": 94.08
+    },
+    {
+      "ref": "9027035",
+      "name": "KIT SUPPORT MAT MÉTÉO",
+      "price_ht": 631.33
+    },
+    {
+      "ref": "9028054",
+      "name": "Adaptat Ethernet Tahoma Switch",
+      "price_ht": 32.3,
+      "code": "CNC"
+    },
+    {
+      "ref": "9028113",
+      "name": "Adaptateur Usb Tahoma Switch",
+      "price_ht": 36.59,
+      "code": "CNC"
+    },
+    {
+      "ref": "9028456",
+      "name": "ADAPTATEUR CAISSON J4® S 78X67 MM GEAR",
+      "price_ht": 1.15
+    },
+    {
+      "ref": "9028457",
+      "name": "ADAPTATEUR CAISSON J4® S 68X64 MM GEAR",
+      "price_ht": 2.03
+    },
+    {
+      "ref": "9028459",
+      "name": "CLIP CAISSON EXTERNE J4® S 78X67 MM",
+      "price_ht": 1.22
+    },
+    {
+      "ref": "9028509",
+      "name": "ADAPTATEUR AXE J4® S GOUTTE 14X60°X4MM",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028510",
+      "name": "ADAPTATEUR AXE J4® S GOUTTE 14X3.7MM",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028511",
+      "name": "ADAPTATEUR AXE J4® S GOUTTE 14X3.7MM + VIS",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028512",
+      "name": "ADAPTATEUR AXE J4® S GOUTTE 14X60°-5MM + VIS",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028513",
+      "name": "ADAPTATEUR AXE J4® S GOUTTE 14X60°+5MM + VIS",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028519",
+      "name": "ADAPTATEUR AXE J4® S-11MM HEXA",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028522",
+      "name": "ADAPTATEUR AXE J4® S GOUTTE 14X60°",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028523",
+      "name": "ADAPTATEUR AXE J4® S GOUTTE 12X80°X2.4MM",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028524",
+      "name": "ADAPTATEUR AXE J4® S-7MM CARRÉ",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028529",
+      "name": "ADAPTATEUR AXE J4® S-12MM CARRÉ",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028530",
+      "name": "ADAPTATEUR AXE J4® S CARRÉ 7MM + VIS",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028531",
+      "name": "ADAPTATEUR AXE J4® S CARRÉ 12MM + VIS",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028555",
+      "name": "Module de connectivité pour visiophones",
+      "price_ht": 82.5,
+      "code": "CNC"
+    },
+    {
+      "ref": "9028625",
+      "name": "ADAPTATEUR AXE J4® S-11MM HEXA + VIS",
+      "price_ht": 1.83
+    },
+    {
+      "ref": "9028650",
+      "name": "Cache rond Amy® + 2x bandelettes adhésives",
+      "price_ht": 3.88,
+      "code": "ACM"
+    },
+    {
+      "ref": "9028652",
+      "name": "Cadre + plaque de fixation Amy®",
+      "price_ht": 3.88,
+      "code": "ACM"
+    },
+    {
+      "ref": "9028692",
+      "name": "CLIP CAISSON EXTERNE J4® S 78X67 MM",
+      "price_ht": 1.01
+    },
+    {
+      "ref": "9028693",
+      "name": "BASE CHAMPIGNON COURT J4® S GRIS",
+      "price_ht": 1.01
+    },
+    {
+      "ref": "9028694",
+      "name": "BASE CHAMPIGNON COURT J4® S NOIR",
+      "price_ht": 1.01
+    },
+    {
+      "ref": "9028955",
+      "name": "SUPPORT CÂBLE ALIMENTATION J4® S",
+      "price_ht": 1.01
+    },
+    {
+      "ref": "9028958",
+      "name": "CAPUCHON LONG NOIR POUR BOUTON STOP",
+      "price_ht": 2.03
+    },
+    {
+      "ref": "9028959",
+      "name": "CAPUCHON LONG GRIS POUR BOUTON STOP",
+      "price_ht": 2.03
+    },
+    {
+      "ref": "9028960",
+      "name": "ADAPTATEUR CAISSON J4® S 68X64 MM LSU",
+      "price_ht": 2.03
+    },
+    {
+      "ref": "9029141",
+      "name": "ADAPTATEUR CAISSON J4® S 78X67 MM LSU",
+      "price_ht": 1.15
+    },
+    {
+      "ref": "9029429",
+      "name": "Dashboard Animeo® Suite",
+      "price_ht": 321.35,
+      "code": "TER"
+    },
+    {
+      "ref": "9029457",
+      "name": "SACHET DE VISSERIE",
+      "price_ht": 2.76
+    },
+    {
+      "ref": "9029485",
+      "name": "CENTRALE MÉTÉO M13",
+      "price_ht": 3140.86
+    },
+    {
+      "ref": "9029766",
+      "name": "Lot de 2 cavaliers droits - Pack x10",
+      "price_ht": 0.75,
+      "code": "CNC"
+    },
+    {
+      "ref": "9029767",
+      "name": "Lot de 2 cavaliers inclinés - Pack x10",
+      "price_ht": 0.75,
+      "code": "CNC"
+    },
+    {
+      "ref": "9101474",
+      "name": "CAPTEUR SOLIRIS® FILAIRE",
+      "price_ht": 77.98
+    },
+    {
+      "ref": "9101480",
+      "name": "ANÉMOMÈTRE EOLIS® FILAIRE",
+      "price_ht": 51.71
+    },
+    {
+      "ref": "9102004",
+      "name": "Prix HT 4,48",
+      "price_ht": 2.92
+    },
+    {
+      "ref": "9127808",
+      "name": "ÉTRIER CARRÉ DIAM. 16MM",
+      "price_ht": 1.84
+    },
+    {
+      "ref": "9127809",
+      "name": "SUPPORT EMBOUT RÉGLABLE",
+      "price_ht": 9.19
+    },
+    {
+      "ref": "9127813",
+      "name": "EMBOUT TÉLESCOPIQUE F2000",
+      "price_ht": 12.56
+    },
+    {
+      "ref": "9127814",
+      "name": "EMBOUT TÉLESCOPIQUE F5039",
+      "price_ht": 20.06
+    },
+    {
+      "ref": "9127862",
+      "name": "EMBOUT TÉLESCOPIQUE ZF64",
+      "price_ht": 8.96
+    },
+    {
+      "ref": "9127863",
+      "name": "EMBOUT TÉLESCOPIQUE ZF80",
+      "price_ht": 12.05
+    },
+    {
+      "ref": "9127864",
+      "name": "SACHET DE 10 GOUPILLES",
+      "price_ht": 1.82
+    },
+    {
+      "ref": "9128033",
+      "name": "BOÎTIER MAÇONNERIE - DIAM. 60 MM",
+      "price_ht": 0.9
+    },
+    {
+      "ref": "9128036",
+      "name": "FICHE DE RACCORDEMENT INVERSEUR + CROCHET GRIS",
+      "price_ht": 10.95
+    },
+    {
+      "ref": "9128037",
+      "name": "FICHE DE RACCORDEMENT OPÉRATEUR GRIS",
+      "price_ht": 11.29
+    },
+    {
+      "ref": "9128088",
+      "name": "BOITE DE DÉRIVATION",
+      "price_ht": 6.83
+    },
+    {
+      "ref": "9128097",
+      "name": "CÂBLE ÉLECTRIQUE BLANC 0,75 MM² - 50 M - 4 CONDUCTEURS",
+      "price_ht": 56.56
+    },
+    {
+      "ref": "9128101",
+      "name": "EMBOUT NON RÉGLABLE DIAM. 50X1,5 TOURILLON DIAM. 10",
+      "price_ht": 7.26
+    },
+    {
+      "ref": "9128765",
+      "name": "BOÎTIER MAÇONNERIE SUPERBOX",
+      "price_ht": 1.86
+    },
+    {
+      "ref": "9129292",
+      "name": "CÂBLE ÉLECTRIQUE BLANC 0,75 MM² - 50 M - 2 CONDUCTEURS",
+      "price_ht": 35.09
+    },
+    {
+      "ref": "9129294",
+      "name": "CÂBLE ÉLECTRIQUE BLANC 0,75 MM² - 50 M - 3 CONDUCTEURS",
+      "price_ht": 39.98
+    },
+    {
+      "ref": "9129296",
+      "name": "CÂBLE ÉLECTRIQUE BLANC 0,75 MM² - 50 M - 5 CONDUCTEURS",
+      "price_ht": 90.3
+    },
+    {
+      "ref": "9129591",
+      "name": "SUPPORT OP. LS50 PLAQUE PH ZINGUÉE",
+      "price_ht": 20.99
+    },
+    {
+      "ref": "9129630",
+      "name": "EMBOUT SANS AXE POUR TUBE DIAM.40",
+      "price_ht": 18.64
+    },
+    {
+      "ref": "9129671",
+      "name": "MANIVELLE AVEC CROCHET - LONG. 1250MM",
+      "price_ht": 24.6
+    },
+    {
+      "ref": "9129674",
+      "name": "MANIVELLE AVEC CROCHET - LONG. 2000MM RIGIDE",
+      "price_ht": 41.17
+    },
+    {
+      "ref": "9132065",
+      "name": "PLAQUE ZINGUÉE",
+      "price_ht": 18.79
+    },
+    {
+      "ref": "9132080",
+      "name": "ÉTRIER ZINGUÉ ZF",
+      "price_ht": 1.27
+    },
+    {
+      "ref": "9132087",
+      "name": "EMBOUT NON RÉGLABLE DIAM. 50X1.5 TOURILLON DIAM. 12",
+      "price_ht": 5.64
+    },
+    {
+      "ref": "9137018",
+      "name": "EMBOUT TUBE DEPRAT OCTOGONAL 40",
+      "price_ht": 2.56
+    },
+    {
+      "ref": "9140180",
+      "name": "ANÉMOMÈTRE GRAND CHANTIER CHAUFFANT",
+      "price_ht": 675.98
+    },
+    {
+      "ref": "9147332",
+      "name": "TOURNE-MOLETTES",
+      "price_ht": 1.76
+    },
+    {
+      "ref": "9147894",
+      "name": "STOP ROUE LS40",
+      "price_ht": 1.0
+    },
+    {
+      "ref": "9154043",
+      "name": "KIT CAPTEUR SOLAIRE + SUPPORT",
+      "price_ht": 44.16
+    },
+    {
+      "ref": "9154122",
+      "name": "BOÎTIER MONTAGE EN SAILLIE POUR RÉCEPTEUR ÉCLAIRAGE & CENTRALIS® RTS",
+      "price_ht": 8.03
+    },
+    {
+      "ref": "9203804",
+      "name": "Réf",
+      "price_ht": 7.9
+    },
+    {
+      "ref": "9203839",
+      "name": "• Section 0,75 mm²",
+      "price_ht": 20.06
+    },
+    {
+      "ref": "9206015",
+      "name": "ACCESSOIRE DE RÉGLAGE LT",
+      "price_ht": 1.76
+    },
+    {
+      "ref": "9206029",
+      "name": "SUPPORT UNIVERSEL ACIER",
+      "price_ht": 1.27
+    },
+    {
+      "ref": "9208282",
+      "name": "Réf",
+      "price_ht": 10.48
+    },
+    {
+      "ref": "9208284",
+      "name": "Réf",
+      "price_ht": 10.48
+    },
+    {
+      "ref": "9410326",
+      "name": "JEU LT 50 - TUBE LLAZA DIAM.80 / TUBE MADOPRON DIAM.80 /",
+      "price_ht": 8.15,
+      "code": "ACM"
+    },
+    {
+      "ref": "9410401",
+      "name": "ROUE LT 50 - TUBE DIAM.60 (ZF)",
+      "price_ht": 1.92,
+      "code": "ACM"
+    },
+    {
+      "ref": "9410402",
+      "name": "COURONNE LT 50 - TUBE DIAM.60 (ZF)",
+      "price_ht": 2.62,
+      "code": "ACM"
+    },
+    {
+      "ref": "9410406",
+      "name": "ROUE LT 50 - TUBE LLAZA DIAM.70 À OGIVE",
+      "price_ht": 1.98,
+      "code": "ACM"
+    },
+    {
+      "ref": "9410621",
+      "name": "SUPPORT Ø50 KOMMERLING",
+      "price_ht": 3.65
+    },
+    {
+      "ref": "9410624",
+      "name": "SUPPORT Ø50 - CAISSON ELKET",
+      "price_ht": 4.08
+    },
+    {
+      "ref": "9410633",
+      "name": "SUPPORT ROTULE POUR EMBOUT DIAM. 12",
+      "price_ht": 5.39
+    },
+    {
+      "ref": "9410635",
+      "name": "SUPPORT ROTULE POUR EMBOUT DIAM. 10",
+      "price_ht": 5.56
+    },
+    {
+      "ref": "9410639",
+      "name": "ÉQUERRE MURALE - LS40 / LT50 (À L’UNITÉ)",
+      "price_ht": 3.35
+    },
+    {
+      "ref": "9410651",
+      "name": "SUPPORT UNIVERSEL DIAM. 50 ET 60",
+      "price_ht": 8.56
+    },
+    {
+      "ref": "9410654",
+      "name": "EMBOUT PALIER INTERMÉDIAIRE POUR TUBE DIAM. 50",
+      "price_ht": 38.44
+    },
+    {
+      "ref": "9410656",
+      "name": "SUPPORT Ø50 CSI ENTRAXE 44",
+      "price_ht": 8.91
+    },
+    {
+      "ref": "9410658",
+      "name": "SUPPORT VOLET ROULANT Ø50 CSI ENTRAXE 48",
+      "price_ht": 8.91
+    },
+    {
+      "ref": "9410665",
+      "name": "SUPPORT LS40 (À L’UNITÉ)",
+      "price_ht": 6.29
+    },
+    {
+      "ref": "9410695",
+      "name": "PION FIXATION Ø50 CSI CVR",
+      "price_ht": 7.63
+    },
+    {
+      "ref": "9410699",
+      "name": "PION FIXATION Ø50 CSI MODULO",
+      "price_ht": 6.21
+    },
+    {
+      "ref": "9410703",
+      "name": "SUPPORT Ø50",
+      "price_ht": 2.86
+    },
+    {
+      "ref": "9410705",
+      "name": "SUPPORT Ø50",
+      "price_ht": 2.86
+    },
+    {
+      "ref": "9410707",
+      "name": "SUPPORT Ø50",
+      "price_ht": 2.86
+    },
+    {
+      "ref": "9410711",
+      "name": "SUPPORT Ø50 OMEGA",
+      "price_ht": 7.63
+    },
+    {
+      "ref": "9410715",
+      "name": "SUPPORT Ø50",
+      "price_ht": 2.86
+    },
+    {
+      "ref": "9410717",
+      "name": "SUPPORT Ø50 OMEGA",
+      "price_ht": 6.2
+    },
+    {
+      "ref": "9410719",
+      "name": "SUPPORT Ø50 DÉPORTÉ",
+      "price_ht": 7.4
+    },
+    {
+      "ref": "9410790",
+      "name": "PION FIXATION Ø50 CSI DOMINO",
+      "price_ht": 5.19
+    },
+    {
+      "ref": "9410821",
+      "name": "EMBOUT MONTÉ DIAMÈTRE 50",
+      "price_ht": 9.32
+    },
+    {
+      "ref": "9410822",
+      "name": "EMBOUT PRÉ-MONTÉ POUR FORTES CHARGES DIAM. 102",
+      "price_ht": 96.7
+    },
+    {
+      "ref": "9420601",
+      "name": "ÉQUERRE Ø50/Ø60 RÉGLABLE",
+      "price_ht": 11.51
+    },
+    {
+      "ref": "9420602",
+      "name": "ÉQUERRE Ø50/Ø60",
+      "price_ht": 16.45
+    },
+    {
+      "ref": "9420604",
+      "name": "ÉQUERRE FIXATION MUR OU PLAFOND - Ø50/Ø60",
+      "price_ht": 9.97
+    },
+    {
+      "ref": "9420613",
+      "name": "OUTIL DE RÉGLAGE ACCÈS DIFFICILE",
+      "price_ht": 3.78
+    },
+    {
+      "ref": "9420623",
+      "name": "SUPPORT OPÉRATEUR LT50/60 STORE BANNE",
+      "price_ht": 6.48
+    },
+    {
+      "ref": "9420624",
+      "name": "SUPPORT UNIVERSEL - ANNEAU À BOUCLE",
+      "price_ht": 3.49
+    },
+    {
+      "ref": "9420626",
+      "name": "SUPPORT MOTEUR Ø50/Ø60",
+      "price_ht": 5.38
+    },
+    {
+      "ref": "9420631",
+      "name": "SUPPORT UNIVERSEL DIAM. 50 ET 60",
+      "price_ht": 3.17
+    },
+    {
+      "ref": "9420632",
+      "name": "SUPPORT DIAM. 50 ET 60",
+      "price_ht": 6.48
+    },
+    {
+      "ref": "9420638",
+      "name": "SUPPORT LT60",
+      "price_ht": 5.72
+    },
+    {
+      "ref": "9420644",
+      "name": "SUPPORT UNIVERSEL DIAM. 50/60 ANNEAU À BOUCLE",
+      "price_ht": 3.5
+    },
+    {
+      "ref": "9420646",
+      "name": "SUPPORT LT50/60 CSI POUR STORE",
+      "price_ht": 21.61
+    },
+    {
+      "ref": "9420647",
+      "name": "SUP. LT50/60 CSI STORE PION 12",
+      "price_ht": 28.75
+    },
+    {
+      "ref": "9420657",
+      "name": "RALLONGE SORTIE CAISSON - AXE HEXA. 7 MM",
+      "price_ht": 4.42
+    },
+    {
+      "ref": "9420659",
+      "name": "RALLONGE SORTIE CAISSON - AXE HEXA. 7 MM",
+      "price_ht": 4.93
+    },
+    {
+      "ref": "9420673",
+      "name": "EMBOUT RÉGLABLE AVEC TOURILLON DIAM. 12",
+      "price_ht": 144.46
+    },
+    {
+      "ref": "9420674",
+      "name": "EMBOUT POUR FORTES CHARGES",
+      "price_ht": 63.3
+    },
+    {
+      "ref": "9420800",
+      "name": "EMBOUT RÉGLABLE AVEC TOURILLON DIAM. 10",
+      "price_ht": 9.84
+    },
+    {
+      "ref": "9420801",
+      "name": "EMBOUT RÉGLABLE AVEC TOURILLON DIAM. 12",
+      "price_ht": 11.12
+    },
+    {
+      "ref": "9430610",
+      "name": "SABOT AVEC ROTULE ALÉSAGE DIAM.12",
+      "price_ht": 32.64,
+      "code": "ACM"
+    },
+    {
+      "ref": "9430623",
+      "name": "EMBOUT PRÉ-MONTÉ POUR FORTES CHARGES DIAM. 78",
+      "price_ht": 72.49
+    },
+    {
+      "ref": "9500614",
+      "name": "PLAQUETTE LO LS40 (X10)",
+      "price_ht": 43.38
+    },
+    {
+      "ref": "9500620",
+      "name": "SUPPORT LS40",
+      "price_ht": 5.06
+    },
+    {
+      "ref": "9500624",
+      "name": "PLAQUE UNIVERSELLE LS40",
+      "price_ht": 7.9
+    },
+    {
+      "ref": "9500634",
+      "name": "PLAQUE REHAU LS40",
+      "price_ht": 3.02
+    },
+    {
+      "ref": "9500659",
+      "name": "SUPPORT INTERFACE LS40/LT50",
+      "price_ht": 2.6
+    },
+    {
+      "ref": "9500688",
+      "name": "EMBOUT UNIVERSEL LS40 (À L’UNITÉ)",
+      "price_ht": 6.0
+    },
+    {
+      "ref": "9500804",
+      "name": "SUPPORT LS40",
+      "price_ht": 5.11
+    },
+    {
+      "ref": "9500815",
+      "name": "PLAQUE POINT FIXE LS40",
+      "price_ht": 4.06
+    },
+    {
+      "ref": "9510333",
+      "name": "Couronne Ø50 Tube D70, à Goutte Ronde",
+      "price_ht": 1.29,
+      "code": "ACM"
+    },
+    {
+      "ref": "9510658",
+      "name": "ÉTRIER LS40 (À L’UNITÉ)",
+      "price_ht": 3.5
+    },
+    {
+      "ref": "9510695",
+      "name": "PLAQUE POINT FIXE - LS40 / LT50 (X10)",
+      "price_ht": 3.26
+    },
+    {
+      "ref": "9540786",
+      "name": "SUPPORT EMBOUT RÉGLABLE",
+      "price_ht": 17.08
+    },
+    {
+      "ref": "9670013",
+      "name": "SACHET 100 VIS PLASTITES 5X16",
+      "price_ht": 9.19
+    },
+    {
+      "ref": "9685001",
+      "name": "TOURNE-MOLLETTE FLEXIBLE LS40",
+      "price_ht": 3.35
+    },
+    {
+      "ref": "9685025",
+      "name": "ANNEAU D’ARRÊT À BOUCLE",
+      "price_ht": 0.66
+    },
+    {
+      "ref": "9685118",
+      "name": "MANCHON POUR HEXAGONE DE 7MM - CARRÉ DE 8 MM",
+      "price_ht": 6.85
+    },
+    {
+      "ref": "9685120",
+      "name": "MANCHON POUR HEXAGONE DE 7MM",
+      "price_ht": 4.42
+    },
+    {
+      "ref": "9685122",
+      "name": "SORTIE DE CAISSON VERTICALE - LONG. 330 MM",
+      "price_ht": 14.09
+    },
+    {
+      "ref": "9685140",
+      "name": "MANIVELLE POUR SORTIE DE CAISSON INVISIBLE",
+      "price_ht": 30.52
+    },
+    {
+      "ref": "9685141",
+      "name": "RALLONGES POUR SYSTÈME FINS DE COURSE CSI",
+      "price_ht": 3.65
+    },
+    {
+      "ref": "9685142",
+      "name": "SORTIE DE CAISSON INVISIBLE ZF - LONG. 400 MM",
+      "price_ht": 18.72
+    },
+    {
+      "ref": "9685171",
+      "name": "SORTIE DE CAISSON 60°- LONG. 260 MM",
+      "price_ht": 24.46
+    },
+    {
+      "ref": "9685173",
+      "name": "SORTIE DE CAISSON VERTICALE - LONG. 315 MM",
+      "price_ht": 15.77
+    },
+    {
+      "ref": "9685174",
+      "name": "SORTIE DE CAISSON À 60°- LONG. 315 MM",
+      "price_ht": 15.77
+    },
+    {
+      "ref": "9685175",
+      "name": "SORTIE DE CAISSON DOUBLE CARDAN - LONG. 315 MM",
+      "price_ht": 42.29
+    },
+    {
+      "ref": "9685176",
+      "name": "MANIVELLE FIXE Ø 12 LONG. 1 200 MM",
+      "price_ht": 22.42
+    },
+    {
+      "ref": "9685179",
+      "name": "SORTIE DE CAISSON VERTICALE - LONG. 260 MM",
+      "price_ht": 8.93
+    },
+    {
+      "ref": "9685180",
+      "name": "SORTIE DE CAISSON À 60°- LONG. 260 MM",
+      "price_ht": 9.32
+    },
+    {
+      "ref": "9685181",
+      "name": "SORTIE DE CAISSON DOUBLE CARDAN - LONG. 350 MM",
+      "price_ht": 36.16
+    },
+    {
+      "ref": "9685182",
+      "name": "SORTIE DE CAISSON VERTICALE - LONG. 315 MM",
+      "price_ht": 20.26
+    },
+    {
+      "ref": "9685183",
+      "name": "SORTIE DE CAISSON À 60°- LONG. 315 MM",
+      "price_ht": 17.69
+    },
+    {
+      "ref": "9685184",
+      "name": "SORTIE DE CAISSON VERTICALE - LONG. 435 MM",
+      "price_ht": 11.0
+    },
+    {
+      "ref": "9686064",
+      "name": "FICHE DE RACCORDEMENT INVERSEUR + CROCHET NOIR",
+      "price_ht": 10.09
+    },
+    {
+      "ref": "9701240",
+      "name": "SUPPORT LT50 2 TROUS M6 - ENTRAXE 48",
+      "price_ht": 4.34
+    },
+    {
+      "ref": "9705414",
+      "name": "ACCESSOIRE ABS LT50",
+      "price_ht": 15.9
+    },
+    {
+      "ref": "9705571",
+      "name": "COURONNE LT50 POUR TUBE TW57",
+      "price_ht": 0.78
+    },
+    {
+      "ref": "9706034",
+      "name": "PLAQUE 100X100 Ø50/Ø60 CSI",
+      "price_ht": 7.76
+    },
+    {
+      "ref": "9707287",
+      "name": "ANNEAU DE SORTIE HEXAGONE DE 7MM POUR MANIVELLE A CROCHET GEIGER - LONG. 100MM",
+      "price_ht": 10.75
+    },
+    {
+      "ref": "9710131",
+      "name": "CÂBLE ÉLECTRIQUE RRF HIR NOIR CONNEXION RAPIDE POUR MOTEUR RADIO 0,5 M",
+      "price_ht": 28.21
+    },
+    {
+      "ref": "9763503",
+      "name": "PLAQUE SUPPORT Ø50/Ø60 -VISSER/SOUDER",
+      "price_ht": 12.56
+    },
+    {
+      "ref": "9763508",
+      "name": "PLAQUE SUPPORT À VISSER Ø50/Ø60",
+      "price_ht": 11.12
+    },
+    {
+      "ref": "9765501",
+      "name": "CÂBLE ÉLECTRIQUE RRF HIR NOIR CONNEXION RAPIDE POUR MOTEUR FILAIRE 0,5 M",
+      "price_ht": 18.37
+    },
+    {
+      "ref": "9800838",
+      "name": "Lot de 2 piles AAAA - Pack x10",
+      "price_ht": 3.9,
+      "code": "CNC"
+    },
+    {
+      "ref": "9910000",
+      "name": "SUPPORT UNIVERSEL",
+      "price_ht": 3.17
+    },
+    {
+      "ref": "9910001",
+      "name": "SUPPORT UNIVERSEL TARAUDÉ",
+      "price_ht": 4.28
+    },
+    {
+      "ref": "9910003",
+      "name": "SUPPORT UNIVERSEL - ANNEAU VERROUILLABLE",
+      "price_ht": 5.64
+    },
+    {
+      "ref": "9910004",
+      "name": "STOP ROUE LT50",
+      "price_ht": 1.27
+    },
+    {
+      "ref": "9910007",
+      "name": "SUPPORT UNIVERSEL TARAUDÉ - ANNEAU VERROUILLABLE",
+      "price_ht": 6.48
+    },
+    {
+      "ref": "9910009",
+      "name": "SUPPORT UNIVERSEL DIAM. 50 ET 60",
+      "price_ht": 3.49
+    },
+    {
+      "ref": "9910013",
+      "name": "CARRÉ RAPPORTE DIAM.50",
+      "price_ht": 5.38
+    },
+    {
+      "ref": "9910014",
+      "name": "CARRÉ RAPPORTE DIAM.50",
+      "price_ht": 5.38
+    },
+    {
+      "ref": "9910040",
+      "name": "SUPPORT CSI DIAM. 50 ET 60 MULTI-ENTRAXES",
+      "price_ht": 8.15
+    },
+    {
+      "ref": "9910051",
+      "name": "SUPPORT MOTEUR ÉTOILE CSI DIAM. 50 ET 60",
+      "price_ht": 3.91
+    },
+    {
+      "ref": "9910062",
+      "name": "STOP ROUE MOTEUR Ø60",
+      "price_ht": 1.71,
+      "code": "ACM"
+    },
+    {
+      "ref": "9998001",
+      "name": "BOÎTIER MONTAGE EN SAILLIE INTEO® BLANC",
+      "price_ht": 5.08
+    }
+  ]
+}
