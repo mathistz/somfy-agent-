@@ -75,8 +75,9 @@ export default async function handler(req, res) {
     }
 
     // Find all 7-digit refs mentioned and look them up in catalogue
-    const refs = [...new Set((fullText.match(/\b(\d{7})\b/g) || []))];
-    const found = refs.filter(r => catalogueMap[r]);
+    // Only trigger if the response explicitly mentions "Réf" or "référence" near a 7-digit number
+    const refMatches = [...(fullText.matchAll(/[Rr][ée]f\.?\s*[:.]?\s*(\d{7})/g) || [])];
+    const found = [...new Set(refMatches.map(m => m[1]))].filter(r => catalogueMap[r]);
 
     // Stream all original chunks
     for (const chunk of allChunks) res.write(chunk);
