@@ -4,6 +4,10 @@
   ],
   "functions": {
     "api/chat.js": { "maxDuration": 60 },
-    "api/pdf.js": { "maxDuration": 30 }
+    "api/pdf.js": { "maxDuration": 60 },
+    "api/pptx.js": { "maxDuration": 60 },
+    "api/boamp.js": { "maxDuration": 60 },
+    "api/send-email.js": { "maxDuration": 60 },
+    "api/catalogue-search.js": { "maxDuration": 60 }
   }
 }
