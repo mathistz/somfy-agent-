@@ -97,19 +97,24 @@ Réglementation clé : Décret BACS (automatisation obligatoire >290kW), Décret
 CATALOGUE PRODUITS TERTIAIRE (utilise toujours les bonnes références) :
 
 SOLUTION FILAIRE :
-— Centralisation basique (volets roulants uniquement, pas BSO/stores ext.) :
-  • Horloge Chronis — Réf. 1805285
-— Centralisation basique + protection vent (BSO et stores extérieurs) :
-  • Horloge Soliris — Réf. 1818316 + Capteur vent/soleil — Réf. 9101474
-— Centralisation 2 zones + protection vent + SSI (ex : 1 zone VR + 1 zone BSO/stores) :
-  • BuCo SoLo 2 Zones — Réf. 1860144 + Capteur vent/soleil — Réf. 9101474
-  Mise en service OPTIONNELLE.
-— Centralisation et automatisation Premium (4 ou 8 zones, station météo, option BACnet IP pour GTB/GTC, raccordement SSI/PPMS) :
-  • Touch BuCo 4 zones — Réf. 1860254 | Touch BuCo 8 zones — Réf. 1860255
-  • Version BACnet : Touch BuCo 4z — Réf. 1870474 | Touch BuCo 8z — Réf. 1870475
-  • Station météo Compact Sensor — Réf. 9015047 | Mat étendu — Réf. 9013727
-  • Alimentation — Réf. 1860093 (pour Compact et Mat étendu)
-  Mise en service OBLIGATOIRE par les équipes Somfy.
+— Contrôleur de moteur (MoCo) — nécessaire pour piloter les moteurs filaires IB+ :
+  • Motor Controller IB+ montage mural — Réf. 1860049 — 294,51 € HT
+  • Motor Controller IB+ rail DIN — Réf. 1860081 — 294,63 € HT
+  • Motor Controller KNX montage mural — Réf. 1860114 — 365,09 € HT (pour solution KNX uniquement)
+  Le MoCo est l'élément de base qui commande les moteurs filaires. Il se branche en amont sur le contrôleur de bâtiment.
+
+— Offre CENTRALISATION SIMPLE "BuCo SoLo" (volets roulants simples sans GTB) :
+  • Horloge Chronis — Réf. 1805285 — 179,32 € HT (VR uniquement, pas BSO ni stores ext.)
+  • Horloge Soliris — Réf. 1818316 — 298,86 € HT + Capteur vent/soleil — Réf. 9101474 — 77,98 € HT (BSO et stores ext.)
+  • BuCo SoLo 2 Zones — Réf. 1860144 — 527,67 € HT + Capteur vent/soleil — Réf. 9101474 (2 zones + SSI)
+  Mise en service OPTIONNELLE. Toujours nommer cette offre "BuCo SoLo" dans les réponses.
+
+— Offre PREMIUM "Touch BuCo" (4 ou 8 zones, station météo, option BACnet IP pour GTB, raccordement SSI/PPMS) :
+  • Touch BuCo 4 zones — Réf. 1860254 — 1 585,79 € HT | Touch BuCo 8 zones — Réf. 1860255 — 1 732,26 € HT
+  • Version BACnet : Touch BuCo 4z — Réf. 1870474 — 3 140,14 € HT | Touch BuCo 8z — Réf. 1870475 — 3 744,02 € HT
+  • Station météo Compact Sensor — Réf. 9015047 — 873,79 € HT | Mat étendu — Réf. 9013727
+  • Alimentation — Réf. 1860093 — 223,91 € HT
+  Mise en service OBLIGATOIRE par les équipes Somfy. Toujours nommer cette offre "Touch BuCo" dans les réponses.
 
 SOLUTION BUS PROTOCOLE OUVERT KNX (mise en service par intégrateur KNX certifié, pas Somfy) :
   • MoCo KNX — Réf. 1860114
@@ -190,17 +195,24 @@ Key regulations: BACS Decree (mandatory automation >290kW), Tertiary Decree (-40
 PRODUCT CATALOGUE — TERTIARY (always cite the correct references):
 
 WIRED SOLUTIONS:
-— Basic centralisation (roller shutters only, no BSO/external blinds):
-  • Chronis Timer — Ref. 1805285
-— Basic centralisation + wind protection (BSO and external blinds):
-  • Soliris Timer — Ref. 1818316 + Wind/Sun sensor — Ref. 9101474
-— 2-zone centralisation + wind protection + SSI (e.g. 1 zone shutters + 1 zone BSO):
-  • BuCo SoLo 2 Zones — Ref. 1860144 + Wind/Sun sensor — Ref. 9101474. Optional commissioning.
-— Premium centralisation & automation (4 or 8 zones, weather station, optional BACnet IP for BMS, SSI/PPMS connection):
-  • Touch BuCo 4z — Ref. 1860254 | Touch BuCo 8z — Ref. 1860255
-  • BACnet version: Touch BuCo 4z — Ref. 1870474 | Touch BuCo 8z — Ref. 1870475
-  • Compact Sensor weather station — Ref. 9015047 | Extended mast — Ref. 9013727
-  • Power supply — Ref. 1860093. Mandatory Somfy commissioning.
+— Motor Controller (MoCo) — required to control IB+ wired motors:
+  • Motor Controller IB+ wall mount — Ref. 1860049 — 294.51 € excl. VAT
+  • Motor Controller IB+ DIN rail — Ref. 1860081 — 294.63 € excl. VAT
+  • Motor Controller KNX wall mount — Ref. 1860114 — 365.09 € excl. VAT (KNX solution only)
+  The MoCo is the base component that controls wired motors, connected upstream to the building controller.
+
+— "BuCo SoLo" BASIC CENTRALISATION offer (no BMS):
+  • Chronis Timer — Ref. 1805285 — 179.32 € excl. VAT (shutters only, no BSO)
+  • Soliris Timer — Ref. 1818316 — 298.86 € excl. VAT + Wind/Sun sensor — Ref. 9101474 — 77.98 € excl. VAT (BSO/external blinds)
+  • BuCo SoLo 2 Zones — Ref. 1860144 — 527.67 € excl. VAT + Wind/Sun sensor — Ref. 9101474 (2 zones + SSI)
+  Optional commissioning. Always name this offer "BuCo SoLo" in responses.
+
+— "Touch BuCo" PREMIUM offer (4 or 8 zones, weather station, optional BACnet IP for BMS, SSI/PPMS):
+  • Touch BuCo 4z — Ref. 1860254 — 1,585.79 € excl. VAT | Touch BuCo 8z — Ref. 1860255 — 1,732.26 € excl. VAT
+  • BACnet version: Touch BuCo 4z — Ref. 1870474 — 3,140.14 € excl. VAT | Touch BuCo 8z — Ref. 1870475 — 3,744.02 € excl. VAT
+  • Compact Sensor — Ref. 9015047 — 873.79 € excl. VAT | Extended mast — Ref. 9013727
+  • Power supply — Ref. 1860093 — 223.91 € excl. VAT
+  Mandatory Somfy commissioning. Always name this offer "Touch BuCo" in responses.
 
 OPEN BUS KNX PROTOCOL (commissioning by certified KNX integrator, not Somfy):
   • MoCo KNX — Ref. 1860114
