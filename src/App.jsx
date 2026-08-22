@@ -920,7 +920,7 @@ function AuthScreen({ onSuccess }) {
   );
 }
 
-function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCat, setOpenCat, sendMessage, newConversation, profileHistory, activeId, setActiveId, deleteConv, isMobile, closeSidebar, displayName, onLogout }) {
+function Sidebar({ lang, setLang, region, setRegion, sector, setSector, profile, setProfile, openCat, setOpenCat, sendMessage, newConversation, profileHistory, activeId, setActiveId, deleteConv, isMobile, closeSidebar, displayName, onLogout }) {
   const t = UI[lang];
   const currentSector = SECTORS[sector];
   const currentProfileData = currentSector.profiles[profile][lang];
@@ -939,12 +939,21 @@ function Sidebar({ lang, setLang, sector, setSector, profile, setProfile, openCa
         {isMobile&&<button onClick={closeSidebar} style={{background:"rgba(37,72,90,0.15)",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",fontSize:18,color:NAVY,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>}
       </div>
       <div style={{padding:"8px 10px 4px",flexShrink:0}}>
-        <div style={{display:"flex",gap:4}}>
-          {["fr","en"].map(l=>(
-            <button key={l} onClick={()=>setLang(l)} style={{flex:1,padding:"6px 4px",borderRadius:6,cursor:"pointer",background:lang===l?YELLOW:"rgba(255,255,255,0.07)",border:lang===l?"none":"1px solid rgba(255,255,255,0.1)",color:lang===l?NAVY:"rgba(255,255,255,0.5)",fontSize:13,fontWeight:lang===l?700:400,display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
-              {l==="fr"?"🇫🇷 FR":"🇬🇧 EN"}
-            </button>
-          ))}
+        <div style={{marginBottom:6}}>
+          <p style={{margin:"0 0 4px",fontSize:10,color:"rgba(255,255,255,0.4)",textTransform:"uppercase",letterSpacing:1}}>Région</p>
+          <select value={region} onChange={e=>setRegion(e.target.value)} style={{width:"100%",padding:"6px 8px",borderRadius:6,border:"1px solid rgba(255,255,255,0.15)",background:"rgba(255,255,255,0.07)",color:"rgba(255,255,255,0.85)",fontSize:12,cursor:"pointer",outline:"none"}}>
+            <option value="france">🇫🇷 France (national)</option>
+            <option value="idf">📍 Île-de-France</option>
+            <option value="ara">📍 Auvergne-Rhône-Alpes</option>
+            <option value="paca">📍 PACA</option>
+            <option value="occ">📍 Occitanie</option>
+            <option value="naq">📍 Nouvelle-Aquitaine</option>
+            <option value="gest">📍 Grand Est</option>
+            <option value="hdf">📍 Hauts-de-France</option>
+            <option value="bre">📍 Bretagne</option>
+            <option value="pdl">📍 Pays de la Loire</option>
+            <option value="nor">📍 Normandie</option>
+          </select>
         </div>
       </div>
       <div style={{padding:"4px 10px 6px",flexShrink:0}}>
@@ -1023,6 +1032,7 @@ function App({ user, onLogout }) {
   const [windowWidth,setWindowWidth]=useState(typeof window!=="undefined"?window.innerWidth:1024);
   const [sidebarOpen,setSidebarOpen]=useState(false);
   const [lang,setLang]=useState("fr");
+  const [region,setRegion]=useState("france");
   const [sector,setSector]=useState("tertiaire");
   const [profile,setProfile]=useState("commercial");
   const [openCat,setOpenCat]=useState("prospection");
@@ -1092,7 +1102,12 @@ function App({ user, onLogout }) {
     try{
       const msgContent=await buildMessageContent(userText,file);
       const apiMessages=[...msgs.map(m=>({role:m.role,content:m.content})),{role:"user",content:msgContent}];
-      const systemPrompt=SYSTEM_PROMPTS[sector][lang]+"\n\n"+PPTX_INSTRUCTIONS[lang];
+      const REGIONS={"france":"France (national)","idf":"Île-de-France","ara":"Auvergne-Rhône-Alpes","paca":"PACA","occ":"Occitanie","naq":"Nouvelle-Aquitaine","gest":"Grand Est","hdf":"Hauts-de-France","bre":"Bretagne","pdl":"Pays de la Loire","nor":"Normandie"};
+      const regionLabel=REGIONS[region]||"France";
+      const regionCtx=region==="france"
+        ?`\n\nCONTEXTE GÉOGRAPHIQUE : tu travailles avec une équipe nationale Somfy France. Les appels d'offres BOAMP doivent couvrir toute la France.`
+        :`\n\nCONTEXTE GÉOGRAPHIQUE : tu travailles avec un commercial Somfy en région ${regionLabel}. Pour les appels d'offres BOAMP, filtre automatiquement sur la région ${regionLabel}. Adapte tes suggestions de prospection et tes arguments commerciaux au tissu économique local de cette région.`;
+      const systemPrompt=SYSTEM_PROMPTS[sector][lang]+regionCtx+"\n\n"+PPTX_INSTRUCTIONS[lang];
       const res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:2000,system:systemPrompt,messages:apiMessages})});
       if(!res.ok){const errText=await res.text();throw new Error(errText||"Erreur serveur");}
       const reader=res.body.getReader();const decoder=new TextDecoder();
@@ -1126,7 +1141,7 @@ function App({ user, onLogout }) {
   const currentCat=currentProfileData.categories.find(c=>c.id===openCat)||currentProfileData.categories[0];
   const messages=currentMessages();
   
-  const sidebarProps={lang,setLang,sector,setSector,profile,setProfile,openCat,setOpenCat,sendMessage,newConversation,profileHistory:history,activeId,setActiveId:(id)=>setAllActiveIds(prev=>({...prev,[hKey]:id})),deleteConv,isMobile,closeSidebar:()=>setSidebarOpen(false),displayName:user.displayName,onLogout};
+  const sidebarProps={lang,setLang,region,setRegion,sector,setSector,profile,setProfile,openCat,setOpenCat,sendMessage,newConversation,profileHistory:history,activeId,setActiveId:(id)=>setAllActiveIds(prev=>({...prev,[hKey]:id})),deleteConv,isMobile,closeSidebar:()=>setSidebarOpen(false),displayName:user.displayName,onLogout};
 
   return (
     <div style={{display:"flex",height:"100dvh",background:"#fafafa",position:"relative",fontFamily:"'Inter',system-ui,sans-serif"}}>
