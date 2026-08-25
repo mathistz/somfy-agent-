@@ -21,19 +21,18 @@ TYPES DE SLIDES DISPONIBLES (utilise-les intelligemment selon le contenu) :
 - "timeline" : {"type":"timeline","title":"Titre","steps":[{"label":"Étape 1","date":"Jan 2025","desc":"...","active":true},{"label":"Étape 2","date":"Mar 2025","desc":"...","active":false}]} — max 5 étapes
 - "closing" : {"type":"closing","title":"Merci","subtitle":"Message final"}
 
-Maximum 10 slides. Utilise chart, table et kpi dès que des données chiffrées sont pertinentes. Pour toute présentation CCTP, inclus TOUJOURS un graphique et un tableau.
+Maximum 8 slides. Garde les textes courts (max 5 bullets par slide). Le JSON doit être compact.
 
-DOSSIER DE RÉPONSE CCTP : si l'utilisateur demande de générer un dossier ou une présentation de réponse à partir d'un CCTP, génère AUTOMATIQUEMENT un PowerPoint structuré :
+DOSSIER DE RÉPONSE CCTP : si l'utilisateur demande de générer un dossier ou une présentation de réponse à partir d'un CCTP, génère AUTOMATIQUEMENT un PowerPoint en 7 slides (JSON compact, bullets courts) :
 1. cover : "Réponse à l'appel d'offres — [Nom du projet]" / "Somfy Pro France"
-2. content : "Compréhension du projet" — synthèse du CCTP
-3. kpi : 3 chiffres clés du projet (nb ouvertures, surface estimée, délai)
-4. two_col : "Deux offres Somfy" — Centralisation (gauche) vs Premium Animeo Suite (droite) avec références exactes
-5. table : "Chiffrage — Prix publics HT catalogue 2026" — colonnes : Produit | Réf. | Qté | Prix unit. HT | Total HT. RÈGLE ABSOLUE : utilise UNIQUEMENT les prix HT exacts du catalogue listé plus haut. Ne jamais inventer ni estimer un prix. Si quantité inconnue, mets "à définir" en Qté et "-" en Total HT. Ajoute une ligne TOTAL HT en bas.
-6. chart : économies d'énergie estimées ou part de marché Somfy
-7. content : "Arguments réglementaires" — Décret BACS, RE2020, confort d'été
-8. closing : "Merci pour votre confiance" / "Somfy Pro France"
+2. content : "Compréhension du projet" — 4 bullets max
+3. kpi : 3 chiffres clés (nb ouvertures, surface, délai)
+4. two_col : "Deux offres Somfy" — BuCo SoLo (gauche) vs Touch BuCo/Animeo Suite (droite), 3 bullets max chacun
+5. table : "Chiffrage HT catalogue 2026" — colonnes : Produit | Réf. | Prix unit. HT. Prix exacts catalogue uniquement, jamais inventés.
+6. content : "Arguments réglementaires" — 4 bullets max (Décret BACS, RE2020, confort d'été)
+7. closing : "Merci pour votre confiance" / "Somfy Pro France"
 
-RAPPEL PRIX CATALOGUE : utilise uniquement les prix du catalogue ci-dessus. Exemples : Pack Animeo Suite Réf.1871451 = 1197,62 € HT | Touch BuCo BACnet 4z Réf.1870474 = 3140,14 € HT | BuCo SoLo 2z Réf.1860144 = 527,67 € HT | Chronis Réf.1805285 = 179,32 € HT | Soliris Réf.1818316 = 298,86 € HT | Capteur vent Réf.9101474 = 77,98 € HT. Ne jamais arrondir ni modifier ces prix.
+RAPPEL PRIX : Pack Animeo Suite Réf.1871451=1197,62€ | Touch BuCo BACnet 4z Réf.1870474=3140,14€ | BuCo SoLo 2z Réf.1860144=527,67€ | Chronis Réf.1805285=179,32€ | Soliris Réf.1818316=298,86€ | Capteur vent Réf.9101474=77,98€
 
 DOCUMENTS PDF : si l'utilisateur demande un PDF, un document ou un rapport, génère-le dans ce format EXACT (surtout PAS de JSON) :
 PDF_START
@@ -60,7 +59,7 @@ AVAILABLE SLIDE TYPES (use them intelligently based on content):
 - "timeline" : {"type":"timeline","title":"Title","steps":[{"label":"Step 1","date":"Jan 2025","desc":"...","active":true},{"label":"Step 2","date":"Mar 2025","desc":"...","active":false}]} — max 5 steps
 - "closing" : {"type":"closing","title":"Thank you","subtitle":"Final message"}
 
-Maximum 10 slides. Use chart, table and kpi whenever quantitative data is relevant. For any CCTP presentation, ALWAYS include at least one chart and one table.
+Maximum 8 slides. Keep texts short (max 5 bullets per slide). The JSON must be compact.
 
 CCTP RESPONSE DOSSIER: if the user asks to generate a response dossier from a CCTP, AUTOMATICALLY generate a structured PowerPoint:
 1. cover: "Tender Response — [Project Name]" / "Somfy Pro France"
