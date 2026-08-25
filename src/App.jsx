@@ -637,8 +637,26 @@ function parseMessage(content) {
   let text = content; let chart = null; let pptx = null; let pdf = null;
   const chartMatch = text.match(/CHART_START\s*([\s\S]*?)\s*CHART_END/);
   if (chartMatch) { text = text.replace(/CHART_START\s*([\s\S]*?)\s*CHART_END/, "").trim(); try { chart = JSON.parse(chartMatch[1].trim()); } catch {} }
-  const pptxMatch = text.match(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/);
-  if (pptxMatch) { text = text.replace(/PPTX_START\s*([\s\S]*?)\s*PPTX_END/, "").trim(); try { pptx = JSON.parse(pptxMatch[1].trim()); } catch {} }
+  const pptxMatch = text.match(/PPTX_START\s*([\s\S]*?)(?:\s*PPTX_END|$)/);
+  if (pptxMatch) {
+    text = text.replace(/PPTX_START[\s\S]*?(?:PPTX_END|$)/, "").trim();
+    try {
+      // Clean the JSON block: remove markdown fences and control characters
+      let raw = pptxMatch[1].trim().replace(/^```[a-z]*\s*/i,"").replace(/```\s*$/,"").trim();
+      // Fix common LLM issues: unescaped newlines inside strings
+      raw = raw.replace(/([^\\])\n/g,"$1\\n").replace(/([^\\])\t/g,"$1\\t");
+      pptx = JSON.parse(raw);
+    } catch(e) {
+      // Second attempt: try to extract JSON object directly
+      try {
+        const jsonStart = pptxMatch[1].indexOf("{");
+        const jsonEnd = pptxMatch[1].lastIndexOf("}");
+        if (jsonStart>=0 && jsonEnd>jsonStart) {
+          pptx = JSON.parse(pptxMatch[1].slice(jsonStart, jsonEnd+1));
+        }
+      } catch {}
+    }
+  }
   const pdfMatch = text.match(/PDF_START\s*([\s\S]*?)(?:\s*PDF_END|$)/);
   if (pdfMatch) { text = text.replace(/PDF_START\s*[\s\S]*?(?:PDF_END|$)/, "").trim(); pdf = parsePdfBlock(pdfMatch[1]); }
   return { text, chart, pptx, pdf };
