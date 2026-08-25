@@ -776,29 +776,6 @@ function PPTXButton({ pptxData }) {
 
   const [showPreview, setShowPreview] = React.useState(false);
 
-  function SlidePreview({ slide, index }) {
-    const isCover = slide.type === "cover" || slide.type === "closing";
-    const bg = isOver => isOver ? NAVY : (index % 2 === 0 ? "#f8fafc" : "#fff");
-    return (
-      <div style={{background:isOver?NAVY:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,overflow:"hidden",marginBottom:8}} key={index}>
-        <div style={{background:isOver?YELLOW:NAVY,padding:"6px 12px",display:"flex",alignItems:"center",gap:8}}>
-          <span style={{fontSize:10,fontWeight:700,color:isOver?NAVY:YELLOW}}>Slide {index+1}</span>
-          <span style={{fontSize:10,color:isOver?NAVY:"rgba(255,255,255,0.7)"}}>{slide.type?.toUpperCase()}</span>
-        </div>
-        <div style={{padding:"10px 12px"}}>
-          {slide.title && <p style={{margin:"0 0 6px",fontSize:13,fontWeight:700,color:NAVY}}>{slide.title}</p>}
-          {slide.subtitle && <p style={{margin:"0 0 4px",fontSize:11,color:"#666"}}>{slide.subtitle}</p>}
-          {slide.bullets && <ul style={{margin:"4px 0",paddingLeft:16}}>{slide.bullets.slice(0,3).map((b,i)=><li key={i} style={{fontSize:11,color:"#444",marginBottom:2}}>{b}</li>)}{slide.bullets.length>3&&<li style={{fontSize:10,color:"#999"}}>+{slide.bullets.length-3} autres...</li>}</ul>}
-          {slide.kpis && <div style={{display:"flex",gap:6,marginTop:4}}>{slide.kpis.map((k,i)=><div key={i} style={{flex:1,textAlign:"center",background:LIGHT,borderRadius:6,padding:"6px 4px"}}><p style={{margin:0,fontSize:16,fontWeight:700,color:i===1?YELLOW:NAVY}}>{k.value}</p><p style={{margin:0,fontSize:9,color:"#666"}}>{k.label}</p></div>)}</div>}
-          {slide.rows && <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:10}}>{slide.rows.slice(0,4).map((row,ri)=><tr key={ri}>{row.map((cell,ci)=><td key={ci} style={{padding:"3px 6px",border:"1px solid #e2e8f0",background:ri===0?NAVY:"transparent",color:ri===0?"white":"#333",fontWeight:ri===0?"bold":"normal"}}>{cell}</td>)}</tr>)}</table></div>}
-          {slide.steps && <div style={{display:"flex",gap:4,overflowX:"auto",marginTop:4}}>{slide.steps.slice(0,5).map((s,i)=><div key={i} style={{flex:1,textAlign:"center",minWidth:60}}><div style={{width:20,height:20,borderRadius:"50%",background:s.active?YELLOW:LIGHT,border:`2px solid ${s.active?YELLOW:NAVY}`,margin:"0 auto 4px",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:700,color:s.active?NAVY:NAVY}}>{i+1}</div><p style={{margin:0,fontSize:9,color:NAVY,fontWeight:600}}>{s.label}</p>{s.date&&<p style={{margin:0,fontSize:8,color:"#999"}}>{s.date}</p>}</div>)}</div>}
-          {slide.left && <div style={{display:"flex",gap:6,marginTop:4}}><div style={{flex:1,background:LIGHT,borderRadius:6,padding:"6px 8px"}}><p style={{margin:"0 0 4px",fontSize:10,fontWeight:700,color:NAVY}}>{slide.left.title}</p>{(slide.left.bullets||[]).slice(0,2).map((b,i)=><p key={i} style={{margin:"2px 0",fontSize:9,color:"#555"}}>• {b}</p>)}</div><div style={{flex:1,background:"#fff8e6",borderRadius:6,padding:"6px 8px"}}><p style={{margin:"0 0 4px",fontSize:10,fontWeight:700,color:NAVY}}>{slide.right?.title}</p>{(slide.right?.bullets||[]).slice(0,2).map((b,i)=><p key={i} style={{margin:"2px 0",fontSize:9,color:"#555"}}>• {b}</p>)}</div></div>}
-          {slide.series && <p style={{margin:"4px 0 0",fontSize:10,color:"#888"}}>📊 Graphique — {slide.chartType||"bar"} — {slide.labels?.length||0} valeurs</p>}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div style={{marginTop:10,padding:"12px 16px",background:`linear-gradient(135deg,${NAVY},#1a3a47)`,borderRadius:10,border:"1px solid rgba(255,183,30,0.3)"}}>
       <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📊 Dossier PowerPoint prêt</p>
@@ -829,27 +806,25 @@ function PPTXButton({ pptxData }) {
         </div>
       )}
       {showPreview&&(
-        <div style={{marginTop:12,maxHeight:420,overflowY:"auto",borderTop:"1px solid rgba(255,255,255,0.1)",paddingTop:12}}>
+        <div style={{marginTop:12,maxHeight:400,overflowY:"auto",borderTop:"1px solid rgba(255,255,255,0.1)",paddingTop:12}}>
           <p style={{margin:"0 0 8px",fontSize:10,color:"rgba(255,255,255,0.5)",textTransform:"uppercase",letterSpacing:1}}>Aperçu — {pptxData.slides?.length} slides</p>
-          {(pptxData.slides||[]).map((slide,i)=>{
-            const LIGHT="#EEF2F5";
-            return (<div key={i} style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,overflow:"hidden",marginBottom:8}}>
-              <div style={{background:NAVY,padding:"5px 10px",display:"flex",alignItems:"center",gap:8}}>
+          {(pptxData.slides||[]).map((slide,i)=>(
+            <div key={i} style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,overflow:"hidden",marginBottom:8}}>
+              <div style={{background:NAVY,padding:"5px 10px",display:"flex",gap:8,alignItems:"center"}}>
                 <span style={{fontSize:10,fontWeight:700,color:YELLOW}}>Slide {i+1}</span>
-                <span style={{fontSize:10,color:"rgba(255,255,255,0.6)"}}>{slide.type?.toUpperCase()}</span>
+                <span style={{fontSize:10,color:"rgba(255,255,255,0.6)"}}>{(slide.type||"").toUpperCase()}</span>
               </div>
               <div style={{padding:"8px 12px"}}>
-                {slide.title&&<p style={{margin:"0 0 5px",fontSize:13,fontWeight:700,color:"#1a1a1a"}}>{slide.title}</p>}
+                {slide.title&&<p style={{margin:"0 0 4px",fontSize:13,fontWeight:700,color:"#1a1a1a"}}>{slide.title}</p>}
                 {slide.subtitle&&<p style={{margin:"0 0 4px",fontSize:11,color:"#666",fontStyle:"italic"}}>{slide.subtitle}</p>}
-                {slide.bullets&&<ul style={{margin:"4px 0",paddingLeft:16}}>{slide.bullets.slice(0,3).map((b,bi)=><li key={bi} style={{fontSize:11,color:"#444",marginBottom:2}}>{b}</li>)}{slide.bullets.length>3&&<li style={{fontSize:10,color:"#999"}}>+{slide.bullets.length-3} autres...</li>}</ul>}
-                {slide.kpis&&<div style={{display:"flex",gap:6,marginTop:4}}>{slide.kpis.map((k,ki)=><div key={ki} style={{flex:1,textAlign:"center",background:LIGHT,borderRadius:6,padding:"6px 4px"}}><p style={{margin:0,fontSize:16,fontWeight:700,color:ki===1?"#FFB71E":"#25485A"}}>{k.value}</p><p style={{margin:0,fontSize:9,color:"#666"}}>{k.label}</p></div>)}</div>}
-                {slide.rows&&<div style={{overflowX:"auto",marginTop:4}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:10}}>{slide.rows.slice(0,4).map((row,ri)=><tr key={ri}>{row.map((cell,ci)=><td key={ci} style={{padding:"3px 6px",border:"1px solid #e2e8f0",background:ri===0?"#25485A":"transparent",color:ri===0?"white":"#333",fontWeight:ri===0?"bold":"normal"}}>{cell}</td>)}</tr>)}</table></div>}
-                {slide.left&&<div style={{display:"flex",gap:6,marginTop:4}}><div style={{flex:1,background:LIGHT,borderRadius:6,padding:"6px 8px"}}><p style={{margin:"0 0 4px",fontSize:10,fontWeight:700,color:"#25485A"}}>{slide.left.title}</p>{(slide.left.bullets||[]).slice(0,2).map((b,bi)=><p key={bi} style={{margin:"2px 0",fontSize:9,color:"#555"}}>• {b}</p>)}</div><div style={{flex:1,background:"#fff8e6",borderRadius:6,padding:"6px 8px"}}><p style={{margin:"0 0 4px",fontSize:10,fontWeight:700,color:"#25485A"}}>{slide.right?.title}</p>{(slide.right?.bullets||[]).slice(0,2).map((b,bi)=><p key={bi} style={{margin:"2px 0",fontSize:9,color:"#555"}}>• {b}</p>)}</div></div>}
-                {slide.steps&&<div style={{display:"flex",gap:4,overflowX:"auto",marginTop:4}}>{slide.steps.map((s,si)=><div key={si} style={{flex:1,textAlign:"center",minWidth:55}}><div style={{width:20,height:20,borderRadius:"50%",background:s.active?"#FFB71E":LIGHT,border:"2px solid #25485A",margin:"0 auto 3px",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:700,color:"#25485A"}}>{si+1}</div><p style={{margin:0,fontSize:9,color:"#25485A",fontWeight:600}}>{s.label}</p></div>)}</div>}
-                {slide.series&&<p style={{margin:"4px 0 0",fontSize:10,color:"#888"}}>📊 Graphique {slide.chartType||"barres"} — {slide.labels?.length||0} valeurs</p>}
+                {Array.isArray(slide.bullets)&&<ul style={{margin:"4px 0",paddingLeft:16}}>{slide.bullets.slice(0,4).map((b,bi)=><li key={bi} style={{fontSize:11,color:"#444",marginBottom:2}}>{b}</li>)}</ul>}
+                {Array.isArray(slide.kpis)&&<div style={{display:"flex",gap:6,marginTop:4}}>{slide.kpis.map((k,ki)=><div key={ki} style={{flex:1,textAlign:"center",background:"#EEF2F5",borderRadius:6,padding:"4px"}}><p style={{margin:0,fontSize:14,fontWeight:700,color:ki===1?"#FFB71E":"#25485A"}}>{k.value}</p><p style={{margin:0,fontSize:9,color:"#666"}}>{k.label}</p></div>)}</div>}
+                {Array.isArray(slide.rows)&&<p style={{margin:"4px 0 0",fontSize:10,color:"#888"}}>📋 Tableau {slide.rows.length} lignes</p>}
+                {slide.left&&<div style={{display:"flex",gap:4,marginTop:4}}><div style={{flex:1,background:"#EEF2F5",borderRadius:4,padding:"4px 8px"}}><p style={{margin:0,fontSize:10,fontWeight:700,color:"#25485A"}}>{slide.left.title}</p></div><div style={{flex:1,background:"#fff8e6",borderRadius:4,padding:"4px 8px"}}><p style={{margin:0,fontSize:10,fontWeight:700,color:"#25485A"}}>{slide.right?.title}</p></div></div>}
+                {Array.isArray(slide.series)&&<p style={{margin:"4px 0 0",fontSize:10,color:"#888"}}>📊 Graphique {slide.chartType||"barres"}</p>}
               </div>
-            </div>);
-          })}
+            </div>
+          ))}
         </div>
       )}
     </div>
