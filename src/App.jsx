@@ -774,16 +774,11 @@ function PPTXButton({ pptxData }) {
     finally { setSending(false); }
   }
 
-  const [showPreview, setShowPreview] = React.useState(false);
-
   return (
     <div style={{marginTop:10,padding:"12px 16px",background:`linear-gradient(135deg,${NAVY},#1a3a47)`,borderRadius:10,border:"1px solid rgba(255,183,30,0.3)"}}>
       <p style={{margin:"0 0 4px",fontSize:12,color:YELLOW,fontWeight:700}}>📊 Dossier PowerPoint prêt</p>
       <p style={{margin:"0 0 10px",fontSize:11,color:"rgba(255,255,255,0.6)"}}>{pptxData.slides?.length||0} slides — {pptxData.title}</p>
-      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:showPreview?10:0}}>
-        <button onClick={()=>setShowPreview(!showPreview)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",borderRadius:7,border:"1px solid rgba(255,183,30,0.4)",background:showPreview?"rgba(255,183,30,0.15)":"transparent",cursor:"pointer",fontSize:12,fontWeight:700,color:YELLOW}}>
-          {showPreview?"🔼 Masquer l'aperçu":"👁️ Aperçu"}
-        </button>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
         <button onClick={handleDownload} disabled={loading} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",borderRadius:7,border:"none",background:loading?"rgba(255,255,255,0.1)":YELLOW,cursor:loading?"default":"pointer",fontSize:12,fontWeight:700,color:loading?"rgba(255,255,255,0.4)":NAVY}}>
           {loading?"⏳ Génération...":"⬇️ Télécharger"}
         </button>
@@ -805,28 +800,7 @@ function PPTXButton({ pptxData }) {
           {emailError&&<p style={{margin:"8px 0 0",fontSize:11,color:"#ff6b6b"}}>{emailError}</p>}
         </div>
       )}
-      {showPreview&&(
-        <div style={{marginTop:12,maxHeight:400,overflowY:"auto",borderTop:"1px solid rgba(255,255,255,0.1)",paddingTop:12}}>
-          <p style={{margin:"0 0 8px",fontSize:10,color:"rgba(255,255,255,0.5)",textTransform:"uppercase",letterSpacing:1}}>Aperçu — {pptxData.slides?.length} slides</p>
-          {(pptxData.slides||[]).map((slide,i)=>(
-            <div key={i} style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,overflow:"hidden",marginBottom:8}}>
-              <div style={{background:NAVY,padding:"5px 10px",display:"flex",gap:8,alignItems:"center"}}>
-                <span style={{fontSize:10,fontWeight:700,color:YELLOW}}>Slide {i+1}</span>
-                <span style={{fontSize:10,color:"rgba(255,255,255,0.6)"}}>{(slide.type||"").toUpperCase()}</span>
-              </div>
-              <div style={{padding:"8px 12px"}}>
-                {slide.title&&<p style={{margin:"0 0 4px",fontSize:13,fontWeight:700,color:"#1a1a1a"}}>{slide.title}</p>}
-                {slide.subtitle&&<p style={{margin:"0 0 4px",fontSize:11,color:"#666",fontStyle:"italic"}}>{slide.subtitle}</p>}
-                {Array.isArray(slide.bullets)&&<ul style={{margin:"4px 0",paddingLeft:16}}>{slide.bullets.slice(0,4).map((b,bi)=><li key={bi} style={{fontSize:11,color:"#444",marginBottom:2}}>{b}</li>)}</ul>}
-                {Array.isArray(slide.kpis)&&<div style={{display:"flex",gap:6,marginTop:4}}>{slide.kpis.map((k,ki)=><div key={ki} style={{flex:1,textAlign:"center",background:"#EEF2F5",borderRadius:6,padding:"4px"}}><p style={{margin:0,fontSize:14,fontWeight:700,color:ki===1?"#FFB71E":"#25485A"}}>{k.value}</p><p style={{margin:0,fontSize:9,color:"#666"}}>{k.label}</p></div>)}</div>}
-                {Array.isArray(slide.rows)&&<p style={{margin:"4px 0 0",fontSize:10,color:"#888"}}>📋 Tableau {slide.rows.length} lignes</p>}
-                {slide.left&&<div style={{display:"flex",gap:4,marginTop:4}}><div style={{flex:1,background:"#EEF2F5",borderRadius:4,padding:"4px 8px"}}><p style={{margin:0,fontSize:10,fontWeight:700,color:"#25485A"}}>{slide.left.title}</p></div><div style={{flex:1,background:"#fff8e6",borderRadius:4,padding:"4px 8px"}}><p style={{margin:0,fontSize:10,fontWeight:700,color:"#25485A"}}>{slide.right?.title}</p></div></div>}
-                {Array.isArray(slide.series)&&<p style={{margin:"4px 0 0",fontSize:10,color:"#888"}}>📊 Graphique {slide.chartType||"barres"}</p>}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+
     </div>
   );
 }
