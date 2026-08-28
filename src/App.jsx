@@ -352,7 +352,7 @@ const SECTORS = {
             { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire dynamique tertiaire ?" },
             { label:"Arguments pour installateurs", text:"Comment convaincre un installateur résidentiel de se lancer sur le marché tertiaire avec Somfy ?" },
           ]},
-          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
+          { id:"gen_prompt_fr", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
             { label:"Comment bien me demander quelque chose ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses possibles de ta part. Donne-moi des exemples concrets selon les cas d'usage courants : analyse de CCTP, dossier de réponse, arguments de vente, veille concurrents, rédaction d'emails. Qu'est-ce que tu as besoin de savoir pour me répondre de façon précise et utile ?" },
             { label:"Analyser un CCTP — comment te le soumettre ?", text:"Je veux t'envoyer un CCTP pour analyse. Comment dois-je te le soumettre et que dois-je te préciser pour que tu me fasses la meilleure analyse possible avec le bon chiffrage et les bonnes références produits ?" },
             { label:"Générer un PowerPoint — que te dire ?", text:"Je veux générer un PowerPoint de présentation ou de réponse à un appel d'offres. Qu'est-ce que je dois te préciser (type de projet, interlocuteur, nombre de slides, contenu souhaité) pour que le résultat soit directement exploitable ?" },
@@ -392,7 +392,7 @@ const SECTORS = {
           { id:"installateurs", label:"Installer network", icon:"🔧", desc:"Training & network animation", prompts:[
             { label:"Installer barriers", text:"What are the main barriers for installers to enter the tertiary dynamic solar shading market?" },
             { label:"Arguments for installers", text:"How to convince a residential installer to move into the tertiary market with Somfy?" },
-          { id:"generation_prompt", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
+          { id:"gen_prompt_en", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
             { label:"How to ask me things effectively?", text:"Explain how to formulate requests to get the best possible answers. Give me concrete examples based on my profile and sector. What do you need to know to give me precise and useful responses?" },
             { label:"Submitting a document — what to tell you?", text:"I want to send you a document (CCTP, report, Excel file...). How should I submit it and what should I specify to get the best possible analysis?" },
             { label:"Generating a PowerPoint — what to say?", text:"I want to generate a PowerPoint. What should I specify (project type, audience, content) so the result is directly usable?" },
@@ -424,7 +424,7 @@ const SECTORS = {
             { label:"Messages clés par segment", text:"Définis les messages clés Somfy pour les écoles, bureaux, bâtiments de santé et hôtels." },
             { label:"Arguments RSE", text:"Quels arguments RSE peut-on développer autour de la protection solaire dynamique ?" },
             { label:"Cas clients à documenter", text:"Quels cas clients Somfy devrait documenter en priorité pour crédibiliser son offre tertiaire ?" },
-          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
+          { id:"gen_prompt_fr2", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
             { label:"Comment bien me demander quelque chose ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses de ta part. Donne-moi des exemples concrets selon mon profil et mon secteur. Qu'est-ce que tu as besoin de savoir pour me répondre de façon précise et utile ?" },
             { label:"Analyser un document — comment te le soumettre ?", text:"Je veux t'envoyer un document (CCTP, rapport, fichier Excel...). Comment dois-je te le soumettre et que dois-je te préciser pour obtenir la meilleure analyse possible ?" },
             { label:"Générer un PowerPoint — que te dire ?", text:"Je veux générer un PowerPoint. Qu'est-ce que je dois te préciser (type de projet, interlocuteur, contenu) pour que le résultat soit directement exploitable ?" },
@@ -454,7 +454,7 @@ const SECTORS = {
             { label:"Key messages by segment", text:"Define Somfy's key messages for schools, offices, healthcare buildings and hotels." },
             { label:"CSR arguments", text:"What CSR arguments can be developed around dynamic solar shading?" },
             { label:"Case studies to document", text:"Which client cases should Somfy document as a priority?" },
-          { id:"generation_prompt", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
+          { id:"gen_prompt_en2", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
             { label:"How to ask me things effectively?", text:"Explain how to formulate requests to get the best possible answers. Give me concrete examples based on my profile and sector. What do you need to know to give me precise and useful responses?" },
             { label:"Submitting a document — what to tell you?", text:"I want to send you a document (CCTP, report, Excel file...). How should I submit it and what should I specify to get the best possible analysis?" },
             { label:"Generating a PowerPoint — what to say?", text:"I want to generate a PowerPoint. What should I specify (project type, audience, content) so the result is directly usable?" },
@@ -502,7 +502,7 @@ const SECTORS = {
             { label:"RE2020 et protection solaire", text:"Quelles sont les exigences de la RE2020 sur la protection solaire dynamique en résidentiel ?" },
             { label:"CEE et volets motorisés", text:"Existe-t-il des CEE applicables aux volets et protections solaires dynamiques résidentielles ?" },
             { label:"TVA réduite rénovation", text:"Comment les installateurs Somfy peuvent-ils faire bénéficier leurs clients de la TVA à 5,5% ?" },
-          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
+          { id:"gen_prompt_fr3", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
             { label:"Comment bien me demander quelque chose ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses de ta part. Donne-moi des exemples concrets selon mon profil et mon secteur. Qu'est-ce que tu as besoin de savoir pour me répondre de façon précise et utile ?" },
             { label:"Analyser un document — comment te le soumettre ?", text:"Je veux t'envoyer un document (CCTP, rapport, fichier Excel...). Comment dois-je te le soumettre et que dois-je te préciser pour obtenir la meilleure analyse possible ?" },
             { label:"Générer un PowerPoint — que te dire ?", text:"Je veux générer un PowerPoint. Qu'est-ce que je dois te préciser (type de projet, interlocuteur, contenu) pour que le résultat soit directement exploitable ?" },
@@ -541,7 +541,7 @@ const SECTORS = {
             { label:"RE2020 and solar shading", text:"What are the RE2020 requirements for dynamic solar shading in residential buildings?" },
             { label:"CEE and motorised shutters", text:"Are there CEE grants applicable to residential dynamic solar shading products?" },
             { label:"Reduced VAT renovation", text:"How can Somfy installers help their clients benefit from the 5.5% reduced VAT?" },
-          { id:"generation_prompt", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
+          { id:"gen_prompt_en3", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
             { label:"How to ask me things effectively?", text:"Explain how to formulate requests to get the best possible answers. Give me concrete examples based on my profile and sector. What do you need to know to give me precise and useful responses?" },
             { label:"Submitting a document — what to tell you?", text:"I want to send you a document (CCTP, report, Excel file...). How should I submit it and what should I specify to get the best possible analysis?" },
             { label:"Generating a PowerPoint — what to say?", text:"I want to generate a PowerPoint. What should I specify (project type, audience, content) so the result is directly usable?" },
@@ -576,7 +576,7 @@ const SECTORS = {
             { label:"Actualités Ajax Systems", text:"Quelles sont les dernières nouveautés d'Ajax Systems ?" },
             { label:"Actualités Ring Amazon", text:"Quelles sont les dernières actualités de Ring sur la sécurité connectée ?" },
             { label:"Innovations domotique 2025", text:"Quelles sont les grandes innovations en domotique résidentielle attendues en 2025 ?" },
-          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
+          { id:"gen_prompt_fr4", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
             { label:"Comment bien me demander quelque chose ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses de ta part. Donne-moi des exemples concrets selon mon profil et mon secteur. Qu'est-ce que tu as besoin de savoir pour me répondre de façon précise et utile ?" },
             { label:"Analyser un document — comment te le soumettre ?", text:"Je veux t'envoyer un document (CCTP, rapport, fichier Excel...). Comment dois-je te le soumettre et que dois-je te préciser pour obtenir la meilleure analyse possible ?" },
             { label:"Générer un PowerPoint — que te dire ?", text:"Je veux générer un PowerPoint. Qu'est-ce que je dois te préciser (type de projet, interlocuteur, contenu) pour que le résultat soit directement exploitable ?" },
