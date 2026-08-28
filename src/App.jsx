@@ -463,7 +463,49 @@ const SECTORS = {
           ]},
           ]},
         ]},
-      }
+      },
+      prompt: {
+        fr: { label:"Prompt", categories: [
+          { id:"guide_prompt", label:"Guide — bien formuler", icon:"📖", desc:"Les bases d'un bon prompt", prompts:[
+            { label:"Comment bien te parler ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses possibles. Quelles informations dois-tu avoir pour me répondre de façon précise et utile ? Donne-moi des exemples concrets." },
+            { label:"Les erreurs à éviter", text:"Quelles sont les erreurs les plus fréquentes quand on te pose une question ? Comment les éviter pour gagner du temps et avoir une réponse directement exploitable ?" },
+          ]},
+          { id:"prompt_cctp", label:"Analyser un CCTP", icon:"📄", desc:"Préparer sa demande d'analyse", prompts:[
+            { label:"Que te donner pour analyser un CCTP ?", text:"Je veux te soumettre un CCTP pour que tu l'analyses et me proposes les meilleures solutions Somfy. Qu'est-ce que tu as besoin que je te précise en plus du fichier ? (type de bâtiment, contraintes particulières, interlocuteur...)" },
+            { label:"Exemple de bon prompt CCTP", text:"Donne-moi un exemple de prompt complet et bien structuré pour te demander d'analyser un CCTP de protection solaire dynamique tertiaire avec chiffrage et dossier de réponse." },
+          ]},
+          { id:"prompt_pptx", label:"Générer un PowerPoint", icon:"📊", desc:"Préparer sa demande de présentation", prompts:[
+            { label:"Que te préciser pour un PowerPoint ?", text:"Je veux générer un PowerPoint professionnel avec toi. Qu'est-ce que je dois te préciser (type de présentation, interlocuteur, nombre de slides, contenu souhaité) pour que le résultat soit directement utilisable ?" },
+            { label:"Exemple de bon prompt PowerPoint", text:"Donne-moi un exemple de prompt complet pour te demander de générer un dossier de réponse PowerPoint à un appel d'offres tertiaire." },
+          ]},
+          { id:"prompt_email", label:"Rédiger un email", icon:"📧", desc:"Préparer sa demande d'email", prompts:[
+            { label:"Que te donner pour un email ?", text:"Je veux que tu rédiges un email pour moi. Quelles informations dois-je te donner (destinataire, contexte, objectif, ton, informations clés) pour que l'email soit immédiatement envoyable sans modification ?" },
+            { label:"Exemple de bon prompt email", text:"Donne-moi un exemple de prompt complet pour te demander de rédiger un email de relance commercial professionnel à un bureau d'études." },
+          ]},
+          { id:"prompt_recherche", label:"Rechercher des infos", icon:"🔍", desc:"Veille et recherche ciblée", prompts:[
+            { label:"Comment affiner une recherche ?", text:"Je veux que tu fasses une recherche ou une veille pour moi. Que dois-je te préciser (région, période, thématique, angle) pour que les résultats soient pertinents et directement actionnables ?" },
+            { label:"Améliore ma demande", text:"Voici ma demande : [colle ta demande ici]. Améliore-la pour qu'elle soit plus précise, mieux structurée et qu'elle génère une meilleure réponse de ta part." },
+          ]},
+        ]},
+        en: { label:"Prompt", categories: [
+          { id:"guide_prompt_en", label:"Guide — good prompting", icon:"📖", desc:"The basics of a good prompt", prompts:[
+            { label:"How to talk to you effectively?", text:"Explain how to formulate requests to get the best possible answers. What information do you need to respond precisely and usefully? Give me concrete examples." },
+            { label:"Common mistakes to avoid", text:"What are the most common mistakes when asking you questions? How to avoid them to save time and get a directly usable answer?" },
+          ]},
+          { id:"prompt_cctp_en", label:"Analysing a CCTP", icon:"📄", desc:"Preparing your analysis request", prompts:[
+            { label:"What to give you to analyse a CCTP?", text:"I want to submit a CCTP for you to analyse and propose the best Somfy solutions. What do you need me to specify in addition to the file? (building type, specific constraints, target audience...)" },
+            { label:"Example of a good CCTP prompt", text:"Give me an example of a complete, well-structured prompt to ask you to analyse a tertiary dynamic solar shading CCTP with pricing and response dossier." },
+          ]},
+          { id:"prompt_pptx_en", label:"Generating a PowerPoint", icon:"📊", desc:"Preparing your presentation request", prompts:[
+            { label:"What to specify for a PowerPoint?", text:"I want to generate a professional PowerPoint with you. What should I specify (presentation type, audience, number of slides, content) so the result is directly usable?" },
+            { label:"Example of a good PowerPoint prompt", text:"Give me an example of a complete prompt to ask you to generate a PowerPoint response dossier for a tertiary tender." },
+          ]},
+          { id:"prompt_email_en", label:"Writing an email", icon:"📧", desc:"Preparing your email request", prompts:[
+            { label:"What to give you for an email?", text:"I want you to write an email for me. What information should I give you (recipient, context, objective, tone, key info) so the email is immediately sendable without modification?" },
+            { label:"Improve my request", text:"Here is my request: [paste your request here]. Improve it so it is more precise and generates a better response." },
+          ]},
+        ]},
+      },
     }
   },
   residentiel: {
@@ -611,7 +653,49 @@ const SECTORS = {
             { label:"Smart home innovations 2025", text:"What are the major smart home innovations expected in 2025?" },
           ]},
         ]},
-      }
+      },
+      prompt: {
+        fr: { label:"Prompt", categories: [
+          { id:"guide_prompt", label:"Guide — bien formuler", icon:"📖", desc:"Les bases d'un bon prompt", prompts:[
+            { label:"Comment bien te parler ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses possibles. Quelles informations dois-tu avoir pour me répondre de façon précise et utile ? Donne-moi des exemples concrets." },
+            { label:"Les erreurs à éviter", text:"Quelles sont les erreurs les plus fréquentes quand on te pose une question ? Comment les éviter pour gagner du temps et avoir une réponse directement exploitable ?" },
+          ]},
+          { id:"prompt_cctp", label:"Analyser un CCTP", icon:"📄", desc:"Préparer sa demande d'analyse", prompts:[
+            { label:"Que te donner pour analyser un CCTP ?", text:"Je veux te soumettre un CCTP pour que tu l'analyses et me proposes les meilleures solutions Somfy. Qu'est-ce que tu as besoin que je te précise en plus du fichier ? (type de bâtiment, contraintes particulières, interlocuteur...)" },
+            { label:"Exemple de bon prompt CCTP", text:"Donne-moi un exemple de prompt complet et bien structuré pour te demander d'analyser un CCTP de protection solaire dynamique tertiaire avec chiffrage et dossier de réponse." },
+          ]},
+          { id:"prompt_pptx", label:"Générer un PowerPoint", icon:"📊", desc:"Préparer sa demande de présentation", prompts:[
+            { label:"Que te préciser pour un PowerPoint ?", text:"Je veux générer un PowerPoint professionnel avec toi. Qu'est-ce que je dois te préciser (type de présentation, interlocuteur, nombre de slides, contenu souhaité) pour que le résultat soit directement utilisable ?" },
+            { label:"Exemple de bon prompt PowerPoint", text:"Donne-moi un exemple de prompt complet pour te demander de générer un dossier de réponse PowerPoint à un appel d'offres tertiaire." },
+          ]},
+          { id:"prompt_email", label:"Rédiger un email", icon:"📧", desc:"Préparer sa demande d'email", prompts:[
+            { label:"Que te donner pour un email ?", text:"Je veux que tu rédiges un email pour moi. Quelles informations dois-je te donner (destinataire, contexte, objectif, ton, informations clés) pour que l'email soit immédiatement envoyable sans modification ?" },
+            { label:"Exemple de bon prompt email", text:"Donne-moi un exemple de prompt complet pour te demander de rédiger un email de relance commercial professionnel à un bureau d'études." },
+          ]},
+          { id:"prompt_recherche", label:"Rechercher des infos", icon:"🔍", desc:"Veille et recherche ciblée", prompts:[
+            { label:"Comment affiner une recherche ?", text:"Je veux que tu fasses une recherche ou une veille pour moi. Que dois-je te préciser (région, période, thématique, angle) pour que les résultats soient pertinents et directement actionnables ?" },
+            { label:"Améliore ma demande", text:"Voici ma demande : [colle ta demande ici]. Améliore-la pour qu'elle soit plus précise, mieux structurée et qu'elle génère une meilleure réponse de ta part." },
+          ]},
+        ]},
+        en: { label:"Prompt", categories: [
+          { id:"guide_prompt_en", label:"Guide — good prompting", icon:"📖", desc:"The basics of a good prompt", prompts:[
+            { label:"How to talk to you effectively?", text:"Explain how to formulate requests to get the best possible answers. What information do you need to respond precisely and usefully? Give me concrete examples." },
+            { label:"Common mistakes to avoid", text:"What are the most common mistakes when asking you questions? How to avoid them to save time and get a directly usable answer?" },
+          ]},
+          { id:"prompt_cctp_en", label:"Analysing a CCTP", icon:"📄", desc:"Preparing your analysis request", prompts:[
+            { label:"What to give you to analyse a CCTP?", text:"I want to submit a CCTP for you to analyse and propose the best Somfy solutions. What do you need me to specify in addition to the file? (building type, specific constraints, target audience...)" },
+            { label:"Example of a good CCTP prompt", text:"Give me an example of a complete, well-structured prompt to ask you to analyse a tertiary dynamic solar shading CCTP with pricing and response dossier." },
+          ]},
+          { id:"prompt_pptx_en", label:"Generating a PowerPoint", icon:"📊", desc:"Preparing your presentation request", prompts:[
+            { label:"What to specify for a PowerPoint?", text:"I want to generate a professional PowerPoint with you. What should I specify (presentation type, audience, number of slides, content) so the result is directly usable?" },
+            { label:"Example of a good PowerPoint prompt", text:"Give me an example of a complete prompt to ask you to generate a PowerPoint response dossier for a tertiary tender." },
+          ]},
+          { id:"prompt_email_en", label:"Writing an email", icon:"📧", desc:"Preparing your email request", prompts:[
+            { label:"What to give you for an email?", text:"I want you to write an email for me. What information should I give you (recipient, context, objective, tone, key info) so the email is immediately sendable without modification?" },
+            { label:"Improve my request", text:"Here is my request: [paste your request here]. Improve it so it is more precise and generates a better response." },
+          ]},
+        ]},
+      },
     }
   }
 };
@@ -1038,7 +1122,7 @@ function Sidebar({ lang, setLang, region, setRegion, sector, setSector, profile,
         <div style={{display:"flex",gap:4}}>
           {Object.keys(currentSector.profiles).map(key=>(
             <button key={key} onClick={()=>switchProfile(key)} style={{flex:1,padding:"7px 4px",borderRadius:6,cursor:"pointer",background:profile===key?"rgba(255,255,255,0.15)":"rgba(255,255,255,0.05)",border:profile===key?"1px solid rgba(255,255,255,0.25)":"1px solid rgba(255,255,255,0.08)",color:profile===key?"#fff":"rgba(255,255,255,0.4)",fontSize:10,fontWeight:profile===key?600:400,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-              <span style={{fontSize:13}}>{key==="commercial"?"🎯":"📈"}</span>
+              <span style={{fontSize:13}}>{key==="commercial"?"🎯":key==="marketing"?"📈":"✨"}</span>
               <span>{currentSector.profiles[key][lang].label}</span>
             </button>
           ))}
