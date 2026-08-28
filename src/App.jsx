@@ -21,7 +21,7 @@ TYPES DE SLIDES DISPONIBLES (utilise-les intelligemment selon le contenu) :
 - "timeline" : {"type":"timeline","title":"Titre","steps":[{"label":"Étape 1","date":"Jan 2025","desc":"...","active":true},{"label":"Étape 2","date":"Mar 2025","desc":"...","active":false}]} — max 5 étapes
 - "closing" : {"type":"closing","title":"Merci","subtitle":"Message final"}
 
-Maximum 8 slides. Garde les textes courts (max 5 bullets par slide). Le JSON doit être compact.
+Maximum 8 slides. Garde les textes courts (max 5 bullets par slide). Le JSON doit être compact. IMPORTANT : génère TOUJOURS le bloc PPTX_START...PPTX_END EN PREMIER dans ta réponse, avant tout texte explicatif.
 
 DOSSIER DE RÉPONSE CCTP : si l'utilisateur demande de générer un dossier ou une présentation de réponse à partir d'un CCTP, génère AUTOMATIQUEMENT un PowerPoint en 7 slides (JSON compact, bullets courts) :
 1. cover : "Réponse à l'appel d'offres — [Nom du projet]" / "Somfy Pro France"
@@ -59,7 +59,7 @@ AVAILABLE SLIDE TYPES (use them intelligently based on content):
 - "timeline" : {"type":"timeline","title":"Title","steps":[{"label":"Step 1","date":"Jan 2025","desc":"...","active":true},{"label":"Step 2","date":"Mar 2025","desc":"...","active":false}]} — max 5 steps
 - "closing" : {"type":"closing","title":"Thank you","subtitle":"Final message"}
 
-Maximum 8 slides. Keep texts short (max 5 bullets per slide). The JSON must be compact.
+Maximum 8 slides. Keep texts short (max 5 bullets per slide). The JSON must be compact. IMPORTANT: ALWAYS generate the PPTX_START...PPTX_END block FIRST in your response, before any explanatory text.
 
 CCTP RESPONSE DOSSIER: if the user asks to generate a response dossier from a CCTP, AUTOMATICALLY generate a structured PowerPoint:
 1. cover: "Tender Response — [Project Name]" / "Somfy Pro France"
@@ -351,6 +351,14 @@ const SECTORS = {
           { id:"installateurs", label:"Réseau installateurs", icon:"🔧", desc:"Formation et animation", prompts:[
             { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire dynamique tertiaire ?" },
             { label:"Arguments pour installateurs", text:"Comment convaincre un installateur résidentiel de se lancer sur le marché tertiaire avec Somfy ?" },
+          ]},
+          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Créer des prompts efficaces", prompts:[
+            { label:"Prompt analyse CCTP", text:"Génère-moi un prompt optimisé pour analyser un CCTP de protection solaire dynamique tertiaire et proposer les meilleures solutions Somfy." },
+            { label:"Prompt dossier commercial", text:"Génère-moi un prompt pour créer un dossier commercial convaincant pour un appel d'offres tertiaire Somfy." },
+            { label:"Prompt veille concurrents", text:"Génère-moi un prompt pour faire une veille concurrentielle efficace sur Schneider, Yokis et les autres acteurs de la protection solaire tertiaire." },
+            { label:"Prompt email client", text:"Génère-moi un prompt pour rédiger un email commercial professionnel et percutant à destination d'un maître d'ouvrage ou d'un BET." },
+            { label:"Prompt newsletter", text:"Génère-moi un prompt pour créer une newsletter marketing hebdomadaire sur la protection solaire dynamique, adaptée à une cible professionnelle." },
+            { label:"Améliore mon prompt", text:"Voici mon prompt : [colle ton prompt ici]. Améliore-le pour qu'il soit plus précis, plus structuré et qu'il génère de meilleures réponses." },
           ]},
         ]},
         en: { label:"Sales", categories: [
