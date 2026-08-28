@@ -352,13 +352,12 @@ const SECTORS = {
             { label:"Freins des installateurs", text:"Quels sont les principaux freins des installateurs à se lancer sur la protection solaire dynamique tertiaire ?" },
             { label:"Arguments pour installateurs", text:"Comment convaincre un installateur résidentiel de se lancer sur le marché tertiaire avec Somfy ?" },
           ]},
-          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Créer des prompts efficaces", prompts:[
-            { label:"Prompt analyse CCTP", text:"Génère-moi un prompt optimisé pour analyser un CCTP de protection solaire dynamique tertiaire et proposer les meilleures solutions Somfy." },
-            { label:"Prompt dossier commercial", text:"Génère-moi un prompt pour créer un dossier commercial convaincant pour un appel d'offres tertiaire Somfy." },
-            { label:"Prompt veille concurrents", text:"Génère-moi un prompt pour faire une veille concurrentielle efficace sur Schneider, Yokis et les autres acteurs de la protection solaire tertiaire." },
-            { label:"Prompt email client", text:"Génère-moi un prompt pour rédiger un email commercial professionnel et percutant à destination d'un maître d'ouvrage ou d'un BET." },
-            { label:"Prompt newsletter", text:"Génère-moi un prompt pour créer une newsletter marketing hebdomadaire sur la protection solaire dynamique, adaptée à une cible professionnelle." },
-            { label:"Améliore mon prompt", text:"Voici mon prompt : [colle ton prompt ici]. Améliore-le pour qu'il soit plus précis, plus structuré et qu'il génère de meilleures réponses." },
+          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
+            { label:"Comment bien me demander quelque chose ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses possibles de ta part. Donne-moi des exemples concrets selon les cas d'usage courants : analyse de CCTP, dossier de réponse, arguments de vente, veille concurrents, rédaction d'emails. Qu'est-ce que tu as besoin de savoir pour me répondre de façon précise et utile ?" },
+            { label:"Analyser un CCTP — comment te le soumettre ?", text:"Je veux t'envoyer un CCTP pour analyse. Comment dois-je te le soumettre et que dois-je te préciser pour que tu me fasses la meilleure analyse possible avec le bon chiffrage et les bonnes références produits ?" },
+            { label:"Générer un PowerPoint — que te dire ?", text:"Je veux générer un PowerPoint de présentation ou de réponse à un appel d'offres. Qu'est-ce que je dois te préciser (type de projet, interlocuteur, nombre de slides, contenu souhaité) pour que le résultat soit directement exploitable ?" },
+            { label:"Rechercher des appels d'offres — comment affiner ?", text:"Je veux rechercher des appels d'offres pertinents pour Somfy. Que dois-je te préciser (région, type de bâtiment, budget, délai) pour que tu me trouves les opportunités les plus pertinentes ?" },
+            { label:"Rédiger un email — que te donner ?", text:"Je veux que tu rédiges un email commercial ou de relance. Quelles informations dois-je te donner (destinataire, contexte, objectif, ton souhaité) pour que l'email soit immédiatement envoyable ?" },
           ]},
         ]},
         en: { label:"Sales", categories: [
@@ -393,6 +392,13 @@ const SECTORS = {
           { id:"installateurs", label:"Installer network", icon:"🔧", desc:"Training & network animation", prompts:[
             { label:"Installer barriers", text:"What are the main barriers for installers to enter the tertiary dynamic solar shading market?" },
             { label:"Arguments for installers", text:"How to convince a residential installer to move into the tertiary market with Somfy?" },
+          { id:"generation_prompt", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
+            { label:"How to ask me things effectively?", text:"Explain how to formulate requests to get the best possible answers. Give me concrete examples based on my profile and sector. What do you need to know to give me precise and useful responses?" },
+            { label:"Submitting a document — what to tell you?", text:"I want to send you a document (CCTP, report, Excel file...). How should I submit it and what should I specify to get the best possible analysis?" },
+            { label:"Generating a PowerPoint — what to say?", text:"I want to generate a PowerPoint. What should I specify (project type, audience, content) so the result is directly usable?" },
+            { label:"Writing an email — what to give you?", text:"I want you to write an email. What information should I give you (recipient, context, objective, tone) so the email is ready to send?" },
+            { label:"Improve my request", text:"Here is my request: [paste your request here]. Improve it so it is more precise and generates a better response." },
+          ]},
           ]},
         ]},
       },
@@ -418,6 +424,13 @@ const SECTORS = {
             { label:"Messages clés par segment", text:"Définis les messages clés Somfy pour les écoles, bureaux, bâtiments de santé et hôtels." },
             { label:"Arguments RSE", text:"Quels arguments RSE peut-on développer autour de la protection solaire dynamique ?" },
             { label:"Cas clients à documenter", text:"Quels cas clients Somfy devrait documenter en priorité pour crédibiliser son offre tertiaire ?" },
+          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
+            { label:"Comment bien me demander quelque chose ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses de ta part. Donne-moi des exemples concrets selon mon profil et mon secteur. Qu'est-ce que tu as besoin de savoir pour me répondre de façon précise et utile ?" },
+            { label:"Analyser un document — comment te le soumettre ?", text:"Je veux t'envoyer un document (CCTP, rapport, fichier Excel...). Comment dois-je te le soumettre et que dois-je te préciser pour obtenir la meilleure analyse possible ?" },
+            { label:"Générer un PowerPoint — que te dire ?", text:"Je veux générer un PowerPoint. Qu'est-ce que je dois te préciser (type de projet, interlocuteur, contenu) pour que le résultat soit directement exploitable ?" },
+            { label:"Rédiger un email — que te donner ?", text:"Je veux que tu rédiges un email. Quelles informations dois-je te donner (destinataire, contexte, objectif, ton) pour que l'email soit immédiatement envoyable ?" },
+            { label:"Améliore ma demande", text:"Voici ma demande : [colle ta demande ici]. Améliore-la pour qu'elle soit plus précise et génère une meilleure réponse." },
+          ]},
           ]},
         ]},
         en: { label:"Marketing", categories: [
@@ -441,6 +454,13 @@ const SECTORS = {
             { label:"Key messages by segment", text:"Define Somfy's key messages for schools, offices, healthcare buildings and hotels." },
             { label:"CSR arguments", text:"What CSR arguments can be developed around dynamic solar shading?" },
             { label:"Case studies to document", text:"Which client cases should Somfy document as a priority?" },
+          { id:"generation_prompt", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
+            { label:"How to ask me things effectively?", text:"Explain how to formulate requests to get the best possible answers. Give me concrete examples based on my profile and sector. What do you need to know to give me precise and useful responses?" },
+            { label:"Submitting a document — what to tell you?", text:"I want to send you a document (CCTP, report, Excel file...). How should I submit it and what should I specify to get the best possible analysis?" },
+            { label:"Generating a PowerPoint — what to say?", text:"I want to generate a PowerPoint. What should I specify (project type, audience, content) so the result is directly usable?" },
+            { label:"Writing an email — what to give you?", text:"I want you to write an email. What information should I give you (recipient, context, objective, tone) so the email is ready to send?" },
+            { label:"Improve my request", text:"Here is my request: [paste your request here]. Improve it so it is more precise and generates a better response." },
+          ]},
           ]},
         ]},
       }
@@ -482,6 +502,13 @@ const SECTORS = {
             { label:"RE2020 et protection solaire", text:"Quelles sont les exigences de la RE2020 sur la protection solaire dynamique en résidentiel ?" },
             { label:"CEE et volets motorisés", text:"Existe-t-il des CEE applicables aux volets et protections solaires dynamiques résidentielles ?" },
             { label:"TVA réduite rénovation", text:"Comment les installateurs Somfy peuvent-ils faire bénéficier leurs clients de la TVA à 5,5% ?" },
+          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
+            { label:"Comment bien me demander quelque chose ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses de ta part. Donne-moi des exemples concrets selon mon profil et mon secteur. Qu'est-ce que tu as besoin de savoir pour me répondre de façon précise et utile ?" },
+            { label:"Analyser un document — comment te le soumettre ?", text:"Je veux t'envoyer un document (CCTP, rapport, fichier Excel...). Comment dois-je te le soumettre et que dois-je te préciser pour obtenir la meilleure analyse possible ?" },
+            { label:"Générer un PowerPoint — que te dire ?", text:"Je veux générer un PowerPoint. Qu'est-ce que je dois te préciser (type de projet, interlocuteur, contenu) pour que le résultat soit directement exploitable ?" },
+            { label:"Rédiger un email — que te donner ?", text:"Je veux que tu rédiges un email. Quelles informations dois-je te donner (destinataire, contexte, objectif, ton) pour que l'email soit immédiatement envoyable ?" },
+            { label:"Améliore ma demande", text:"Voici ma demande : [colle ta demande ici]. Améliore-la pour qu'elle soit plus précise et génère une meilleure réponse." },
+          ]},
           ]},
         ]},
         en: { label:"Sales", categories: [
@@ -514,6 +541,13 @@ const SECTORS = {
             { label:"RE2020 and solar shading", text:"What are the RE2020 requirements for dynamic solar shading in residential buildings?" },
             { label:"CEE and motorised shutters", text:"Are there CEE grants applicable to residential dynamic solar shading products?" },
             { label:"Reduced VAT renovation", text:"How can Somfy installers help their clients benefit from the 5.5% reduced VAT?" },
+          { id:"generation_prompt", label:"Prompt generation", icon:"✨", desc:"How to formulate the best requests", prompts:[
+            { label:"How to ask me things effectively?", text:"Explain how to formulate requests to get the best possible answers. Give me concrete examples based on my profile and sector. What do you need to know to give me precise and useful responses?" },
+            { label:"Submitting a document — what to tell you?", text:"I want to send you a document (CCTP, report, Excel file...). How should I submit it and what should I specify to get the best possible analysis?" },
+            { label:"Generating a PowerPoint — what to say?", text:"I want to generate a PowerPoint. What should I specify (project type, audience, content) so the result is directly usable?" },
+            { label:"Writing an email — what to give you?", text:"I want you to write an email. What information should I give you (recipient, context, objective, tone) so the email is ready to send?" },
+            { label:"Improve my request", text:"Here is my request: [paste your request here]. Improve it so it is more precise and generates a better response." },
+          ]},
           ]},
         ]},
       },
@@ -542,6 +576,13 @@ const SECTORS = {
             { label:"Actualités Ajax Systems", text:"Quelles sont les dernières nouveautés d'Ajax Systems ?" },
             { label:"Actualités Ring Amazon", text:"Quelles sont les dernières actualités de Ring sur la sécurité connectée ?" },
             { label:"Innovations domotique 2025", text:"Quelles sont les grandes innovations en domotique résidentielle attendues en 2025 ?" },
+          { id:"generation_prompt", label:"Génération de prompt", icon:"✨", desc:"Comment bien formuler sa demande", prompts:[
+            { label:"Comment bien me demander quelque chose ?", text:"Explique-moi comment bien formuler mes demandes pour obtenir les meilleures réponses de ta part. Donne-moi des exemples concrets selon mon profil et mon secteur. Qu'est-ce que tu as besoin de savoir pour me répondre de façon précise et utile ?" },
+            { label:"Analyser un document — comment te le soumettre ?", text:"Je veux t'envoyer un document (CCTP, rapport, fichier Excel...). Comment dois-je te le soumettre et que dois-je te préciser pour obtenir la meilleure analyse possible ?" },
+            { label:"Générer un PowerPoint — que te dire ?", text:"Je veux générer un PowerPoint. Qu'est-ce que je dois te préciser (type de projet, interlocuteur, contenu) pour que le résultat soit directement exploitable ?" },
+            { label:"Rédiger un email — que te donner ?", text:"Je veux que tu rédiges un email. Quelles informations dois-je te donner (destinataire, contexte, objectif, ton) pour que l'email soit immédiatement envoyable ?" },
+            { label:"Améliore ma demande", text:"Voici ma demande : [colle ta demande ici]. Améliore-la pour qu'elle soit plus précise et génère une meilleure réponse." },
+          ]},
           ]},
         ]},
         en: { label:"Marketing", categories: [
